@@ -1,8 +1,13 @@
 import Testing
 @testable import BraisenlySwiftUI
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    // Swift Testing Documentation
-    // https://developer.apple.com/documentation/testing
+@Test func sidebarModesExposeStableSymbols() {
+    #expect(BraisenlySidebarMode.allCases.count == 5)
+    #expect(BraisenlySidebarMode.search.icon == "magnifyingglass")
+}
+
+@Test func actionItemsPreserveIdentityAndSelection() {
+    let item = BraisenlyActionItem(id: "reading", icon: "book", title: "Reading view", isChecked: true)
+    #expect(item.id == "reading")
+    #expect(item.isChecked)
 }
