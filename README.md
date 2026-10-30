@@ -2,7 +2,7 @@
 
 BraisenlySwiftUI is a reusable SwiftUI design system for building dark, focused note and research interfaces. It provides design tokens, surface treatments, atomic controls, sidebar and search components, grouped action sheets, and a complete mobile workspace composition.
 
-The package is written in Swift 6.4 and supports iOS 17 and macOS 14 or later.
+The package is written in Swift 6.4 and supports iOS 17, iPadOS 17, and macOS 14 or later.
 
 ## Installation
 
@@ -60,11 +60,66 @@ struct ToolbarExample: View {
 }
 ```
 
+## Adaptive platforms
+
+Every visual component supports iPhone, iPad, and Mac layouts. Components default to `BraisenlyPlatform.automatic`, which selects compact phone presentation on iPhone, regular presentation on iPad, and desktop density on macOS.
+
+- iPhone uses floating controls and an animated overlay drawer.
+- iPad uses larger touch targets, wider spacing, constrained reading width, and a balanced two-column split view.
+- Mac uses desktop control density, a resizable sidebar, constrained reading width, and a desktop-sized action sheet.
+
+You can force a platform variant for previews, embedded layouts, or testing:
+
+```swift
+BraisenlyDocumentCanvas(
+    title: "Project Notes",
+    bodyText: "A platform-specific preview.",
+    platform: .iPad
+)
+```
+
+The complete workspace adapts in the same way:
+
+```swift
+BraisenlyMobileWorkspaceView(platform: .mac)
+```
+
+## Solarized themes
+
+Braisenly includes the canonical Solarized palette and semantic Solarized Light and Dark themes. `BraisenlyDS.Solarized` exposes all 16 original colors, while `BraisenlyDS.Colors` automatically resolves each semantic role for the active appearance.
+
+- Solarized Dark uses `base03` and `base02` backgrounds with `base0` and `base1` text.
+- Solarized Light uses `base3` and `base2` backgrounds with `base00` and `base01` text.
+- Accent colors remain consistent between appearances.
+
+The complete workspace starts in Solarized Dark and includes an animated theme control. Set a different initial appearance when needed:
+
+```swift
+BraisenlyMobileWorkspaceView(initialTheme: .light)
+```
+
+Use the morphing toggle independently with any Braisenly surface:
+
+```swift
+struct ThemeControl: View {
+    @State private var theme = BraisenlyTheme.dark
+
+    var body: some View {
+        BraisenlyThemeToggle(theme: $theme)
+            .braisenlyTheme(theme)
+    }
+}
+```
+
+The toggle uses the SF Symbols Replace content transition to morph between sun and moon symbols and automatically disables motion when Reduce Motion is enabled.
+
 ## Components
 
 ### Foundations
 
 - `BraisenlyDesignSystem` and `BraisenlyDS` expose semantic colors, typography, and layout metrics.
+- `BraisenlyPlatform` selects automatic, iPhone, iPad, or Mac presentation.
+- `BraisenlyTheme` selects Solarized Light or Dark presentation.
 - `BraisenlyCapsuleModifier` creates elevated floating controls.
 - `BraisenlyCardModifier` creates bordered grouped surfaces.
 - `.braisenlyCapsule()` and `.braisenlyCard()` apply those surfaces to any view.
@@ -75,11 +130,17 @@ struct ToolbarExample: View {
 - `BraisenlyDualActionPill`
 - `BraisenlyTabCounterBadge`
 - `BraisenlyHighlightedText`
+- `BraisenlyThemeToggle`
 
 ### Navigation and search
 
 - `BraisenlyBottomToolbar`
+- `BraisenlyToolbarIconButton`
 - `BraisenlySidebarDrawer`
+- `BraisenlySidebarSearchHeader`
+- `BraisenlySearchMetadataRow`
+- `BraisenlyExpandableSearchResult`
+- `BraisenlySidebarFooter`
 - `BraisenlySidebarContextPopover`
 - `BraisenlySearchSnippetCard`
 - `BraisenlySidebarMode`
@@ -91,6 +152,9 @@ struct ToolbarExample: View {
 - `BraisenlyActionGroup`
 - `BraisenlyDocumentActionSheet`
 - `BraisenlyDocumentCanvas`
+- `BraisenlyDocumentChrome`
+- `BraisenlyCompactWorkspace`
+- `BraisenlyRegularWorkspace`
 - `BraisenlyMobileWorkspaceView`
 
 ## Custom surfaces
