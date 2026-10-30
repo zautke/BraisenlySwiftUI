@@ -15,6 +15,10 @@ let package = Package(
             name: "BraisenlySwiftUI",
             targets: ["BraisenlySwiftUI"]
         ),
+        .library(
+            name: "BraisenlyAI",
+            targets: ["BraisenlyAI"]
+        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -25,12 +29,28 @@ let package = Package(
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],
         ),
+        .target(
+            name: "BraisenlyAI",
+            dependencies: ["BraisenlySwiftUI"],
+            path: "Sources/AI",
+            swiftSettings: [
+                .enableUpcomingFeature("ApproachableConcurrency"),
+            ]
+        ),
         .testTarget(
             name: "BraisenlySwiftUITests",
             dependencies: ["BraisenlySwiftUI"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
             ],
+        ),
+        .testTarget(
+            name: "BraisenlyAITests",
+            dependencies: ["BraisenlyAI"],
+            path: "Tests/BraisenlyAITests",
+            swiftSettings: [
+                .enableUpcomingFeature("ApproachableConcurrency"),
+            ]
         ),
     ]
 )

@@ -2,6 +2,8 @@
 
 BraisenlySwiftUI is a reusable SwiftUI design system for building dark, focused note and research interfaces. It provides design tokens, surface treatments, atomic controls, sidebar and search components, grouped action sheets, and a complete mobile workspace composition.
 
+The package also ships `BraisenlyAI`, an additive, separately importable AI chat component library and provider-agnostic streaming model layer built on the same design system.
+
 The package is written in Swift 6.4 and supports iOS 17, iPadOS 17, and macOS 14 or later.
 
 ## Installation
@@ -18,6 +20,12 @@ Then add the product to your target:
 
 ```swift
 .product(name: "BraisenlySwiftUI", package: "BraisenlySwiftUI")
+```
+
+For AI chat components, add the separate product:
+
+```swift
+.product(name: "BraisenlyAI", package: "BraisenlySwiftUI")
 ```
 
 In Xcode, you can instead choose **File → Add Package Dependencies** and enter the repository URL.
@@ -180,3 +188,73 @@ swift test
 ```
 
 Tests use Apple's Swift Testing framework.
+
+## BraisenlyAI
+
+Import the AI module independently from the base design system:
+
+```swift
+import BraisenlyAI
+```
+
+Create an `AIChatClient` adapter for the provider or on-device model you use. The library deliberately does not depend on a specific AI SDK:
+
+```swift
+struct MyAIClient: AIChatClient {
+    func streamResponse(
+        to request: AIChatRequest
+    ) async throws -> AsyncThrowingStream<AIChatResponseEvent, any Error> {
+        AsyncThrowingStream { continuation in
+            // Connect your provider and yield text, tool, and citation events.
+            continuation.yield(.textDelta("Hello from Braisenly"))
+            continuation.yield(.finished)
+            continuation.finish()
+        }
+    }
+}
+```
+
+Own the session and present the complete chat surface:
+
+```swift
+import BraisenlyAI
+import SwiftUI
+
+struct AssistantView: View {
+    @State private var session = AIChatSession(client: MyAIClient())
+
+    var body: some View {
+        AIChatView(
+            session: session,
+            modelName: "My model"
+        )
+    }
+}
+```
+
+### AI UI components
+
+- `AIChatView`
+- `AIChatHeader`
+- `AIMessageList`
+- `AIMessageBubble`
+- `AIComposer`
+- `AIEmptyState`
+- `AIStreamingIndicator`
+- `AIToolCallCard`
+- `AICitationChip`
+- `AIChatErrorBanner`
+
+### AI models and business logic
+
+- `AIChatSession`
+- `AIChatClient`
+- `AIChatRequest`
+- `AIChatResponseEvent`
+- `AIConversation`
+- `AIMessage`, `AIMessageRole`, and `AIMessageStatus`
+- `AIToolCall`
+- `AICitation`
+- `AIChatFailure`
+
+All business types live under `Sources/AI/Models`, while reusable SwiftUI components live under `Sources/AI/UI`.
