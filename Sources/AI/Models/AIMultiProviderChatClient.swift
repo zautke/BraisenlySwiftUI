@@ -16,8 +16,10 @@ public struct AIMultiProviderChatClient: AIChatClient {
     ) async throws -> AsyncThrowingStream<AIChatResponseEvent, any Error> {
         let config = configurationProvider()
         switch config.activeProfile.provider {
-        case .appleIntelligence:
-            let client = AIFoundationModelsChatClient()
+        case .mlxOnDevice, .appleIntelligence:
+            let client = AIFoundationModelsChatClient(
+                fallbackClient: AISmartLocalAssistantClient()
+            )
             return try await client.streamResponse(to: request)
         case .openAICompatible:
             let baseURL = URL(string: config.openAIBaseURL) ?? URL(string: "https://api.openai.com/v1")!

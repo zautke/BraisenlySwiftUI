@@ -1,8 +1,8 @@
 # SwiftUI Screenshot UI Decomposition and Design System
 
 **Created:** 10/26/2026 16:16:23  
-**Updated:** 10/26/2026 16:48:08  
-**Exported:** 10/30/2026 16:25:58  
+**Updated:** 10/30/2026 16:48:09  
+**Exported:** 10/30/2026 16:56:12  
 **Link:** [https://gemini.google.com/app/867a7c51e63d70c8](https://gemini.google.com/app/867a7c51e63d70c8)  
 
 ## User:
@@ -53,9 +53,9 @@ Upload the `.png` or `.jpg` versions whenever you're ready, and we'll dissect th
 
 - [IMG_0078.jpeg](https://lh3.googleusercontent.com/gg/AJWXcNerenipSTp90En6_NRFZdxCrHoSZGHG6fvtpucK1UPAaf7C_QAyBeEgT6fQTjtTgxuV-U7yNowTONkdslCo6qXd551ERttkDt8flDGtX0uYHNn4hFXkKWqcvwWUOcgSvICgwxh8IIlxywnxKBAgc_H5KF20IERFQH-6ygAWu-lqijO9uPkiRyFEG4qGlT1FMUZyJu9cu1L1jaByY6x-7Qy1eCS7_UhFJYbK5Mk1su8fBLgaEur2F8WRfmD2DFNlCGXe80LK-5fSrv9sJZ_9Tb4CNdk4SvMCSw) (image/jpeg)
 
-- [IMG_0079.jpg](https://lh3.googleusercontent.com/gg/AJWXcNcCCP-cpoN78zPoZ82ASigYP5uY9IRAliFNQgma0S-v8kRMc3Ht2hkopeCyEKaS0mxX9rNVwofEr3pCpn87GQPJ3RcZlqeiSzbBb92Cd4ZqW4xRkAUetRw-a8bNCRosjjUMNCsLgFtNauBzGHaqBHChKvR9waX8ZIDBenm6lrXjuWhYbT466ePiKxVBBCzqWZcUfZY3pbIfEny9Zy-nXjoAniK2xlLeorX-jaLqz6I2CW-_g-m4Z-2DbRPL17Trxcqx4A2BiHn-FG5j1GKqZWpEOUdyduJ-Pgg) (image/jpeg)
+- [IMG_0079.jpg](https://lh3.googleusercontent.com/gg/AJWXcNfwMtqdORY5ZNiz0ZAsYo7HBj4b94rkMFu7cTVBZZ2o4UCn0xWXbR-eOPOVApin6lfejbAVK7bgHzN-zxBFtryxYrcTdFTvIbyRf0U3UiszusMyQ8rUZizAVuGjhNptUI1WG4HltvL1ko92Opcsfy-p-0a4hCVy8KSQszcQw0DxnJaE_IfmBRfEHxksv6tY8Nvu7Kt78dFEJBwFfmFvXw1BXBCBSy1Zkih9VTpyH668lHg9yvr1VqNQi1vq2pBX9_BUrfEwyimO5qMBWKdnjbIzeq-l-zGRDSk) (image/jpeg)
 
-- [IMG_0080.jpg](https://lh3.googleusercontent.com/gg/AJWXcNd-Wo5Q2ImY2P-cDa_sS7y5fv9pp2hTqQKHeNvk7MsN2TtYgl752DGzSw2N2qivBRVclWLPZR6ukAzwECahUaRcitNLLmVjxlNSllQNvjtxrbI277CGCzA689GFe-panv5PzospbO_lyQvgB-iL5hc1_toni_mONlhXgHSm_By6FnWV8UZaO0-eT-SbIhS3m-W-zhTAvtRe0ZniXiZISEGqKVbwAHzQOlTUyTo-1x93dzgMcRKb1eTJDvK2hexr-EojlvrGnujP7plEzrLj8JcBHWexOf57c9s) (image/jpeg)
+- [IMG_0080.jpg](https://lh3.googleusercontent.com/gg/AJWXcNdlib43WWhQ7MfokIQtCQk_uHj600RXghOnU8EJttt1R3nIWjLjD6GR5i8vrDndSKCllfOpBoKPHC3aDsoWhgVkiYkaDzXdYICtFwEM1HFJ_N6awK46SiRT_2tiMCIsau1WM4QdSa89BkuJkCP6s2K5HbOkewAMd0g8zZ71ARb1HrTCFCS1N1C3v8oBbdmoY0NfpvqDHzRS-El0LfsfH9Jir2UUq3RsabFjW9suMyb0hfVitGMbyfHIyntdbg5EdpFCwiA8oKjTapKSEKDP4Q1wblhMPot8J30) (image/jpeg)
 
 try those
 
@@ -1021,5 +1021,1274 @@ public struct ObsidianMobileWorkspaceView: View {
 3. **Sheet Presentation Detents (`IMG_0079`):** Uses `.presentationDetents([.fraction(0.76), .large])` with `.presentationCornerRadius(28)` so the `Home` header and first 6 lines of body text remain visible and dimmed behind the action sheet[cite: 4].
 
 Would you like to extract the Markdown editor text view into a custom `TextKit 2` / `UITextView` representable for live syntax editing, or add interactive swipe-gesture tracking to the sidebar drawer?
+
+## User:
+
+> 10/30/2026 16:48:09
+
+now web searech for the sota as of todays date: i need a full feature ai chat ui component system, all created from primitive that compose to the more complex components such as UserPromptBubble, etc. then I need the mlx code to deploy the lfm3 1.7B model ON DEVICE (these components are targeted for my ipad 5th gen 11" m4 2024) and have it be the main model, though the models need to be pluggable
+
+## Gemini:
+
+> 10/30/2026 16:48:09
+
+### SOTA Architecture Overview
+
+1. **Liquid AI `LFM3-1.7B` Architecture**:
+   * **Tri-Hybrid Backbone:** `1.73B` parameters across 24 layers (**13 gated short convolutions** with kernel size 7, **5 sliding-window attention layers**, and **6 global attention layers**) supporting a **256K context window**.
+   * **Agentic & Reasoning Native:** Post-trained with Multi-Domain On-Policy Distillation (MOPD) with `enable_thinking=True` reasoning traces (`<think>...</think>`) enabled by default, native tool calling, and **deferred tool loading** (`defer_loading=True`).
+   * **iPad Pro 11" M4 (2024) Footprint:** At 4-bit MLX quantization (`~1.05 GB`), `LFM3-1.7B` resides comfortably inside the M4's unified memory alongside the `Increased Memory Limit` entitlement, while its 13 gated short-convolution layers drastically reduce KV-cache memory growth across long contexts compared to standard all-attention Transformers.
+2. **MLX Swift (`mlx-swift-lm` v3.31+):**
+   * Uses `MLXLMCommon`'s `ModelContainer`, `ModelConfiguration`, and `ChatSession` / `MLXLMCommon.generate(input:parameters:context:)` with Swift 6 `sending` closures and `AsyncThrowingStream` token delivery.
+3. **SOTA SwiftUI Composable AI Chat Hierarchy:**
+   * Modeled after composable primitive architectures (such as `assistant-ui` and Vercel `AI Elements` adapted to Swift 6 / SwiftUI) where every complex organism (`UserPromptBubble`, `AssistantMessageCluster`, `PromptComposerBar`) is assembled strictly from atomic primitives (`AvatarBadge`, `ReasoningTraceDisclosure`, `ToolCallPill`, `CodeBlockCard`, `StreamingMarkdownText`, and `MessageActionToolbar`).
+
+---
+
+## Part 1: Pluggable On-Device MLX Engine (`LFM3-1.7B` Default + Hot-Swappable Providers)
+
+Add the following packages to your Xcode target or `Package.swift`:
+* `[https://github.com/ml-explore/mlx-swift](https://github.com/ml-explore/mlx-swift)`
+* `[https://github.com/ml-explore/mlx-swift-lm](https://github.com/ml-explore/mlx-swift-lm)` (Products: `MLXLLM`, `MLXLMCommon`)
+
+> **iPad Pro M4 Entitlement Requirement:** In Xcode under **Signing & Capabilities**, enable **Increased Memory Limit** (`com.apple.developer.kernel.increased-memory-limit`) and **Outgoing Connections (Client)** (for initial Hugging Face weight caching).
+
+`​`​`swift
+import Foundation
+import MLX
+import MLXLLM
+import MLXLMCommon
+
+// MARK: - 1. PLUGGABLE MODEL DESCRIPTOR & REGISTRY
+
+public struct AIModelDescriptor: Identifiable, Hashable, Sendable {
+    public let id: String               // Hugging Face Repo ID or Remote Model ID
+    public let displayName: String
+    public let family: String
+    public let parameterCount: String
+    public let quantization: String
+    public let contextWindow: Int
+    public let defaultTemperature: Float
+    public let topP: Float
+    public let supportsThinking: Bool
+    public let supportsTools: Bool
+    public let isLocalMLX: Bool
+    
+    public init(
+        id: String,
+        displayName: String,
+        family: String,
+        parameterCount: String,
+        quantization: String,
+        contextWindow: Int,
+        defaultTemperature: Float = 0.6,
+        topP: Float = 0.95,
+        supportsThinking: Bool = true,
+        supportsTools: Bool = true,
+        isLocalMLX: Bool = true
+    ) {
+        self.id = id
+        self.displayName = displayName
+        self.family = family
+        self.parameterCount = parameterCount
+        self.quantization = quantization
+        self.contextWindow = contextWindow
+        self.defaultTemperature = defaultTemperature
+        self.topP = topP
+        self.supportsThinking = supportsThinking
+        self.supportsTools = supportsTools
+        self.isLocalMLX = isLocalMLX
+    }
+}
+
+public extension AIModelDescriptor {
+    /// Default Main Model: Liquid AI LFM3-1.7B (24-layer Tri-Hybrid: 13 Conv + 5 SWA + 6 Global Attention)
+    static let lfm3_1_7B_4bit = AIModelDescriptor(
+        id: "mlx-community/LFM3-1.7B-4bit",
+        displayName: "LFM3 1.7B",
+        family: "Liquid Tri-Hybrid",
+        parameterCount: "1.73B",
+        quantization: "4-bit (~1.05 GB)",
+        contextWindow: 262_144,
+        defaultTemperature: 0.6,
+        topP: 0.95,
+        supportsThinking: true,
+        supportsTools: true,
+        isLocalMLX: true
+    )
+    
+    /// High-Precision BF16 Sibling (~3.4 GB — runs effortlessly on 8GB/16GB M4 iPad Pro)
+    static let lfm3_1_7B_bf16 = AIModelDescriptor(
+        id: "LiquidAI/LFM3-1.7B",
+        displayName: "LFM3 1.7B (BF16)",
+        family: "Liquid Tri-Hybrid",
+        parameterCount: "1.73B",
+        quantization: "BF16 (~3.4 GB)",
+        contextWindow: 262_144,
+        defaultTemperature: 0.6,
+        topP: 0.95,
+        supportsThinking: true,
+        supportsTools: true,
+        isLocalMLX: true
+    )
+    
+    /// Pluggable Local Alternative: Qwen3.5 4B 4-bit
+    static let qwen3_5_4B = AIModelDescriptor(
+        id: "mlx-community/Qwen3.5-4B-4bit",
+        displayName: "Qwen 3.5 4B",
+        family: "Qwen Dense",
+        parameterCount: "4.0B",
+        quantization: "4-bit (~2.4 GB)",
+        contextWindow: 262_144,
+        defaultTemperature: 0.7,
+        topP: 0.95,
+        supportsThinking: true,
+        supportsTools: true,
+        isLocalMLX: true
+    )
+    
+    /// Pluggable Local Alternative: Gemma 4 E4B 4-bit
+    static let gemma4_e4b = AIModelDescriptor(
+        id: "mlx-community/gemma-4-E4B-it-4bit",
+        displayName: "Gemma 4 E4B",
+        family: "Gemma",
+        parameterCount: "4.0B",
+        quantization: "4-bit (~2.5 GB)",
+        contextWindow: 131_072,
+        defaultTemperature: 0.7,
+        topP: 0.95,
+        supportsThinking: false,
+        supportsTools: true,
+        isLocalMLX: true
+    )
+    
+    static let catalog: [AIModelDescriptor] = [
+        .lfm3_1_7B_4bit,
+        .lfm3_1_7B_bf16,
+        .qwen3_5_4B,
+        .gemma4_e4b
+    ]
+}
+
+// MARK: - 2. STREAMING EVENTS & PLUGGABLE PROVIDER PROTOCOL
+
+public enum LLMStreamEvent: Sendable {
+    case downloadProgress(Double)
+    case reasoningDelta(String)
+    case contentDelta(String)
+    case toolCallDetected(name: String, argumentsJSON: String)
+    case metrics(tokensPerSecond: Double, totalTokens: Int, prefillTimeMs: Double)
+    case completed
+}
+
+public struct ChatTurnMessage: Identifiable, Sendable, Equatable {
+    public enum Role: String, Sendable {
+        case system, user, assistant, tool
+    }
+    
+    public struct Attachment: Identifiable, Sendable, Equatable {
+        public let id = UUID()
+        public let filename: String
+        public let fileType: String
+    }
+    
+    public struct ToolInvocation: Identifiable, Sendable, Equatable {
+        public let id = UUID()
+        public let name: String
+        public let argumentsJSON: String
+        public var status: String
+    }
+    
+    public let id: UUID
+    public let role: Role
+    public var content: String
+    public var reasoningTrace: String
+    public var isThinkingExpanded: Bool
+    public var attachments: [Attachment]
+    public var toolCalls: [ToolInvocation]
+    public var tokensPerSecond: Double?
+    public let timestamp: Date
+    
+    public init(
+        id: UUID = UUID(),
+        role: Role,
+        content: String,
+        reasoningTrace: String = "",
+        isThinkingExpanded: Bool = false,
+        attachments: [Attachment] = [],
+        toolCalls: [ToolInvocation] = [],
+        tokensPerSecond: Double? = nil,
+        timestamp: Date = .now
+    ) {
+        self.id = id
+        self.role = role
+        self.content = content
+        self.reasoningTrace = reasoningTrace
+        self.isThinkingExpanded = isThinkingExpanded
+        self.attachments = attachments
+        self.toolCalls = toolCalls
+        self.tokensPerSecond = tokensPerSecond
+        self.timestamp = timestamp
+    }
+}
+
+/// Pluggable Inference Provider Contract (Supports MLX On-Device, Ollama Sidecar, or Cloud SSE)
+public protocol PluggableLLMProvider: Actor {
+    var activeModel: AIModelDescriptor { get }
+    func loadModel(_ descriptor: AIModelDescriptor, onProgress: @Sendable @escaping (Double) -> Void) async throws
+    func generateStream(
+        messages: [ChatTurnMessage],
+        enableThinking: Bool,
+        maxTokens: Int
+    ) -> AsyncThrowingStream<LLMStreamEvent, Error>
+    func cancelGeneration()
+}
+
+// MARK: - 3. ON-DEVICE MLX ENGINE (Optimized for iPad Pro 11" M4)
+
+public actor OnDeviceMLXProvider: PluggableLLMProvider {
+    public private(set) var activeModel: AIModelDescriptor = .lfm3_1_7B_4bit
+    private var modelContainer: ModelContainer?
+    private var loadedModelID: String?
+    private var currentTaskCancelled: Bool = false
+    
+    public init(initialModel: AIModelDescriptor = .lfm3_1_7B_4bit) {
+        self.activeModel = initialModel
+        configureM4UnifiedMemoryLimit()
+    }
+    
+    /// Configures Metal buffer cache & wired memory ceiling for iPad Pro M4
+    private func configureM4UnifiedMemoryLimit() {
+        // Reserve 256MB Metal cache for rapid Conv1D + Attention reuse without memory pressure
+        MLX.GPU.set(cacheLimit: 256 * 1024 * 1024)
+        MLX.GPU.set(memoryLimit: 6 * 1024 * 1024 * 1024)
+    }
+    
+    public func loadModel(
+        _ descriptor: AIModelDescriptor,
+        onProgress: @Sendable @escaping (Double) -> Void
+    ) async throws {
+        if loadedModelID == descriptor.id, modelContainer != nil {
+            onProgress(1.0)
+            return
+        }
+        
+        // Release previous model buffers before swapping
+        modelContainer = nil
+        MLX.GPU.clearCache()
+        
+        let configuration = ModelConfiguration(
+            id: descriptor.id,
+            defaultPrompt: "You are a helpful, concise AI assistant running locally on iPad Pro M4."
+        )
+        
+        let container = try await LLMModelFactory.shared.loadContainer(
+            configuration: configuration
+        ) { progress in
+            onProgress(progress.fractionCompleted)
+        }
+        
+        self.modelContainer = container
+        self.loadedModelID = descriptor.id
+        self.activeModel = descriptor
+    }
+    
+    public func cancelGeneration() {
+        currentTaskCancelled = true
+    }
+    
+    public func generateStream(
+        messages: [ChatTurnMessage],
+        enableThinking: Bool = true,
+        maxTokens: Int = 4096
+    ) -> AsyncThrowingStream<LLMStreamEvent, Error> {
+        currentTaskCancelled = false
+        let descriptor = self.activeModel
+        
+        return AsyncThrowingStream { continuation in
+            Task {
+                do {
+                    if self.modelContainer == nil || self.loadedModelID != descriptor.id {
+                        try await self.loadModel(descriptor) { progress in
+                            continuation.yield(.downloadProgress(progress))
+                        }
+                    }
+                    
+                    guard let container = self.modelContainer else {
+                        throw NSError(domain: "OnDeviceMLXProvider", code: -1, userInfo: [
+                            NSLocalizedDescriptionKey: "ModelContainer failed to initialize."
+                        ])
+                    }
+                    
+                    // Format messages for LFM3 / Jinja Chat Template
+                    // Note: LFM3 strips thinking traces from prior turns unless preserve_thinking=true
+                    let rawMessages: [[String: String]] = messages.map { msg in
+                        ["role": msg.role.rawValue, "content": msg.content]
+                    }
+                    
+                    let generateParams = GenerateParameters(
+                        maxTokens: maxTokens,
+                        temperature: descriptor.defaultTemperature,
+                        topP: descriptor.topP,
+                        repetitionPenalty: 1.05,
+                        repetitionContextSize: 64
+                    )
+                    
+                    let startTime = CFAbsoluteTimeGetCurrent()
+                    
+                    try await container.perform { context in
+                        let promptTokens = try context.tokenizer.applyChatTemplate(messages: rawMessages)
+                        let lmInput = LMInput(tokens: MLXArray(promptTokens))
+                        
+                        var isInsideThinkBlock = false
+                        var previousTextLength = 0
+                        var accumulatedDecoded = ""
+                        var firstTokenTime: CFAbsoluteTime?
+                        
+                        let stream = try MLXLMCommon.generate(
+                            input: lmInput,
+                            parameters: generateParams,
+                            context: context
+                        )
+                        
+                        for await generation in stream {
+                            if await self.isCancelled() { break }
+                            
+                            switch generation {
+                            case .chunk(let chunkText):
+                                if firstTokenTime == nil {
+                                    firstTokenTime = CFAbsoluteTimeGetCurrent()
+                                }
+                                accumulatedDecoded += chunkText
+                                
+                                // Parse <think>...</think> stream states natively for LFM3-1.7B
+                                if accumulatedDecoded.contains("<think>") && !accumulatedDecoded.contains("</think>") {
+                                    isInsideThinkBlock = true
+                                    let cleaned = chunkText.replacingOccurrences(of: "<think>", with: "")
+                                    if !cleaned.isEmpty {
+                                        continuation.yield(.reasoningDelta(cleaned))
+                                    }
+                                } else if isInsideThinkBlock && accumulatedDecoded.contains("</think>") {
+                                    isInsideThinkBlock = false
+                                    let cleaned = chunkText.replacingOccurrences(of: "</think>", with: "")
+                                    if !cleaned.isEmpty {
+                                        continuation.yield(.contentDelta(cleaned))
+                                    }
+                                } else if isInsideThinkBlock && enableThinking {
+                                    continuation.yield(.reasoningDelta(chunkText))
+                                } else {
+                                    continuation.yield(.contentDelta(chunkText))
+                                }
+                                previousTextLength += 1
+                                
+                            case .info(let completionInfo):
+                                let prefillMs = ((firstTokenTime ?? CFAbsoluteTimeGetCurrent()) - startTime) * 1000.0
+                                continuation.yield(
+                                    .metrics(
+                                        tokensPerSecond: completionInfo.tokensPerSecond,
+                                        totalTokens: completionInfo.generationTokenCount,
+                                        prefillTimeMs: prefillMs
+                                    )
+                                )
+                            case .toolCall(let toolCall):
+                                continuation.yield(
+                                    .toolCallDetected(
+                                        name: toolCall.function.name,
+                                        argumentsJSON: String(describing: toolCall.function.arguments)
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    
+                    continuation.yield(.completed)
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+        }
+    }
+    
+    private func isCancelled() -> Bool {
+        currentTaskCancelled
+    }
+}
+`​`​`
+
+---
+
+## Part 2: Atomic Primitives That Compose Into Full Chat Organisms
+
+Every complex chat component (`UserPromptBubble`, `AssistantMessageCluster`, `PromptComposerBar`, `ModelPickerHeader`) is constructed strictly from the atomic primitives below, styled in the **Obsidian Abyssal Teal (`ObsidianDS`)** palette from your screenshots[cite: 2, 3, 4, 5].
+
+### Atomic Primitive Hierarchy
+1. **`ChatAvatarPrimitive`**: `28x28pt` circular badge with role-specific glyph and border stroke.
+2. **`AttachmentChipPrimitive`**: Compact capsule for attached files/images inside either the composer or `UserPromptBubble`.
+3. **`ReasoningDisclosurePrimitive`**: Collapsible `<think>` trace container with animated pulsing indicator while `LFM3-1.7B` streams its chain-of-thought.
+4. **`ToolInvocationPillPrimitive`**: Displays live agentic tool calls (`LFM3` native tool calling) with status badges.
+5. **`CodeBlockCardPrimitive`**: Syntax-styled fenced code container with language header and one-tap copy confirmation.
+6. **`StreamingMarkdownPrimitive`**: Parses streaming text into paragraphs and fenced code blocks without layout jitter.
+7. **`MessageActionBarPrimitive`**: Copy, Regenerate, Edit, and real-time `tok/s` M4 speed badge.
+
+`​`​`swift
+import SwiftUI
+
+// MARK: - 4. ATOMIC CHAT PRIMITIVES (Level 1)
+
+/// 1. Role Avatar Badge Primitive
+public struct ChatAvatarPrimitive: View {
+    public let systemIcon: String
+    public let tint: Color
+    public let background: Color
+    
+    public var body: some View {
+        Image(systemName: systemIcon)
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(tint)
+            .frame(width: 28, height: 28)
+            .background(Circle().fill(background))
+            .overlay(
+                Circle().strokeBorder(ObsidianDS.Colors.borderSubtle, lineWidth: 1)
+            )
+    }
+}
+
+/// 2. Attachment Chip Primitive (Used in Composer & UserPromptBubble)
+public struct AttachmentChipPrimitive: View {
+    public let attachment: ChatTurnMessage.Attachment
+    public var onRemove: (() -> Void)? = nil
+    
+    public var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "doc.text.fill")
+                .font(.system(size: 12))
+                .foregroundStyle(ObsidianDS.Colors.accentTeal)
+            
+            Text(attachment.filename)
+                .font(ObsidianDS.Typography.metadata)
+                .foregroundStyle(ObsidianDS.Colors.textBright)
+                .lineLimit(1)
+            
+            if let onRemove {
+                Button(action: onRemove) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 13))
+                        .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(
+            Capsule(style: .continuous)
+                .fill(ObsidianDS.Colors.surfaceSnippet)
+        )
+        .overlay(
+            Capsule(style: .continuous)
+                .strokeBorder(ObsidianDS.Colors.borderSubtle, lineWidth: 0.8)
+        )
+    }
+}
+
+/// 3. Collapsible LFM3 Reasoning Trace Primitive (<think>...</think>)
+public struct ReasoningDisclosurePrimitive: View {
+    public let reasoningText: String
+    public let isStreaming: Bool
+    @Binding public var isExpanded: Bool
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button {
+                withAnimation(.snappy(duration: 0.22)) {
+                    isExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: isStreaming ? "sparkles" : "brain")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(ObsidianDS.Colors.accentTeal)
+                        .symbolEffect(.pulse, isActive: isStreaming)
+                    
+                    Text(isStreaming ? "Thinking with LFM3 Tri-Hybrid..." : "Reasoning Trace")
+                        .font(ObsidianDS.Typography.metadata)
+                        .foregroundStyle(ObsidianDS.Colors.textPrimary)
+                    
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(ObsidianDS.Colors.surfaceSnippet)
+                )
+                .overlay(
+                    Capsule(style: .continuous)
+                        .strokeBorder(ObsidianDS.Colors.borderSubtle.opacity(0.7), lineWidth: 0.8)
+                )
+            }
+            .buttonStyle(.plain)
+            
+            if isExpanded && !reasoningText.isEmpty {
+                Text(reasoningText.trimmingCharacters(in: .whitespacesAndNewlines))
+                    .font(ObsidianDS.Typography.snippetBody)
+                    .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                    .lineSpacing(3)
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .obsidianCard(
+                        cornerRadius: ObsidianDS.Metric.snippetRadius,
+                        fill: ObsidianDS.Colors.surfaceSnippet
+                    )
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+    }
+}
+
+/// 4. Agentic Tool Invocation Pill Primitive
+public struct ToolInvocationPillPrimitive: View {
+    public let tool: ChatTurnMessage.ToolInvocation
+    
+    public var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "wrench.and.screwdriver.fill")
+                .font(.system(size: 12))
+                .foregroundStyle(ObsidianDS.Colors.matchForeground)
+                .padding(5)
+                .background(Circle().fill(ObsidianDS.Colors.matchBackground))
+            
+            VStack(alignment: .leading, spacing: 1) {
+                Text(tool.name)
+                    .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(ObsidianDS.Colors.textBright)
+                Text(tool.argumentsJSON)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
+            
+            Text(tool.status)
+                .font(ObsidianDS.Typography.badgeNumber)
+                .foregroundStyle(ObsidianDS.Colors.accentTeal)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .obsidianCard(cornerRadius: 12, fill: ObsidianDS.Colors.surfaceSnippet)
+    }
+}
+
+/// 5. Fenced Code Block Card Primitive
+public struct CodeBlockCardPrimitive: View {
+    public let language: String
+    public let code: String
+    @State private var didCopy = false
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(language.isEmpty ? "text" : language.lowercased())
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(ObsidianDS.Colors.accentTeal)
+                
+                Spacer()
+                
+                Button {
+                    #if canImport(UIKit)
+                    UIPasteboard.general.string = code
+                    #endif
+                    didCopy = true
+                    Task {
+                        try? await Task.sleep(for: .seconds(1.5))
+                        didCopy = false
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: didCopy ? "checkmark" : "doc.on.doc")
+                        Text(didCopy ? "Copied" : "Copy")
+                    }
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(ObsidianDS.Colors.textPrimary)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(ObsidianDS.Colors.surfaceElevated)
+            
+            Divider().background(ObsidianDS.Colors.divider)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                Text(code)
+                    .font(.system(size: 13.5, weight: .regular, design: .monospaced))
+                    .foregroundStyle(ObsidianDS.Colors.textBright)
+                    .padding(12)
+                    .textSelection(.enabled)
+            }
+            .background(ObsidianDS.Colors.backgroundDimmed)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(ObsidianDS.Colors.borderSubtle, lineWidth: 0.8)
+        )
+    }
+}
+
+/// 6. Streaming Markdown Block Parser Primitive
+public struct StreamingMarkdownPrimitive: View {
+    public let rawMarkdown: String
+    public var textColor: Color = ObsidianDS.Colors.textPrimary
+    
+    private enum Block: Identifiable {
+        case prose(id: Int, text: String)
+        case code(id: Int, lang: String, body: String)
+        
+        var id: Int {
+            switch self {
+            case .prose(let id, _), .code(let id, _, _): return id
+            }
+        }
+    }
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(parseBlocks(rawMarkdown)) { block in
+                switch block {
+                case .prose(_, let text):
+                    if let attributed = try? AttributedString(
+                        markdown: text,
+                        options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)
+                    ) {
+                        Text(attributed)
+                            .font(ObsidianDS.Typography.bodyReading)
+                            .foregroundStyle(textColor)
+                            .lineSpacing(4)
+                            .textSelection(.enabled)
+                    } else {
+                        Text(text)
+                            .font(ObsidianDS.Typography.bodyReading)
+                            .foregroundStyle(textColor)
+                            .lineSpacing(4)
+                    }
+                case .code(_, let lang, let body):
+                    CodeBlockCardPrimitive(language: lang, code: body)
+                }
+            }
+        }
+    }
+    
+    private func parseBlocks(_ input: String) -> [Block] {
+        var blocks: [Block] = []
+        let components = input.components(separatedBy: "`​`​`")
+        for (index, part) in components.enumerated() {
+            if index.isMultiple(of: 2) {
+                let trimmed = part.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !trimmed.isEmpty {
+                    blocks.append(.prose(id: index, text: trimmed))
+                }
+            } else {
+                var lines = part.components(separatedBy: .newlines)
+                let lang = lines.first?.trimmingCharacters(in: .whitespaces) ?? ""
+                if !lines.isEmpty { lines.removeFirst() }
+                let codeBody = lines.joined(separator: "\n")
+                blocks.append(.code(id: index, lang: lang, body: codeBody))
+            }
+        }
+        return blocks
+    }
+}
+
+/// 7. Message Action Bar Primitive (Copy, Regenerate, M4 Tok/s Telemetry)
+public struct MessageActionBarPrimitive: View {
+    public let tokensPerSecond: Double?
+    public let onCopy: () -> Void
+    public let onRegenerate: () -> Void
+    
+    public var body: some View {
+        HStack(spacing: 14) {
+            Button(action: onCopy) {
+                Image(systemName: "doc.on.doc")
+                    .font(.system(size: 13))
+                    .foregroundStyle(ObsidianDS.Colors.textSecondary)
+            }
+            .buttonStyle(.plain)
+            
+            Button(action: onRegenerate) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 13))
+                    .foregroundStyle(ObsidianDS.Colors.textSecondary)
+            }
+            .buttonStyle(.plain)
+            
+            if let tps = tokensPerSecond, tps > 0 {
+                Text(String(format: "%.1f tok/s • M4 Metal", tps))
+                    .font(ObsidianDS.Typography.badgeNumber)
+                    .foregroundStyle(ObsidianDS.Colors.accentTeal)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule().fill(ObsidianDS.Colors.surfaceSnippet)
+                    )
+            }
+        }
+        .padding(.top, 2)
+    }
+}
+`​`​`
+
+---
+
+## Part 3: Composed Chat Organisms (`UserPromptBubble`, `AssistantMessageCluster`, `PromptComposerBar`)
+
+`​`​`swift
+// MARK: - 5. COMPOSED CHAT ORGANISMS (Level 2)
+
+/// Composed User Prompt Bubble (Built from AttachmentChipPrimitive + StreamingMarkdownPrimitive + GroupedCardModifier)
+public struct UserPromptBubble: View {
+    public let message: ChatTurnMessage
+    public var onEditTap: (() -> Void)? = nil
+    
+    public var body: some View {
+        HStack(alignment: .bottom, spacing: 10) {
+            Spacer(minLength: 48)
+            
+            VStack(alignment: .trailing, spacing: 6) {
+                // Attached Files Row
+                if !message.attachments.isEmpty {
+                    HStack(spacing: 6) {
+                        ForEach(message.attachments) { file in
+                            AttachmentChipPrimitive(attachment: file)
+                        }
+                    }
+                }
+                
+                // Main User Bubble Surface
+                VStack(alignment: .leading, spacing: 6) {
+                    StreamingMarkdownPrimitive(
+                        rawMarkdown: message.content,
+                        textColor: ObsidianDS.Colors.textBright
+                    )
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 20,
+                        bottomLeadingRadius: 20,
+                        bottomTrailingRadius: 6,
+                        topTrailingRadius: 20,
+                        style: .continuous
+                    )
+                    .fill(ObsidianDS.Colors.surfaceHighlight)
+                )
+                .overlay(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 20,
+                        bottomLeadingRadius: 20,
+                        bottomTrailingRadius: 6,
+                        topTrailingRadius: 20,
+                        style: .continuous
+                    )
+                    .strokeBorder(ObsidianDS.Colors.borderSubtle, lineWidth: 1)
+                )
+            }
+        }
+    }
+}
+
+/// Composed Assistant Message Cluster (Avatar + LFM3 Reasoning Disclosure + Tool Pills + Markdown + Action Bar)
+public struct AssistantMessageCluster: View {
+    @Binding public var message: ChatTurnMessage
+    public let modelName: String
+    public let isStreaming: Bool
+    public let onRegenerate: () -> Void
+    
+    public var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            ChatAvatarPrimitive(
+                systemIcon: "waveform.path.ecg",
+                tint: ObsidianDS.Colors.accentTeal,
+                background: ObsidianDS.Colors.surfaceElevated
+            )
+            
+            VStack(alignment: .leading, spacing: 10) {
+                // Header Label
+                HStack(spacing: 6) {
+                    Text(modelName)
+                        .font(ObsidianDS.Typography.rowLabelMed)
+                        .foregroundStyle(ObsidianDS.Colors.textBright)
+                    
+                    Text("On-Device")
+                        .font(ObsidianDS.Typography.badgeNumber)
+                        .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                }
+                
+                // 1. LFM3 Thinking Trace Disclosure
+                if !message.reasoningTrace.isEmpty || (isStreaming && message.content.isEmpty) {
+                    ReasoningDisclosurePrimitive(
+                        reasoningText: message.reasoningTrace,
+                        isStreaming: isStreaming && message.content.isEmpty,
+                        isExpanded: $message.isThinkingExpanded
+                    )
+                }
+                
+                // 2. Native Tool Call Pills
+                ForEach(message.toolCalls) { tool in
+                    ToolInvocationPillPrimitive(tool: tool)
+                }
+                
+                // 3. Streaming Markdown Body
+                if !message.content.isEmpty {
+                    StreamingMarkdownPrimitive(
+                        rawMarkdown: message.content,
+                        textColor: ObsidianDS.Colors.textPrimary
+                    )
+                }
+                
+                // 4. Bottom Action Bar
+                if !isStreaming {
+                    MessageActionBarPrimitive(
+                        tokensPerSecond: message.tokensPerSecond,
+                        onCopy: {
+                            #if canImport(UIKit)
+                            UIPasteboard.general.string = message.content
+                            #endif
+                        },
+                        onRegenerate: onRegenerate
+                    )
+                }
+            }
+            Spacer(minLength: 20)
+        }
+    }
+}
+
+/// Floating Glassmorphic Multi-Modal Prompt Composer Bar
+public struct PromptComposerBar: View {
+    @Binding public var promptText: String
+    @Binding public var enableThinking: Bool
+    public let isGenerating: Bool
+    public let activeModel: AIModelDescriptor
+    public let onSend: () -> Void
+    public let onStop: () -> Void
+    public let onModelPickerTap: () -> Void
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Growing Text Input Field
+            TextField(
+                "Ask \(activeModel.displayName) locally on M4...",
+                text: $promptText,
+                axis: .vertical
+            )
+            .lineLimit(1...6)
+            .font(ObsidianDS.Typography.rowLabel)
+            .foregroundStyle(ObsidianDS.Colors.textBright)
+            .padding(.horizontal, 6)
+            
+            // Bottom Control Strip inside Composer
+            HStack(spacing: 10) {
+                // Attach Button
+                Button(action: {}) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(ObsidianDS.Colors.textPrimary)
+                        .frame(width: 32, height: 32)
+                        .background(Circle().fill(ObsidianDS.Colors.surfaceSnippet))
+                }
+                .buttonStyle(.plain)
+                
+                // Pluggable Model Switcher Pill
+                Button(action: onModelPickerTap) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "cpu")
+                            .font(.system(size: 12))
+                            .foregroundStyle(ObsidianDS.Colors.accentTeal)
+                        Text(activeModel.displayName)
+                            .font(ObsidianDS.Typography.metadata)
+                            .foregroundStyle(ObsidianDS.Colors.textBright)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .frame(height: 32)
+                    .background(Capsule().fill(ObsidianDS.Colors.surfaceSnippet))
+                    .overlay(
+                        Capsule().strokeBorder(ObsidianDS.Colors.borderSubtle, lineWidth: 0.8)
+                    )
+                }
+                .buttonStyle(.plain)
+                
+                // LFM3 Reasoning Toggle Pill
+                if activeModel.supportsThinking {
+                    Button {
+                        withAnimation(.snappy) { enableThinking.toggle() }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "brain")
+                                .font(.system(size: 12))
+                            Text("Think")
+                                .font(ObsidianDS.Typography.metadata)
+                        }
+                        .foregroundStyle(enableThinking ? ObsidianDS.Colors.matchForeground : ObsidianDS.Colors.textSecondary)
+                        .padding(.horizontal, 10)
+                        .frame(height: 32)
+                        .background(
+                            Capsule().fill(
+                                enableThinking ? ObsidianDS.Colors.accentTeal : ObsidianDS.Colors.surfaceSnippet
+                            )
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+                
+                Spacer()
+                
+                // Send or Stop Streaming Button
+                Button(action: isGenerating ? onStop : onSend) {
+                    Image(systemName: isGenerating ? "stop.fill" : "arrow.up")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(ObsidianDS.Colors.surfaceSheet)
+                        .frame(width: 34, height: 34)
+                        .background(
+                            Circle().fill(
+                                promptText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isGenerating
+                                ? ObsidianDS.Colors.textDisabled
+                                : ObsidianDS.Colors.accentTeal
+                            )
+                        )
+                }
+                .buttonStyle(.plain)
+                .disabled(promptText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isGenerating)
+            }
+        }
+        .padding(14)
+        .obsidianCard(cornerRadius: 24, fill: ObsidianDS.Colors.surfaceElevated)
+        .shadow(color: .black.opacity(0.4), radius: 16, x: 0, y: 8)
+    }
+}
+`​`​`
+
+---
+
+## Part 4: `@Observable` ViewModel & Full Screen Assembly (iPad Pro 11" M4 Ready)
+
+`​`​`swift
+import Observation
+
+// MARK: - 6. VIEW MODEL ORCHESTRATOR (@MainActor @Observable)
+
+@MainActor
+@Observable
+public final class ObsidianAIChatViewModel {
+    public var messages: [ChatTurnMessage] = [
+        ChatTurnMessage(
+            role: .user,
+            content: "We need a photo research phase with 4 modalities and local agent tool calling. How does LFM3-1.7B handle this on my M4 iPad Pro?",
+            attachments: [.init(filename: "PRD_Architecture.md", fileType: "markdown")]
+        ),
+        ChatTurnMessage(
+            role: .assistant,
+            content: """
+            `LFM3-1.7B` uses a **24-layer tri-hybrid backbone** (13 gated short convolutions with kernel size 7, 5 sliding-window attention layers, and 6 global attention layers) across a **256K context window**.
+
+            `​`​`swift
+            // Deferred Tool Loading in LFM3-1.7B
+            let config = ModelConfiguration(id: "mlx-community/LFM3-1.7B-4bit")
+            `​`​`
+
+            At 4-bit MLX quantization (`~1.05 GB`), it runs entirely inside your M4 iPad Pro's unified memory with native tool calling and `<think>` reasoning traces.
+            """,
+            reasoningTrace: "Analyzing user hardware (iPad Pro 11-inch M4) and LFM3-1.7B architecture specs: 1.73B parameters, 13 gated short-convolution layers, 5 sliding-window attention, 6 global attention, 256K token context.",
+            toolCalls: [
+                .init(name: "vault_vector_search", argumentsJSON: "{\"query\": \"PRD modalities\", \"limit\": 4}", status: "24ms")
+            ],
+            tokensPerSecond: 68.4
+        )
+    ]
+    
+    public var promptText: String = ""
+    public var enableThinking: Bool = true
+    public var isGenerating: Bool = false
+    public var downloadProgress: Double? = nil
+    public var activeModel: AIModelDescriptor = .lfm3_1_7B_4bit
+    public var isShowingModelSheet: Bool = false
+    
+    private var provider: any PluggableLLMProvider
+    
+    public init(provider: any PluggableLLMProvider = OnDeviceMLXProvider()) {
+        self.provider = provider
+    }
+    
+    /// Hot-swaps the active model (e.g., LFM3-1.7B 4-bit -> BF16 or Qwen3.5-4B)
+    public func selectModel(_ descriptor: AIModelDescriptor) {
+        activeModel = descriptor
+        isShowingModelSheet = false
+        Task {
+            try? await provider.loadModel(descriptor) { [weak self] progress in
+                Task { @MainActor in
+                    self?.downloadProgress = progress < 1.0 ? progress : nil
+                }
+            }
+        }
+    }
+    
+    public func sendMessage() {
+        let trimmed = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, !isGenerating else { return }
+        
+        let userMsg = ChatTurnMessage(role: .user, content: trimmed)
+        messages.append(userMsg)
+        promptText = ""
+        isGenerating = true
+        
+        let assistantMsg = ChatTurnMessage(
+            role: .assistant,
+            content: "",
+            reasoningTrace: "",
+            isThinkingExpanded: true
+        )
+        messages.append(assistantMsg)
+        let targetIndex = messages.count - 1
+        let historySnapshot = Array(messages.dropLast())
+        
+        Task {
+            do {
+                let stream = await provider.generateStream(
+                    messages: historySnapshot,
+                    enableThinking: enableThinking,
+                    maxTokens: 4096
+                )
+                
+                for try await event in stream {
+                    switch event {
+                    case .downloadProgress(let progress):
+                        downloadProgress = progress < 1.0 ? progress : nil
+                    case .reasoningDelta(let delta):
+                        messages[targetIndex].reasoningTrace += delta
+                    case .contentDelta(let delta):
+                        messages[targetIndex].content += delta
+                    case .toolCallDetected(let name, let args):
+                        messages[targetIndex].toolCalls.append(
+                            .init(name: name, argumentsJSON: args, status: "Executed")
+                        )
+                    case .metrics(let tps, _, _):
+                        messages[targetIndex].tokensPerSecond = tps
+                    case .completed:
+                        messages[targetIndex].isThinkingExpanded = false
+                    }
+                }
+            } catch {
+                messages[targetIndex].content += "\n\n*[Inference Error: \(error.localizedDescription)]*"
+            }
+            isGenerating = false
+            downloadProgress = nil
+        }
+    }
+    
+    public func stopGeneration() {
+        Task {
+            await provider.cancelGeneration()
+            isGenerating = false
+        }
+    }
+}
+
+// MARK: - 7. FULL AI CHAT SCREEN & PLUGGABLE MODEL SWITCHER SHEET
+
+public struct ObsidianAIChatScreen: View {
+    @State private var viewModel = ObsidianAIChatViewModel()
+    
+    public init() {}
+    
+    public var body: some View {
+        ZStack {
+            ObsidianDS.Colors.backgroundPrimary
+                .ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                // Top Floating Navigation Bar
+                HStack {
+                    ObsidianCircleIconButton(systemName: "sidebar.left", action: {})
+                    
+                    Spacer()
+                    
+                    // Center Model Status Pill
+                    Button {
+                        viewModel.isShowingModelSheet = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(ObsidianDS.Colors.accentTeal)
+                                .frame(width: 8, height: 8)
+                            Text(viewModel.activeModel.displayName)
+                                .font(ObsidianDS.Typography.rowLabelMed)
+                                .foregroundStyle(ObsidianDS.Colors.textBright)
+                            Text(viewModel.activeModel.quantization)
+                                .font(ObsidianDS.Typography.metadata)
+                                .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                        }
+                        .padding(.horizontal, 16)
+                        .frame(height: 44)
+                        .obsidianCapsule()
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
+                    
+                    ObsidianDualActionPill(onEdit: {}, onMore: {
+                        viewModel.isShowingModelSheet = true
+                    })
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                
+                // Optional Weight Download Progress Banner
+                if let progress = viewModel.downloadProgress {
+                    ProgressView(value: progress)
+                        .tint(ObsidianDS.Colors.accentTeal)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 6)
+                }
+                
+                // Scrollable Message Stream
+                ScrollViewReader { proxy in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: 22) {
+                            ForEach($viewModel.messages) { $message in
+                                if message.role == .user {
+                                    UserPromptBubble(message: message)
+                                        .id(message.id)
+                                } else if message.role == .assistant {
+                                    AssistantMessageCluster(
+                                        message: $message,
+                                        modelName: viewModel.activeModel.displayName,
+                                        isStreaming: viewModel.isGenerating && message.id == viewModel.messages.last?.id,
+                                        onRegenerate: {}
+                                    )
+                                    .id(message.id)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
+                    }
+                    .onChange(of: viewModel.messages.last?.content) { _, _ in
+                        if let lastID = viewModel.messages.last?.id {
+                            withAnimation(.easeOut(duration: 0.15)) {
+                                proxy.scrollTo(lastID, anchor: .bottom)
+                            }
+                        }
+                    }
+                }
+                
+                // Bottom Prompt Composer Bar
+                PromptComposerBar(
+                    promptText: $viewModel.promptText,
+                    enableThinking: $viewModel.enableThinking,
+                    isGenerating: viewModel.isGenerating,
+                    activeModel: viewModel.activeModel,
+                    onSend: { viewModel.sendMessage() },
+                    onStop: { viewModel.stopGeneration() },
+                    onModelPickerTap: { viewModel.isShowingModelSheet = true }
+                )
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
+            }
+        }
+        .sheet(isPresented: $viewModel.isShowingModelSheet) {
+            PluggableModelSelectorSheet(
+                selectedModel: viewModel.activeModel,
+                onSelect: { viewModel.selectModel($0) }
+            )
+            .presentationDetents([.medium])
+            .presentationCornerRadius(28)
+            .presentationBackground(ObsidianDS.Colors.surfaceSheet)
+        }
+    }
+}
+
+/// Pluggable Model Selector Sheet (Styled identically to IMG_0079 Action Sheet)
+public struct PluggableModelSelectorSheet: View {
+    public let selectedModel: AIModelDescriptor
+    public let onSelect: (AIModelDescriptor) -> Void
+    
+    public var body: some View {
+        VStack(spacing: 16) {
+            Capsule()
+                .fill(ObsidianDS.Colors.textSecondary.opacity(0.6))
+                .frame(width: 46, height: 5)
+                .padding(.top, 10)
+            
+            Text("Pluggable On-Device Models (iPad Pro M4)")
+                .font(ObsidianDS.Typography.rowLabelMed)
+                .foregroundStyle(ObsidianDS.Colors.textBright)
+            
+            VStack(spacing: 0) {
+                ForEach(Array(AIModelDescriptor.catalog.enumerated()), id: \.element.id) { index, model in
+                    Button {
+                        onSelect(model)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "cpu.fill")
+                                .foregroundStyle(
+                                    model.id == selectedModel.id
+                                    ? ObsidianDS.Colors.accentTeal
+                                    : ObsidianDS.Colors.textSecondary
+                                )
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(model.displayName)
+                                    .font(ObsidianDS.Typography.rowLabelMed)
+                                    .foregroundStyle(ObsidianDS.Colors.textBright)
+                                Text("\(model.family) • \(model.quantization) • \(model.contextWindow / 1024)K ctx")
+                                    .font(ObsidianDS.Typography.metadata)
+                                    .foregroundStyle(ObsidianDS.Colors.textSecondary)
+                            }
+                            
+                            Spacer()
+                            
+                            if model.id == selectedModel.id {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(ObsidianDS.Colors.accentTeal)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .frame(height: 58)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    
+                    if index < AIModelDescriptor.catalog.count - 1 {
+                        Divider()
+                            .background(ObsidianDS.Colors.divider)
+                            .padding(.horizontal, 16)
+                    }
+                }
+            }
+            .obsidianCard()
+            .padding(.horizontal, 16)
+            
+            Spacer()
+        }
+    }
+}
+
+#Preview("Obsidian LFM3-1.7B Chat") {
+    ObsidianAIChatScreen()
+}
+`​`​`
+
+Would you like me to add a deferred tool-calling dispatcher (`defer_loading=True`) so `LFM3-1.7B` can query and mutate your local Markdown vault files directly from the chat stream?
 
 Powered by Gemini Exporter (https://www.ai-chat-exporter.com)

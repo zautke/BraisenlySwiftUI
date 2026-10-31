@@ -91,6 +91,18 @@ private struct TestChatClient: AIChatClient {
     #expect(hasTextDelta)
 }
 
+@Test func openWeightCatalogIncludesLFM3AndOmniModels() {
+    let ids = AIModelProfile.openWeightCatalog.map(\.id)
+    #expect(ids.contains("mlx-community/LFM3-1.7B-4bit"))
+    #expect(ids.contains("LiquidAI/LFM3-1.7B"))
+    #expect(ids.contains("lfm3-omni"))
+    #expect(ids.contains("mlx-community/Qwen3.5-4B-4bit"))
+    #expect(ids.contains("mlx-community/gemma-4-E4B-it-4bit"))
+    #expect(AIModelProfile.lfm3Omni.isLocalMLX)
+    #expect(AIModelProfile.lfm3Omni.provider == .mlxOnDevice)
+    #expect(AIInferenceConfiguration().activeProfile == .lfm3_1_7B_4bit)
+}
+
 @MainActor
 @Test func workspaceControllerManagesMultipleConversationsAndPersistence() throws {
     let tempURL = FileManager.default.temporaryDirectory

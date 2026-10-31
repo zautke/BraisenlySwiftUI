@@ -21,6 +21,9 @@ public struct AIModelSettingsSheet: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
+        let openWeightModels = profiles.filter(\.isLocalMLX)
+        let systemAndCloudModels = profiles.filter { !$0.isLocalMLX }
+
         ZStack {
             BraisenlyDS.Colors.surfaceSheet.ignoresSafeArea()
             VStack(spacing: 14) {
@@ -37,7 +40,7 @@ public struct AIModelSettingsSheet: View {
                                 Text("Inference & Model Settings")
                                     .font(BraisenlyDS.Typography.vaultTitle)
                                     .foregroundStyle(BraisenlyDS.Colors.textBright)
-                                Text("Choose on-device Apple Foundation Models or cloud endpoints.")
+                                Text("Pluggable on-device open-weight MLX models, Apple Foundation Models, and cloud endpoints.")
                                     .font(BraisenlyDS.Typography.metadata)
                                     .foregroundStyle(BraisenlyDS.Colors.textSecondary)
                             }
@@ -51,33 +54,62 @@ public struct AIModelSettingsSheet: View {
                         }
 
                         BraisenlyStatusCard(
-                            title: AIFoundationModelsChatClient.isSystemModelAvailable
-                                ? "Apple Foundation Models Ready"
-                                : "Smart Local Assistant Active",
-                            subtitle: AIFoundationModelsChatClient.isSystemModelAvailable
-                                ? "On-device Apple Intelligence is available for private zero-latency inference."
-                                : "Using built-in local synthesis engine with automatic fallback when offline.",
-                            systemImage: "apple.intelligence",
+                            title: configuration.activeProfile.isLocalMLX
+                                ? "\(configuration.activeProfile.name) (\(configuration.activeProfile.quantization))"
+                                : (AIFoundationModelsChatClient.isSystemModelAvailable
+                                    ? "Apple Foundation Models Ready"
+                                    : "Smart Local Assistant Active"),
+                            subtitle: configuration.activeProfile.isLocalMLX
+                                ? "\(configuration.activeProfile.family) • \(configuration.activeProfile.parameterCount) • \(configuration.activeProfile.contextWindow / 1024)K context window"
+                                : (AIFoundationModelsChatClient.isSystemModelAvailable
+                                    ? "On-device Apple Intelligence is available for private zero-latency inference."
+                                    : "Using built-in local synthesis engine with automatic fallback when offline."),
+                            systemImage: configuration.activeProfile.provider.iconName,
                             iconColor: BraisenlyDS.Colors.accentTeal
                         )
 
-                        Text("Select Model Profile")
-                            .font(BraisenlyDS.Typography.rowLabelMedium)
-                            .foregroundStyle(BraisenlyDS.Colors.textBright)
+                        if !openWeightModels.isEmpty {
+                            Text("Pluggable On-Device Open-Weight Models (MLX)")
+                                .font(BraisenlyDS.Typography.rowLabelMedium)
+                                .foregroundStyle(BraisenlyDS.Colors.textBright)
 
-                        BraisenlyActionGroup(
-                            items: profiles.map { profile in
-                                BraisenlyActionItem(
-                                    id: profile.id,
-                                    icon: profile.provider.iconName,
-                                    title: LocalizedStringResource(stringLiteral: "\(profile.name) — \(profile.subtitle)"),
-                                    isChecked: profile.id == configuration.activeProfile.id
-                                )
-                            },
-                            platform: resolvedPlatform
-                        ) { selectedItem in
-                            if let matched = profiles.first(where: { $0.id == selectedItem.id }) {
-                                configuration.activeProfile = matched
+                            BraisenlyActionGroup(
+                                items: openWeightModels.map { profile in
+                                    BraisenlyActionItem(
+                                        id: profile.id,
+                                        icon: profile.provider.iconName,
+                                        title: LocalizedStringResource(stringLiteral: "\(profile.name) — \(profile.subtitle)"),
+                                        isChecked: profile.id == configuration.activeProfile.id
+                                    )
+                                },
+                                platform: resolvedPlatform
+                            ) { selectedItem in
+                                if let matched = openWeightModels.first(where: { $0.id == selectedItem.id }) {
+                                    configuration.activeProfile = matched
+                                    configuration.temperature = matched.defaultTemperature
+                                }
+                            }
+                        }
+
+                        if !systemAndCloudModels.isEmpty {
+                            Text("Apple Intelligence & Cloud Endpoints")
+                                .font(BraisenlyDS.Typography.rowLabelMedium)
+                                .foregroundStyle(BraisenlyDS.Colors.textBright)
+
+                            BraisenlyActionGroup(
+                                items: systemAndCloudModels.map { profile in
+                                    BraisenlyActionItem(
+                                        id: profile.id,
+                                        icon: profile.provider.iconName,
+                                        title: LocalizedStringResource(stringLiteral: "\(profile.name) — \(profile.subtitle)"),
+                                        isChecked: profile.id == configuration.activeProfile.id
+                                    )
+                                },
+                                platform: resolvedPlatform
+                            ) { selectedItem in
+                                if let matched = systemAndCloudModels.first(where: { $0.id == selectedItem.id }) {
+                                    configuration.activeProfile = matched
+                                }
                             }
                         }
 

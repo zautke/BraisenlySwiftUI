@@ -10,9 +10,9 @@ public struct AIInferenceConfiguration: Codable, Hashable, Sendable {
     public var enableBuiltInTools: Bool
 
     public init(
-        activeProfile: AIModelProfile = .appleOnDevice,
+        activeProfile: AIModelProfile = .lfm3_1_7B_4bit,
         systemPrompt: String = "You are Askenly, a focused, articulate research and knowledge assistant. Provide clear, well-structured answers with concise markdown.",
-        temperature: Double = 0.7,
+        temperature: Double = 0.6,
         openAIBaseURL: String = "https://api.openai.com/v1",
         openAIAPIKey: String = "",
         anthropicAPIKey: String = "",
