@@ -19,11 +19,14 @@ public struct AIEmptyState: View {
 
     public var body: some View {
         VStack(spacing: 18) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 34, weight: .medium))
-                .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+            BraisenlyAvatarBadge(
+                systemName: "sparkles",
+                foregroundColor: BraisenlyDS.Colors.accentTeal,
+                size: 56,
+                iconSize: 26
+            )
             VStack(spacing: 6) {
-                Text("How can Braisenly help?")
+                Text("How can Askenly help?")
                     .font(BraisenlyDS.Typography.documentTitle)
                     .foregroundStyle(BraisenlyDS.Colors.textBright)
                 Text("Ask a question, develop an idea, or work with your notes.")
@@ -33,12 +36,9 @@ public struct AIEmptyState: View {
             }
             VStack(spacing: 10) {
                 ForEach(suggestions, id: \.self) { suggestion in
-                    Button(suggestion) { onSelectSuggestion(suggestion) }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
-                        .padding(.horizontal, 16)
-                        .frame(maxWidth: 420, minHeight: 44, alignment: .leading)
-                        .braisenlyCard(cornerRadius: 14)
+                    BraisenlySuggestionCard(title: suggestion) {
+                        onSelectSuggestion(suggestion)
+                    }
                 }
             }
         }

@@ -24,16 +24,15 @@ public struct AIMessageList: View {
                 ScrollView {
                     LazyVStack(spacing: 18) {
                         ForEach(messages) { message in
-                            AIMessageBubble(message: message).id(message.id)
-                        }
-                        if messages.last?.role == .assistant,
-                           messages.last?.status == .complete {
-                            Button(action: onRegenerate) {
-                                Label("Regenerate", systemImage: "arrow.clockwise")
-                                    .font(BraisenlyDS.Typography.metadata)
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                            let isLastAssistant = message.id == messages.last?.id
+                                && message.role == .assistant
+                                && message.status == .complete
+                            AIMessageBubble(
+                                message: message,
+                                canRegenerate: isLastAssistant,
+                                onRegenerate: onRegenerate
+                            )
+                            .id(message.id)
                         }
                     }
                     .padding(16)
@@ -44,6 +43,10 @@ public struct AIMessageList: View {
                 .onChange(of: messages.count) { _, _ in
                     guard let lastID = messages.last?.id else { return }
                     withAnimation(.snappy) { proxy.scrollTo(lastID, anchor: .bottom) }
+                }
+                .onChange(of: messages.last?.text) { _, _ in
+                    guard let lastID = messages.last?.id else { return }
+                    proxy.scrollTo(lastID, anchor: .bottom)
                 }
             }
         }

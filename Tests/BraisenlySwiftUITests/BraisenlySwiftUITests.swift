@@ -1,3 +1,4 @@
+import SwiftUI
 import Testing
 @testable import BraisenlySwiftUI
 
@@ -29,4 +30,21 @@ import Testing
     #expect(BraisenlyTheme.light.next == .dark)
     #expect(BraisenlyTheme.dark.symbolName == "moon.stars.fill")
     #expect(BraisenlyTheme.light.symbolName == "sun.max.fill")
+}
+
+@Test func chatPrimitivesStoreConfigurationProperties() {
+    let avatar = BraisenlyAvatarBadge(systemName: "sparkles", size: 40, iconSize: 18)
+    #expect(avatar.systemName == "sparkles")
+    #expect(avatar.size == 40)
+
+    let bubble = BraisenlyChatBubbleSurface(text: "Hello **world**", cornerRadius: 20)
+    #expect(bubble.text == "Hello **world**")
+    #expect(bubble.cornerRadius == 20)
+
+    let pill = BraisenlyCitationPill(title: "Design Doc", source: "Vault")
+    #expect(pill.title == "Design Doc")
+    #expect(pill.source == "Vault")
+
+    let modelPill = BraisenlyModelPill(title: "Apple Foundation Model", action: {})
+    #expect(modelPill.isInteractive)
 }

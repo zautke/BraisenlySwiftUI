@@ -3,21 +3,40 @@ import SwiftUI
 
 public struct AIChatView: View {
     @Bindable private var session: AIChatSession
-    @State private var theme: BraisenlyTheme
+    @State private var internalTheme: BraisenlyTheme
+    private var externalTheme: Binding<BraisenlyTheme>?
 
     public let platform: BraisenlyPlatform
     public let modelName: String?
+    public let onToggleSidebar: (() -> Void)?
+    public let onNewChat: (() -> Void)?
+    public let onSelectModel: (() -> Void)?
+    public let onMoreActions: (() -> Void)?
 
     public init(
         session: AIChatSession,
         platform: BraisenlyPlatform = .automatic,
         initialTheme: BraisenlyTheme = .dark,
-        modelName: String? = nil
+        theme: Binding<BraisenlyTheme>? = nil,
+        modelName: String? = nil,
+        onToggleSidebar: (() -> Void)? = nil,
+        onNewChat: (() -> Void)? = nil,
+        onSelectModel: (() -> Void)? = nil,
+        onMoreActions: (() -> Void)? = nil
     ) {
         self.session = session
         self.platform = platform
         self.modelName = modelName
-        _theme = State(initialValue: initialTheme)
+        self.externalTheme = theme
+        self.onToggleSidebar = onToggleSidebar
+        self.onNewChat = onNewChat
+        self.onSelectModel = onSelectModel
+        self.onMoreActions = onMoreActions
+        _internalTheme = State(initialValue: initialTheme)
+    }
+
+    private var activeThemeBinding: Binding<BraisenlyTheme> {
+        externalTheme ?? $internalTheme
     }
 
     public var body: some View {
@@ -25,8 +44,12 @@ public struct AIChatView: View {
             AIChatHeader(
                 title: session.conversation.title,
                 modelName: modelName,
-                theme: $theme,
-                platform: platform
+                theme: activeThemeBinding,
+                platform: platform,
+                onToggleSidebar: onToggleSidebar,
+                onNewChat: onNewChat,
+                onSelectModel: onSelectModel,
+                onMoreActions: onMoreActions
             )
             AIMessageList(
                 messages: session.messages,
@@ -49,6 +72,6 @@ public struct AIChatView: View {
             .padding(.vertical, 12)
         }
         .background(BraisenlyDS.Colors.backgroundPrimary.ignoresSafeArea())
-        .braisenlyTheme(theme)
+        .braisenlyTheme(activeThemeBinding.wrappedValue)
     }
 }

@@ -9,21 +9,10 @@ public struct AICitationChip: View {
     }
 
     public var body: some View {
-        if let url = citation.url {
-            Link(destination: url) { label }
-                .buttonStyle(.plain)
-        } else {
-            label
-        }
-    }
-
-    private var label: some View {
-        Label(citation.title, systemImage: "link")
-            .font(BraisenlyDS.Typography.metadata)
-            .foregroundStyle(BraisenlyDS.Colors.accentTeal)
-            .lineLimit(1)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceSnippet)
+        BraisenlyCitationPill(
+            title: citation.title,
+            source: citation.source,
+            url: citation.url
+        )
     }
 }

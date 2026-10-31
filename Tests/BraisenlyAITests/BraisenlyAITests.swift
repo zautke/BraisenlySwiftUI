@@ -5,11 +5,12 @@ import Testing
 private struct TestChatClient: AIChatClient {
     let events: [AIChatResponseEvent]
 
-    func streamResponse(
+    nonisolated func streamResponse(
         to request: AIChatRequest
     ) async throws -> AsyncThrowingStream<AIChatResponseEvent, any Error> {
-        AsyncThrowingStream { continuation in
-            for event in events { continuation.yield(event) }
+        let captured = events
+        return AsyncThrowingStream { continuation in
+            for event in captured { continuation.yield(event) }
             continuation.finish()
         }
     }
@@ -34,6 +35,7 @@ private struct TestChatClient: AIChatClient {
     #expect(session.messages[1].text == "Hello there")
     #expect(session.messages[1].status == .complete)
     #expect(session.messages[1].citations.count == 1)
+    #expect(session.conversation.title == "Hi")
 }
 
 @MainActor
@@ -50,11 +52,62 @@ private struct TestChatClient: AIChatClient {
 @Test func conversationRoundTripsThroughCodable() throws {
     let conversation = AIConversation(
         title: "Research",
-        messages: [AIMessage(role: .user, text: "Question")]
+        messages: [AIMessage(role: .user, text: "Question")],
+        isPinned: true
     )
 
     let data = try JSONEncoder().encode(conversation)
     let decoded = try JSONDecoder().decode(AIConversation.self, from: data)
 
     #expect(decoded == conversation)
+    #expect(decoded.lastMessagePreview == "Question")
+}
+
+@Test func sseLineParserExtractsValidJSONPayloads() {
+    #expect(AISSELineParser.extractPayload(from: "data: {\"delta\":\"hi\"}") == "{\"delta\":\"hi\"}")
+    #expect(AISSELineParser.extractPayload(from: "data: [DONE]") == nil)
+    #expect(AISSELineParser.extractPayload(from: "event: message") == nil)
+}
+
+@Test func smartLocalAssistantBuildsToolCallsAndTextDeltas() {
+    let events = AISmartLocalAssistantClient.buildEvents(
+        for: "Summarize my research notes",
+        messageCount: 1
+    )
+    let hasToolCall = events.contains {
+        if case .toolCall = $0 { return true }
+        return false
+    }
+    let hasCitation = events.contains {
+        if case .citation = $0 { return true }
+        return false
+    }
+    let hasTextDelta = events.contains {
+        if case .textDelta = $0 { return true }
+        return false
+    }
+    #expect(hasToolCall)
+    #expect(hasCitation)
+    #expect(hasTextDelta)
+}
+
+@MainActor
+@Test func workspaceControllerManagesMultipleConversationsAndPersistence() throws {
+    let tempURL = FileManager.default.temporaryDirectory
+        .appending(path: "AskenlyTest-\(UUID().uuidString).json")
+    defer { try? FileManager.default.removeItem(at: tempURL) }
+
+    let store = AIConversationStore(fileURL: tempURL)
+    let controller = AIChatWorkspaceController(store: store)
+
+    #expect(controller.conversations.count == 1)
+    controller.session.renameConversation("First Thread")
+    controller.togglePinCurrentConversation()
+    controller.createNewConversation()
+
+    #expect(controller.conversations.count == 2)
+    #expect(controller.filteredConversations.first?.title == "First Thread")
+
+    let reloaded = store.loadConversations()
+    #expect(reloaded.count == 2)
 }

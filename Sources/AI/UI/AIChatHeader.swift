@@ -7,35 +7,79 @@ public struct AIChatHeader: View {
     public let title: String
     public let modelName: String?
     public let platform: BraisenlyPlatform
+    public let onToggleSidebar: (() -> Void)?
+    public let onNewChat: (() -> Void)?
+    public let onSelectModel: (() -> Void)?
+    public let onMoreActions: (() -> Void)?
 
     public init(
         title: String,
         modelName: String? = nil,
         theme: Binding<BraisenlyTheme>,
-        platform: BraisenlyPlatform = .automatic
+        platform: BraisenlyPlatform = .automatic,
+        onToggleSidebar: (() -> Void)? = nil,
+        onNewChat: (() -> Void)? = nil,
+        onSelectModel: (() -> Void)? = nil,
+        onMoreActions: (() -> Void)? = nil
     ) {
         self.title = title
         self.modelName = modelName
         _theme = theme
         self.platform = platform
+        self.onToggleSidebar = onToggleSidebar
+        self.onNewChat = onNewChat
+        self.onSelectModel = onSelectModel
+        self.onMoreActions = onMoreActions
     }
 
     public var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "sparkles")
-                .foregroundStyle(BraisenlyDS.Colors.accentTeal)
-            VStack(alignment: .leading, spacing: 2) {
+            if let onToggleSidebar {
+                BraisenlyCircleIconButton(
+                    systemName: "sidebar.left",
+                    accessibilityLabel: "Toggle sidebar",
+                    platform: platform,
+                    action: onToggleSidebar
+                )
+            } else {
+                BraisenlyAvatarBadge(systemName: "sparkles")
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(BraisenlyDS.Typography.rowLabelMedium)
                     .foregroundStyle(BraisenlyDS.Colors.textBright)
+                    .lineLimit(1)
                 if let modelName {
-                    Text(modelName)
-                        .font(BraisenlyDS.Typography.metadata)
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                    BraisenlyModelPill(
+                        title: modelName,
+                        systemImage: "cpu",
+                        action: onSelectModel
+                    )
                 }
             }
+
             Spacer()
+
+            if let onNewChat {
+                BraisenlyCircleIconButton(
+                    systemName: "square.and.pencil",
+                    accessibilityLabel: "New conversation",
+                    platform: platform,
+                    action: onNewChat
+                )
+            }
+
             BraisenlyThemeToggle(theme: $theme, platform: platform)
+
+            if let onMoreActions {
+                BraisenlyCircleIconButton(
+                    systemName: "ellipsis",
+                    accessibilityLabel: "Conversation actions",
+                    platform: platform,
+                    action: onMoreActions
+                )
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)

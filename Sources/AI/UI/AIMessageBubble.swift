@@ -1,11 +1,27 @@
 import BraisenlySwiftUI
 import SwiftUI
 
-public struct AIMessageBubble: View {
-    public let message: AIMessage
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
-    public init(message: AIMessage) {
+public struct AIMessageBubble: View {
+    @State private var isCopied = false
+
+    public let message: AIMessage
+    public let canRegenerate: Bool
+    public let onRegenerate: (() -> Void)?
+
+    public init(
+        message: AIMessage,
+        canRegenerate: Bool = false,
+        onRegenerate: (() -> Void)? = nil
+    ) {
         self.message = message
+        self.canRegenerate = canRegenerate
+        self.onRegenerate = onRegenerate
     }
 
     public var body: some View {
@@ -13,17 +29,12 @@ public struct AIMessageBubble: View {
             if message.role != .user { avatar }
             VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 10) {
                 if !message.text.isEmpty {
-                    Text(message.text)
-                        .font(BraisenlyDS.Typography.bodyReading)
-                        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
-                        .textSelection(.enabled)
-                        .padding(14)
-                        .braisenlyCard(
-                            cornerRadius: 18,
-                            fill: message.role == .user
-                                ? BraisenlyDS.Colors.surfaceHighlight
-                                : BraisenlyDS.Colors.surfaceElevated
-                        )
+                    BraisenlyChatBubbleSurface(
+                        text: message.text,
+                        fill: message.role == .user
+                            ? BraisenlyDS.Colors.surfaceHighlight
+                            : BraisenlyDS.Colors.surfaceElevated
+                    )
                 }
                 ForEach(message.toolCalls) { AIToolCallCard(toolCall: $0) }
                 if !message.citations.isEmpty {
@@ -34,7 +45,16 @@ public struct AIMessageBubble: View {
                     }
                     .scrollIndicators(.hidden)
                 }
-                if message.status == .streaming { AIStreamingIndicator() }
+                if message.status == .streaming {
+                    AIStreamingIndicator()
+                } else if message.role == .assistant && !message.text.isEmpty {
+                    BraisenlyMessageActionPill(
+                        isCopied: isCopied,
+                        canRegenerate: canRegenerate,
+                        onCopy: copyMessageText,
+                        onRegenerate: onRegenerate
+                    )
+                }
             }
             .frame(maxWidth: 680, alignment: message.role == .user ? .trailing : .leading)
             if message.role == .user { avatar }
@@ -44,12 +64,21 @@ public struct AIMessageBubble: View {
     }
 
     private var avatar: some View {
-        Image(systemName: message.role == .user ? "person.fill" : "sparkles")
-            .font(.system(size: 14, weight: .semibold))
-            .foregroundStyle(message.role == .user ? BraisenlyDS.Colors.textBright : BraisenlyDS.Colors.accentTeal)
-            .frame(width: 32, height: 32)
-            .background(Circle().fill(BraisenlyDS.Colors.surfaceElevated))
-            .overlay(Circle().strokeBorder(BraisenlyDS.Colors.borderSubtle))
-            .accessibilityHidden(true)
+        BraisenlyAvatarBadge(
+            systemName: message.role == .user ? "person.fill" : "sparkles",
+            foregroundColor: message.role == .user
+                ? BraisenlyDS.Colors.textBright
+                : BraisenlyDS.Colors.accentTeal
+        )
+    }
+
+    private func copyMessageText() {
+        #if canImport(UIKit)
+        UIPasteboard.general.string = message.text
+        #elseif canImport(AppKit)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(message.text, forType: .string)
+        #endif
+        isCopied = true
     }
 }

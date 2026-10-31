@@ -9,24 +9,12 @@ public struct AIToolCallCard: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: iconName)
-                .foregroundStyle(iconColor)
-                .frame(width: 20)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(toolCall.name).font(BraisenlyDS.Typography.rowLabelMedium)
-                if !toolCall.summary.isEmpty {
-                    Text(toolCall.summary)
-                        .font(BraisenlyDS.Typography.metadata)
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
-                }
-            }
-            Spacer(minLength: 0)
-        }
-        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
-        .padding(12)
-        .braisenlyCard(cornerRadius: BraisenlyDS.Metrics.snippetRadius, fill: BraisenlyDS.Colors.surfaceSnippet)
-        .accessibilityElement(children: .combine)
+        BraisenlyStatusCard(
+            title: toolCall.name,
+            subtitle: toolCall.summary,
+            systemImage: iconName,
+            iconColor: iconColor
+        )
     }
 
     private var iconName: String {
