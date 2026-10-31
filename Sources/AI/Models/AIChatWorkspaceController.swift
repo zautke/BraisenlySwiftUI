@@ -34,7 +34,7 @@ public final class AIChatWorkspaceController {
         self.store = store
         self.defaults = defaults
 
-        let loadedConfig: AIInferenceConfiguration
+        var loadedConfig: AIInferenceConfiguration
         if let initialConfiguration {
             loadedConfig = initialConfiguration
         } else if let data = defaults.data(forKey: Self.configDefaultsKey),
@@ -43,6 +43,7 @@ public final class AIChatWorkspaceController {
         } else {
             loadedConfig = AIInferenceConfiguration()
         }
+        loadedConfig.activeProfile = Self.migratedProfile(loadedConfig.activeProfile)
         self.configuration = loadedConfig
 
         let loadedConversations = store.loadConversations()
@@ -69,8 +70,25 @@ public final class AIChatWorkspaceController {
         )
     }
 
+    private static func migratedProfile(_ profile: AIModelProfile) -> AIModelProfile {
+        switch profile.modelIdentifier {
+        case "mlx-community/LFM3-1.7B-4bit", "LiquidAI/LFM3-1.7B-MLX-4bit":
+            return .lfm3_1_7B_4bit
+        case "LiquidAI/LFM3-1.7B", "LiquidAI/LFM3-1.7B-MLX-bf16":
+            return .lfm3_1_7B_bf16
+        case "lfm3-omni", "LiquidAI/LFM3-Omni-2B-MLX-4bit":
+            return .lfm3Omni
+        case "mlx-community/Qwen3.5-4B-4bit", "mlx-community/Qwen3.5-4B-MLX-4bit":
+            return .qwen3_5_4B
+        case "mlx-community/gemma-4-E4B-it-4bit", "mlx-community/gemma-4-e4b-it-4bit":
+            return .gemma4_e4b
+        default:
+            return profile
+        }
+    }
+
     public var filteredConversations: [AIConversation] {
-        let sorted = conversations.sorted { lhs, rhs in
+        let sorted = conversations.sorted { lhs, rhs -> Bool in
             if lhs.isPinned != rhs.isPinned {
                 return lhs.isPinned && !rhs.isPinned
             }

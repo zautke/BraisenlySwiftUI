@@ -16,7 +16,12 @@ public struct AIMultiProviderChatClient: AIChatClient {
     ) async throws -> AsyncThrowingStream<AIChatResponseEvent, any Error> {
         let config = configurationProvider()
         switch config.activeProfile.provider {
-        case .mlxOnDevice, .appleIntelligence:
+        case .mlxOnDevice:
+            let client = AIOnDeviceMLXChatClient(
+                modelIdentifier: config.activeProfile.modelIdentifier
+            )
+            return try await client.streamResponse(to: request)
+        case .appleIntelligence:
             let client = AIFoundationModelsChatClient(
                 fallbackClient: AISmartLocalAssistantClient()
             )

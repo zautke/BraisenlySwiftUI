@@ -50,14 +50,14 @@ public struct AIModelProfile: Identifiable, Codable, Hashable, Sendable {
 
     /// Default Main Open-Weight Model: Liquid AI LFM3-1.7B 4-bit (24-layer Tri-Hybrid: 13 Conv + 5 SWA + 6 Global Attention)
     public static let lfm3_1_7B_4bit = Self(
-        id: "mlx-community/LFM3-1.7B-4bit",
+        id: "LiquidAI/LFM3-1.7B-MLX-4bit",
         name: "LFM3 1.7B",
-        subtitle: "Liquid Tri-Hybrid • 4-bit (~1.05 GB) • 256K ctx",
+        subtitle: "Liquid Tri-Hybrid • 4-bit (~973 MB) • 256K ctx",
         provider: .mlxOnDevice,
-        modelIdentifier: "mlx-community/LFM3-1.7B-4bit",
+        modelIdentifier: "LiquidAI/LFM3-1.7B-MLX-4bit",
         family: "Liquid Tri-Hybrid",
         parameterCount: "1.73B",
-        quantization: "4-bit (~1.05 GB)",
+        quantization: "4-bit (~973 MB)",
         contextWindow: 262_144,
         defaultTemperature: 0.6,
         topP: 0.95,
@@ -68,11 +68,11 @@ public struct AIModelProfile: Identifiable, Codable, Hashable, Sendable {
 
     /// High-Precision Open-Weight BF16 Sibling (~3.4 GB — runs effortlessly on 8GB/16GB M4 iPad Pro)
     public static let lfm3_1_7B_bf16 = Self(
-        id: "LiquidAI/LFM3-1.7B",
+        id: "LiquidAI/LFM3-1.7B-MLX-bf16",
         name: "LFM3 1.7B (BF16)",
         subtitle: "Liquid Tri-Hybrid • BF16 (~3.4 GB) • 256K ctx",
         provider: .mlxOnDevice,
-        modelIdentifier: "LiquidAI/LFM3-1.7B",
+        modelIdentifier: "LiquidAI/LFM3-1.7B-MLX-bf16",
         family: "Liquid Tri-Hybrid",
         parameterCount: "1.73B",
         quantization: "BF16 (~3.4 GB)",
@@ -86,14 +86,14 @@ public struct AIModelProfile: Identifiable, Codable, Hashable, Sendable {
 
     /// Open-Weight Multimodal Omni Model: Liquid AI LFM3-Omni (Vision, Audio, and Text Tri-Hybrid)
     public static let lfm3Omni = Self(
-        id: "lfm3-omni",
+        id: "LiquidAI/LFM3-Omni-2B-MLX-4bit",
         name: "LFM3 Omni",
-        subtitle: "Liquid Multimodal Omni • 4-bit (~1.85 GB) • 256K ctx",
+        subtitle: "Liquid Multimodal Omni • 4-bit (~1.96 GB) • 256K ctx",
         provider: .mlxOnDevice,
-        modelIdentifier: "lfm3-omni",
+        modelIdentifier: "LiquidAI/LFM3-Omni-2B-MLX-4bit",
         family: "Liquid Multimodal Omni",
-        parameterCount: "3.0B",
-        quantization: "4-bit (~1.85 GB)",
+        parameterCount: "2.0B",
+        quantization: "4-bit (~1.96 GB)",
         contextWindow: 262_144,
         defaultTemperature: 0.6,
         topP: 0.95,
@@ -104,11 +104,11 @@ public struct AIModelProfile: Identifiable, Codable, Hashable, Sendable {
 
     /// Pluggable Local Open-Weight Alternative: Qwen3.5 4B 4-bit
     public static let qwen3_5_4B = Self(
-        id: "mlx-community/Qwen3.5-4B-4bit",
+        id: "mlx-community/Qwen3.5-4B-MLX-4bit",
         name: "Qwen 3.5 4B",
         subtitle: "Qwen Dense • 4-bit (~2.4 GB) • 256K ctx",
         provider: .mlxOnDevice,
-        modelIdentifier: "mlx-community/Qwen3.5-4B-4bit",
+        modelIdentifier: "mlx-community/Qwen3.5-4B-MLX-4bit",
         family: "Qwen Dense",
         parameterCount: "4.0B",
         quantization: "4-bit (~2.4 GB)",
@@ -122,11 +122,11 @@ public struct AIModelProfile: Identifiable, Codable, Hashable, Sendable {
 
     /// Pluggable Local Open-Weight Alternative: Gemma 4 E4B 4-bit
     public static let gemma4_e4b = Self(
-        id: "mlx-community/gemma-4-E4B-it-4bit",
+        id: "mlx-community/gemma-4-e4b-it-4bit",
         name: "Gemma 4 E4B",
         subtitle: "Gemma • 4-bit (~2.5 GB) • 128K ctx",
         provider: .mlxOnDevice,
-        modelIdentifier: "mlx-community/gemma-4-E4B-it-4bit",
+        modelIdentifier: "mlx-community/gemma-4-e4b-it-4bit",
         family: "Gemma",
         parameterCount: "4.0B",
         quantization: "4-bit (~2.5 GB)",
