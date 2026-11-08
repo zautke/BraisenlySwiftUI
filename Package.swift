@@ -15,6 +15,14 @@ let package = Package(
             name: "BraisenlySwiftUI",
             targets: ["BraisenlySwiftUI"]
         ),
+        .library(
+            name: "BraisenlyAI",
+            targets: ["BraisenlyAI"]
+        ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/ml-explore/mlx-swift", .upToNextMinor(from: "0.31.3")),
+        .package(url: "https://github.com/ml-explore/mlx-swift-lm", exact: "2.31.3"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -23,14 +31,38 @@ let package = Package(
             name: "BraisenlySwiftUI",
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
+            ]
+        ),
+        .target(
+            name: "BraisenlyAI",
+            dependencies: [
+                "BraisenlySwiftUI",
+                .product(name: "MLX", package: "mlx-swift"),
+                .product(name: "MLXNN", package: "mlx-swift"),
+                .product(name: "MLXFast", package: "mlx-swift"),
+                .product(name: "MLXLLM", package: "mlx-swift-lm"),
+                .product(name: "MLXVLM", package: "mlx-swift-lm"),
+                .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
             ],
+            path: "Sources/AI",
+            swiftSettings: [
+                .enableUpcomingFeature("ApproachableConcurrency"),
+            ]
         ),
         .testTarget(
             name: "BraisenlySwiftUITests",
             dependencies: ["BraisenlySwiftUI"],
             swiftSettings: [
                 .enableUpcomingFeature("ApproachableConcurrency"),
-            ],
+            ]
+        ),
+        .testTarget(
+            name: "BraisenlyAITests",
+            dependencies: ["BraisenlyAI"],
+            path: "Tests/BraisenlyAITests",
+            swiftSettings: [
+                .enableUpcomingFeature("ApproachableConcurrency"),
+            ]
         ),
     ]
 )
