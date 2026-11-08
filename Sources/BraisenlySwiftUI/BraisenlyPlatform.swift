@@ -7,7 +7,7 @@ public enum BraisenlyPlatform: Sendable, Equatable {
     case iPad
     case mac
 
-    func resolved(horizontalSizeClass: UserInterfaceSizeClass?) -> Self {
+    public func resolved(horizontalSizeClass: UserInterfaceSizeClass?) -> Self {
         guard self == .automatic else { return self }
 #if os(macOS)
         return .mac
@@ -16,7 +16,7 @@ public enum BraisenlyPlatform: Sendable, Equatable {
 #endif
     }
 
-    var controlSize: CGFloat {
+    public var controlSize: CGFloat {
         switch self {
         case .iPhone, .automatic: 44
         case .iPad: 48
@@ -24,7 +24,7 @@ public enum BraisenlyPlatform: Sendable, Equatable {
         }
     }
 
-    var rowHeight: CGFloat {
+    public var rowHeight: CGFloat {
         switch self {
         case .iPhone, .automatic: 48
         case .iPad: 52
@@ -32,7 +32,7 @@ public enum BraisenlyPlatform: Sendable, Equatable {
         }
     }
 
-    var contentMaxWidth: CGFloat {
+    public var contentMaxWidth: CGFloat {
         switch self {
         case .iPhone, .automatic: .infinity
         case .iPad: 760
