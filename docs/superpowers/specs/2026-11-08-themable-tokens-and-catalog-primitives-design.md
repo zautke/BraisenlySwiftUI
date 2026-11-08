@@ -49,6 +49,7 @@ The package's tokens are static (`BraisenlyDS.Colors.x`), so nothing that uses t
 | Concurrency | All token types are value types conforming to `Sendable` and `Equatable`. Verified in the macOS 27.2 SDK: `public struct Glass : Equatable, Sendable` (SwiftUICore.swiftinterface:7422); `Color`, `Font`, `ColorScheme`, `CGFloat` are `Sendable`. `@Entry` macro present (SwiftUICore.swiftinterface:3627). |
 | Liquid Glass | `glassEffect(_:in:)`, `Glass` (`.regular/.clear/.identity/.tint(_:)/.interactive(_:)`), `GlassEffectContainer(spacing:)`. Glass only on control/chrome surfaces. Apply `.glassEffect` after layout modifiers. `.interactive()` only on tappable surfaces. |
 | Accessibility | Reduce Transparency: rely on the system's glass adaptation (glass becomes more opaque); no custom fallback. Reduce Motion: every theme-change animation and every `withAnimation` added by this work is skipped when `accessibilityReduceMotion` is true. Dynamic Type: all typography tokens are text-style based; icon sizes passed as `CGFloat` parameters scale via `@ScaledMetric`. |
+| Platform-identical public API (U-16) | The public API surface of `BraisenlySwiftUI` is identical on iOS and macOS. No `public` type, member or extension may be declared inside an `#if os(…)` or `#if canImport(…)` region; platform differences live only inside bodies or internal helpers. This makes the macOS symbol graph authoritative for the demo's completeness test. Enforced by the `platformConditionalPublic` scan (§11.2). |
 | Platform branching | Only the existing patterns: `#if canImport(UIKit)` / `#elseif canImport(AppKit)` for system colors, and runtime `BraisenlyPlatform` density. No `#available`. |
 | Tests | Swift Testing only (`import Testing`, `@Test`, `#expect`, `#require`). Tests that render use `@MainActor`. |
 | Commits | Conventional Commits with scopes, e.g. `feat(theme): …`, `refactor(tokens): …`. |
@@ -525,7 +526,7 @@ public struct BraisenlyThemeSwitcher: View {
 | `SurfaceModifierTests.swift` | `BraisenlyGlassGroup` and both modifiers render via `ImageRenderer` in all three themes; `BraisenlyCardModifier()` defaults (`cornerRadius == nil`, `role == .content`); capsule default role `.control` |
 | `TokenMigration<Batch>Tests.swift` (one per batch) | `SourceScan.violations(in: <batch files>)` is empty; each migrated view renders (`ImageRenderer(...).cgImage != nil`) under each of `BraisenlyThemes.all` |
 | one `<Component>Tests.swift` per new wrapper/control/switcher | stored configuration, pure helpers (`rows(for:)`, `nextID`, `BraisenlyTextStyle.font(in:)` maps every case to the matching token, `BraisenlyScale` subscript), render smoke in all three themes |
-| `StaticTokenGuardTests.swift` (final task) | repo-wide: every `.swift` under `Sources/` except the exempt list has zero violations |
+| `StaticTokenGuardTests.swift` (final task) | repo-wide: every `.swift` under `Sources/` except the exempt list has zero violations; every `.swift` under `Sources/BraisenlySwiftUI/` (no exemptions) has zero `platformConditionalPublic` violations (U-16) |
 | `Tests/BraisenlyAITests/AITokenMigration<Batch>Tests.swift` | render smoke for AI views (needs the AI module); the static scan of AI files runs in the BraisenlySwiftUITests target (file scan needs no import) |
 
 ### 11.1 Banned patterns (regex, in `SourceScan.bannedPatterns`)
@@ -543,6 +544,25 @@ public struct BraisenlyThemeSwitcher: View {
 There are no per-line suppressions. A legitimate value that matches is expressed through a token (sub-scale values through `metrics.hairline`); the only escape hatch is the exempt list. Exempt files: everything under `Sources/BraisenlySwiftUI/Theme/`, `Sources/BraisenlySwiftUI/BraisenlyDesignSystem.swift`, `Sources/BraisenlySwiftUI/BraisenlyAdaptiveColor.swift`, and everything under `Sources/AI/Models/`.
 
 Negative test (first-class, reported PASS when it fails as declared): `SourceScanTests.detectsEachBannedPattern` feeds one offending line per pattern through `SourceScan.violations(inSource:named:)` and expects exactly one violation per line.
+
+### 11.2 Platform-conditional public declarations (U-16)
+
+`SourceScan.platformConditionalPublicViolations(inSource:named:) -> [String]` walks the file line by line with a stack of `#if` frames:
+- `#if <cond>` pushes a frame; the frame is *platform* when `<cond>` contains `os(` or `canImport(`.
+- `#elseif <cond>` marks the top frame *platform* if `<cond>` contains `os(` or `canImport(` (an `#elseif`/`#else` branch of a platform frame stays platform).
+- `#endif` pops.
+- A line is a violation when any frame on the stack is *platform* and the line matches the declaration regex `^\s*(@[A-Za-z_]+(\([^)]*\))?\s+)*(nonisolated\s+)?public\s` (covers `public struct`, `public extension`, `    public init`, `@MainActor public func`).
+- Violation format: `"<file>:<line>: platformConditionalPublic"`. `//` comment lines are skipped.
+
+Scope: every `.swift` file under `Sources/BraisenlySwiftUI/`, **including** `Theme/`, `BraisenlyDesignSystem.swift` and `BraisenlyAdaptiveColor.swift` (the §11.1 exempt list does not apply). The `BraisenlyAI` module is out of scope. At 0.1.0 the existing `#if` sites (`BraisenlyPlatform.resolved` body, `BraisenlyAdaptiveColor` imports and internal helper) already comply. The new `Theme/BraisenlySystemColor.swift` must keep every declaration inside its `#if canImport` branches internal.
+
+Negative tests (PASS = the declared violation is reported):
+- `#if os(macOS)` / `public struct X {}` / `#endif` → exactly `["N.swift:2: platformConditionalPublic"]`
+- `#if canImport(UIKit)` / `#elseif canImport(AppKit)` / `    public init() {}` / `#endif` → violation on line 3
+- `#if canImport(UIKit)` / `#else` / `@MainActor public func f() {}` / `#endif` → violation on line 3
+- nested: `#if DEBUG` / `#if os(iOS)` / `public extension View {}` / `#endif` / `#endif` → violation on line 3
+
+Positive tests (no violations): `#if DEBUG` / `public func f() {}` / `#endif`; `public func f() {` / `#if os(macOS)` / `return .mac` / `#endif` / `}` (platform branch inside a public body); an internal `static func make()` inside `#if canImport(UIKit)`.
 
 ## 12. Package.swift
 
@@ -569,6 +589,7 @@ Environment-driven theming, Liquid Glass default theme, and catalog primitives.
 - Layout wrappers: `BraisenlyVStack`, `BraisenlyHStack`, `BraisenlyZStack`, `BraisenlyScroll`, `BraisenlySpacer`, `BraisenlyDivider`, `BraisenlyText`, `BraisenlyIcon`, `BraisenlyGrid`, `BraisenlySplitView`, `View.braisenlyPadding(_:_:)`.
 - Controls: `BraisenlySectionHeader`, `BraisenlyNavRow`, `BraisenlySegmentedControl`, `BraisenlyToggleRow`, `BraisenlyStepperRow`, `BraisenlyTextFieldRow`, `BraisenlyChipGroup`, `BraisenlyColorSwatch`, `BraisenlyPropertyTable`, `BraisenlyEmptyState`, `BraisenlyButton`.
 - `View.braisenlySheetBackground()`; `braisenlyCard`/`braisenlyCapsule` take a `BraisenlySurfaceRole`.
+- Guard tests: components read no static tokens or literal metrics, and the public API is identical on iOS and macOS (no public declarations behind `#if os`/`#if canImport`).
 
 ### Changed
 - Every component reads tokens from the environment theme; Liquid Glass is applied only to control and navigation surfaces.
@@ -582,6 +603,18 @@ Environment-driven theming, Liquid Glass default theme, and catalog primitives.
 - Layout-offset sums for values above 28 pt (≤ 8 pt delta).
 - Wording of accessibility hints other than those pinned in §10.
 - Test fixture strings.
+
+**Note for the demo repo (not package work).** With the floor at macOS 26 and U-16 in force, the demo's public-views generator (`scripts/public-views.sh`) must extract the symbol graph for target `arm64-apple-macos26.0` (was `arm64-apple-macos14.0`), and it builds only the UI module, in its own scratch path so it neither resolves MLX for `BraisenlyAI` nor contends for the package's `.build` lock:
+
+```bash
+swift build --package-path ../BraisenlySwiftUI --target BraisenlySwiftUI --scratch-path ../BraisenlySwiftUI/.build-symgraph
+swift symbolgraph-extract -module-name BraisenlySwiftUI -target arm64-apple-macos26.0 \
+  -I ../BraisenlySwiftUI/.build-symgraph/debug/Modules -I ../BraisenlySwiftUI/.build-symgraph/debug \
+  -sdk "$(xcrun --show-sdk-path --sdk macosx)" -output-dir ../BraisenlySwiftUI/.build-symgraph/symgraph \
+  -minimum-access-level public
+```
+
+The scratch path name `.build-symgraph` is the Architect's call. It is currently **not** gitignored (the package's `.gitignore` lists only `.swiftpm/`, `.build/` and `.DS_Store`; verified with `git check-ignore`). Plan Task 27 adds `.build-*/` to the package `.gitignore`. The macOS graph is authoritative because U-16 guarantees iOS exposes the same public symbols.
 
 ## 15. Deviations from the coordinator plan
 
@@ -615,7 +648,8 @@ A fresh Sonnet builder read this spec cold on 2026-11-08 and raised 10 questions
 
 ## 17. Open questions for the user
 
-Only the user can answer these. Defaults are applied until they answer.
+All resolved. The user answered on 2026-11-08, relayed by the coordinator.
 
-1. **macOS text size.** Text-style typography makes macOS text use macOS sizes (`.body` = 13 pt, previously a fixed 16.5–17.5 pt). That matches the HIG, but it is a visible change on Mac. *Default: accept native macOS sizes.*
-2. **Liquid Glass accent colour.** The Liquid Glass theme keeps the Solarized cyan (`0x2AA198`) as its accent, for brand continuity. The alternative is the system accent (`Color.accentColor`, which follows the user's system setting). *Default: Solarized cyan.*
+1. **macOS text size. RESOLVED:** accept the native macOS text-style sizes (`.body` = 13 pt). §4.2 stands as written.
+2. **Liquid Glass accent colour. RESOLVED:** Solarized cyan `0x2AA198` (`accentTeal`), as in §4.2.
+3. **New invariant U-16 (approved):** the public API is identical on iOS and macOS. See §3 and §11.2.

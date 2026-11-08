@@ -15,6 +15,7 @@
 - Worktree `/Volumes/MACDEV/BraisenlySwiftUI-catalog`, branch `feat/themable-tokens-and-catalog-primitives`. Commits pushed to its draft PR into `development`.
 - `Package.swift` platforms `.iOS(.v26), .macOS(.v26)`; `swift-tools-version: 6.4`; every target keeps `.enableUpcomingFeature("ApproachableConcurrency")`.
 - No `#available`, no `@unchecked Sendable`, no `nonisolated(unsafe)`.
+- U-16: the public API is identical on iOS and macOS. No `public` declaration may sit inside an `#if os(…)` or `#if canImport(…)` region anywhere under `Sources/BraisenlySwiftUI/`; platform differences live only inside bodies or internal helpers (spec §11.2).
 - All token types `Sendable` + `Equatable` value types.
 - Glass never on `.content` role surfaces; `GlassEffectContainer` only via `BraisenlyGlassGroup`; `.glassEffect` after layout modifiers; `.interactive()` only on `.control`.
 - Every animation added is skipped when `accessibilityReduceMotion` is true.
@@ -133,7 +134,7 @@ Expected: FAIL to compile, "cannot find 'BraisenlyThemes' in scope".
 
 - [ ] **Step 3: Implement the four Theme files and bump `Package.swift` platforms to `.iOS(.v26), .macOS(.v26)`**
 
-Values exactly per spec §4.2 tables (colors, typography, metrics) and §4.4 table (themes). `solarized(_:)` builds every color from `BraisenlyRGB` hex via `Color(red:green:blue:)` — the same construction `BraisenlyDS.Solarized` uses, so equality holds. `BraisenlySystemColor` mirrors `BraisenlyAdaptiveColor`'s `#if canImport(UIKit)` / `AppKit` structure with the spec §4.2 mapping. `scrim` = `Color.black.opacity(0.38)`, `shadow` = `Color.black.opacity(0.35)` (Theme/ files are exempt from the source scan).
+Values exactly per spec §4.2 tables (colors, typography, metrics) and §4.4 table (themes). `solarized(_:)` builds every color from `BraisenlyRGB` hex via `Color(red:green:blue:)` — the same construction `BraisenlyDS.Solarized` uses, so equality holds. `BraisenlySystemColor` mirrors `BraisenlyAdaptiveColor`'s `#if canImport(UIKit)` / `AppKit` structure with the spec §4.2 mapping. Every declaration inside those branches stays internal (U-16): the public `BraisenlyColorTokens.system` sits outside any `#if`. `scrim` = `Color.black.opacity(0.38)`, `shadow` = `Color.black.opacity(0.35)` (Theme/ files are exempt from the source scan).
 
 - [ ] **Step 4: Run test to verify it passes**
 
@@ -238,6 +239,7 @@ git commit -m "feat(theme): theme-aware card/capsule surfaces with glass roles a
 - Consumes: nothing (pure file/regex scan).
 - Produces:
   - `enum SourceScan { static let bannedPatterns: [(id: String, regex: String)]; static let exemptPrefixes: [String]; static func violations(inSource source: String, named name: String) -> [String]; static func violations(in relativePaths: [String]) throws -> [String]; static func allSwiftSources() throws -> [String] }`
+  - U-16 rule (spec §11.2): `static func platformConditionalPublicViolations(inSource source: String, named name: String) -> [String]`, `static func platformConditionalPublicViolations(in relativePaths: [String]) throws -> [String]`, `static func moduleSources(_ module: String) throws -> [String]` (every `.swift` under `Sources/<module>/`, sorted, **no** exemptions). Violation format `"<file>:<line>: platformConditionalPublic"`. Algorithm: `#if` frame stack, frame is platform when its `#if`/`#elseif` condition contains `os(` or `canImport(`, pop on `#endif`; flag lines matching `^\s*(@[A-Za-z_]+(\([^)]*\))?\s+)*(nonisolated\s+)?public\s` while any frame is platform; skip `//` lines.
   - Patterns and exempt list exactly spec §11.1. Paths are relative to package root, e.g. `"Sources/BraisenlySwiftUI/BraisenlyModelPill.swift"`; root = `URL(filePath: #filePath)` up three levels (`Support` → `BraisenlySwiftUITests` → `Tests` → root). Violation string format: `"<relativePath>:<line>: <patternID>"`. Lines that are `//` comments are skipped.
 
 - [ ] **Step 1: Write the failing test** `Tests/BraisenlySwiftUITests/SourceScanTests.swift`
@@ -271,6 +273,35 @@ func detectsEachBannedPattern(line: String, patternID: String) {
     #expect(SourceScan.violations(inSource: ok, named: "Y.swift").isEmpty)
 }
 
+// U-16 negative tests: PASS means the public declaration inside a platform region is reported on the declared line.
+@Test(arguments: [
+    ("#if os(macOS)\npublic struct X {}\n#endif", 2),
+    ("#if canImport(UIKit)\n#elseif canImport(AppKit)\n    public init() {}\n#endif", 3),
+    ("#if canImport(UIKit)\n#else\n@MainActor public func f() {}\n#endif", 3),
+    ("#if DEBUG\n#if os(iOS)\npublic extension View {}\n#endif\n#endif", 3),
+])
+func detectsPublicDeclarationInPlatformRegion(source: String, line: Int) {
+    #expect(SourceScan.platformConditionalPublicViolations(inSource: source, named: "N.swift")
+            == ["N.swift:\(line): platformConditionalPublic"])
+}
+
+@Test(arguments: [
+    "#if DEBUG\npublic func f() {}\n#endif",
+    "public func f() -> P {\n#if os(macOS)\nreturn .mac\n#endif\n}",
+    "#if canImport(UIKit)\nstatic func make() {}\n#endif",
+    "#if os(macOS)\n// public struct Commented {}\n#endif",
+])
+func allowsPlatformBranchesWithoutPublicDeclarations(source: String) {
+    #expect(SourceScan.platformConditionalPublicViolations(inSource: source, named: "P.swift").isEmpty)
+}
+
+@Test func moduleSourcesIncludeExemptTokenFiles() throws {
+    let files = try SourceScan.moduleSources("BraisenlySwiftUI")
+    #expect(files.contains("Sources/BraisenlySwiftUI/BraisenlyAdaptiveColor.swift"))
+    #expect(files.contains("Sources/BraisenlySwiftUI/BraisenlyPlatform.swift"))
+    #expect(!files.contains { $0.hasPrefix("Sources/AI/") })
+}
+
 @Test func findsPackageSources() throws {
     let files = try SourceScan.allSwiftSources()
     #expect(files.contains("Sources/BraisenlySwiftUI/BraisenlyModelPill.swift"))
@@ -284,12 +315,17 @@ func detectsEachBannedPattern(line: String, patternID: String) {
 Run: `swift test --filter SourceScanTests`
 Expected: FAIL to compile, "cannot find 'SourceScan' in scope".
 
-- [ ] **Step 3: Implement `SourceScan`** with `NSRegularExpression` (or Swift `Regex`) over each line; `allSwiftSources()` enumerates `Sources/` recursively with `FileManager.enumerator`, returns sorted relative paths minus `exemptPrefixes`. When two patterns match one line (e.g. `literalPadding` and `ternaryPadding` cannot both match by construction), report each match.
+- [ ] **Step 3: Implement `SourceScan`** with `NSRegularExpression` (or Swift `Regex`) over each line; `allSwiftSources()` enumerates `Sources/` recursively with `FileManager.enumerator`, returns sorted relative paths minus `exemptPrefixes`. When two patterns match one line (e.g. `literalPadding` and `ternaryPadding` cannot both match by construction), report each match. Implement the U-16 frame-stack scan and `moduleSources(_:)` per the Interfaces block (`moduleSources` shares the enumerator but applies no exemptions).
 
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `swift test --filter SourceScanTests`
-Expected: 8 parameterized cases + 2 tests PASS.
+Expected: 8 + 4 + 4 parameterized cases and 3 plain tests PASS.
+
+- [ ] **Step 4b: Confirm the current tree already complies with U-16**
+
+Run: `git grep -n -A4 "#if os\|#if canImport\|#elseif canImport\|#else" -- Sources/BraisenlySwiftUI | grep public || echo clean`
+Expected: `clean` (Architect ran it on 2026-11-08 at tip `62c2480`; the only platform branches are in the `BraisenlyPlatform.resolved` body and in `BraisenlyAdaptiveColor`'s imports and internal `make`). The repo-wide assertion itself lands in Task 27.
 
 - [ ] **Step 5: Commit**
 
@@ -623,26 +659,32 @@ func rendersBothStylesAndUnknownSelection(theme: BraisenlyThemeDefinition) {
 - [ ] **Step 4:** `swift build && swift test --filter BraisenlySwiftUITests` — Expected: build succeeds, all PASS.
 - [ ] **Step 5:** `git add -u Sources/BraisenlySwiftUI/BraisenlyTheme.swift Sources/BraisenlySwiftUI/BraisenlyThemeToggle.swift Tests/BraisenlySwiftUITests/BraisenlySwiftUITests.swift && git add Tests/BraisenlySwiftUITests/LegacyThemeRemovalTests.swift && git commit -m "refactor(theme)!: remove BraisenlyTheme and BraisenlyThemeToggle"`
 
-### Task 27: Repo-wide guard and CHANGELOG 0.2.0
+### Task 27: Repo-wide guards, CHANGELOG 0.2.0, gitignore
 
 **Files:**
 - Create: `Tests/BraisenlySwiftUITests/StaticTokenGuardTests.swift`
 - Modify: `CHANGELOG.md` (insert spec §13 section above `## 0.1.0`)
+- Modify: `.gitignore` (append `.build-*/` for the demo's `.build-symgraph` scratch path, spec §14)
 
 **Interfaces:**
-- Consumes: all prior tasks; `SourceScan.allSwiftSources()`, `SourceScan.violations(in:)`.
-- Produces: the regression net for future components.
+- Consumes: all prior tasks; `SourceScan.allSwiftSources()`, `SourceScan.violations(in:)`, `SourceScan.moduleSources(_:)`, `SourceScan.platformConditionalPublicViolations(in:)`.
+- Produces: the regression net for future components (static tokens/literal metrics, and U-16 platform-identical public API).
 
-- [ ] **Step 1: Write the test**
+- [ ] **Step 1: Write the tests**
 ```swift
 @Test func noComponentReadsStaticTokensOrLiteralMetrics() throws {
     #expect(try SourceScan.violations(in: SourceScan.allSwiftSources()) == [])
 }
+
+@Test func publicAPIIsIdenticalOnIOSAndMacOS() throws {   // U-16
+    #expect(try SourceScan.platformConditionalPublicViolations(in: SourceScan.moduleSources("BraisenlySwiftUI")) == [])
+}
 ```
-- [ ] **Step 2:** `swift test --filter StaticTokenGuardTests` — Expected: PASS if Tasks 4–10 are complete; any FAIL names the file:line a batch missed — fix in that file (owner batch's scope) and rerun.
-- [ ] **Step 3:** Insert the spec §13 CHANGELOG text verbatim.
-- [ ] **Step 4:** `swift test` (whole package) — Expected: all suites PASS.
-- [ ] **Step 5:** `git add Tests/BraisenlySwiftUITests/StaticTokenGuardTests.swift CHANGELOG.md && git commit -m "chore(release): add static-token guard and 0.2.0 changelog"`
+- [ ] **Step 2:** `swift test --filter StaticTokenGuardTests` — Expected: both PASS if Tasks 1–26 complied; any FAIL names `file:line: <patternID>` or `file:line: platformConditionalPublic` — fix it in that file (move the `public` declaration out of the `#if` region and keep only the body platform-specific) and rerun.
+- [ ] **Step 3: Negative check of the U-16 guard (first-class, reported PASS when it fails as declared)** — temporarily append `#if os(macOS)\npublic struct U16Probe {}\n#endif` to `Sources/BraisenlySwiftUI/BraisenlyPlatform.swift`, run `swift test --filter publicAPIIsIdenticalOnIOSAndMacOS`, expect exactly one failure naming `Sources/BraisenlySwiftUI/BraisenlyPlatform.swift:<line>: platformConditionalPublic`, then `git checkout -- Sources/BraisenlySwiftUI/BraisenlyPlatform.swift` and rerun, expecting PASS. Record both results for the run ledger.
+- [ ] **Step 4:** Insert the spec §13 CHANGELOG text verbatim. Append `.build-*/` to `.gitignore`, then confirm with `git check-ignore -v .build-symgraph/x` (expected: matches `.gitignore:<n>:.build-*/`).
+- [ ] **Step 5:** `swift test` (whole package) — Expected: all suites PASS.
+- [ ] **Step 6:** `git add Tests/BraisenlySwiftUITests/StaticTokenGuardTests.swift CHANGELOG.md .gitignore && git commit -m "chore(release): add static-token and platform-identical API guards, 0.2.0 changelog"`
 
 ### Task 28: Final verification (no source edits)
 
