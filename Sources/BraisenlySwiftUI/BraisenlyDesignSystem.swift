@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Design tokens shared by every Braisenly component.
+/// Static Solarized source values; components read `EnvironmentValues.braisenlyTheme`.
 public enum BraisenlyDesignSystem: Sendable {
     /// Canonical Solarized sRGB palette by Ethan Schoonover.
     public enum Solarized: Sendable {
