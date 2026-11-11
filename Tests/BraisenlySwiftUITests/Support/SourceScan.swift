@@ -14,6 +14,7 @@ enum SourceScan {
         ("colorLiteral", #"Color\.(black|white|gray)|\.black\.opacity"#),
     ]
 
+    /// Entries ending in "/" are directory prefixes; all others match one file exactly.
     static let exemptPrefixes: [String] = [
         "Sources/BraisenlySwiftUI/Theme/",
         "Sources/BraisenlySwiftUI/BraisenlyDesignSystem.swift",
@@ -44,8 +45,12 @@ enum SourceScan {
     /// Every `.swift` under `Sources/`, sorted, minus `exemptPrefixes`.
     static func allSwiftSources() throws -> [String] {
         try swiftFiles(under: "Sources").filter { path in
-            !exemptPrefixes.contains { path.hasPrefix($0) }
+            !isExempt(path)
         }
+    }
+
+    static func isExempt(_ path: String) -> Bool {
+        exemptPrefixes.contains { $0.hasSuffix("/") ? path.hasPrefix($0) : path == $0 }
     }
 
     // MARK: Platform-conditional public declarations (§11.2, U-16)

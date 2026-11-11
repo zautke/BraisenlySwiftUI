@@ -61,3 +61,13 @@ func allowsPlatformBranchesWithoutPublicDeclarations(source: String) {
     #expect(!files.contains { $0.hasPrefix("Sources/BraisenlySwiftUI/Theme/") })
     #expect(!files.contains { $0.hasPrefix("Sources/AI/Models/") })
 }
+
+@Test(arguments: [
+    ("Sources/BraisenlySwiftUI/BraisenlyDesignSystem.swift", true),
+    ("Sources/BraisenlySwiftUI/Theme/BraisenlyTokens.swift", true),
+    ("Sources/BraisenlySwiftUI/BraisenlyDesignSystemFoo.swift", false),
+    ("Sources/BraisenlySwiftUI/ThemeExtras/X.swift", false),
+])
+func exemptionMatchesExactFileOrDirectoryOnly(path: String, exempt: Bool) {
+    #expect(SourceScan.isExempt(path) == exempt)
+}

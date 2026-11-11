@@ -21,7 +21,7 @@ struct BraisenlyGlassGroup<Content: View>: View {
 
     var body: some View {
         if theme.surface == .solid || isInGlassGroup {
-            content.environment(\.braisenlyIsInGlassGroup, true)
+            content
         } else {
             GlassEffectContainer(spacing: theme.metrics.spacing[spacing]) { content }
                 .environment(\.braisenlyIsInGlassGroup, true)
