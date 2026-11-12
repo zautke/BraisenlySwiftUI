@@ -1,16 +1,18 @@
 import SwiftUI
 
 public struct BraisenlyStatusCard: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let title: String
     public let subtitle: String
     public let systemImage: String
-    public let iconColor: Color
+    public let iconColor: Color?
 
     public init(
         title: String,
         subtitle: String = "",
         systemImage: String,
-        iconColor: Color = BraisenlyDS.Colors.accentTeal
+        iconColor: Color? = nil
     ) {
         self.title = title
         self.subtitle = subtitle
@@ -19,26 +21,27 @@ public struct BraisenlyStatusCard: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: theme.metrics.spacing[.s]) {
             Image(systemName: systemImage)
-                .foregroundStyle(iconColor)
+                .foregroundStyle(iconColor ?? theme.colors.accentTeal)
                 .frame(width: 20)
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                 Text(title)
-                    .font(BraisenlyDS.Typography.rowLabelMedium)
+                    .font(theme.typography.rowLabelMedium)
                 if !subtitle.isEmpty {
                     Text(subtitle)
-                        .font(BraisenlyDS.Typography.metadata)
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                        .font(theme.typography.metadata)
+                        .foregroundStyle(theme.colors.textSecondary)
                 }
             }
             Spacer(minLength: 0)
         }
-        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
-        .padding(12)
+        .foregroundStyle(theme.colors.textPrimary)
+        .padding(theme.metrics.spacing[.m])
         .braisenlyCard(
-            cornerRadius: BraisenlyDS.Metrics.snippetRadius,
-            fill: BraisenlyDS.Colors.surfaceSnippet
+            cornerRadius: theme.metrics.radius[.s],
+            fill: theme.colors.surfaceSnippet,
+            role: .content
         )
         .accessibilityElement(children: .combine)
     }

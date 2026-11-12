@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlySearchSnippetCard: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     public let text: String
@@ -15,9 +16,9 @@ public struct BraisenlySearchSnippetCard: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
-        BraisenlyHighlightedText(text, highlight: query, font: BraisenlyDS.Typography.snippetBody)
-            .padding(resolvedPlatform == .mac ? 10 : 12)
+        BraisenlyHighlightedText(text, highlight: query, font: theme.typography.snippetBody)
+            .padding(resolvedPlatform == .mac ? theme.metrics.spacing[.s] : theme.metrics.spacing[.m])
             .frame(maxWidth: .infinity, alignment: .leading)
-            .braisenlyCard(cornerRadius: BraisenlyDS.Metrics.snippetRadius, fill: BraisenlyDS.Colors.surfaceSnippet)
+            .braisenlyCard(cornerRadius: theme.metrics.radius[.s], fill: theme.colors.surfaceSnippet, role: .content)
     }
 }
