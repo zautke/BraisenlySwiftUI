@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyCompactWorkspace: View {
+    @Environment(\.braisenlyTheme) private var theme
     public let documentTitle: String
     public let documentText: String
     @Binding private var isSidebarOpen: Bool
@@ -8,7 +9,7 @@ public struct BraisenlyCompactWorkspace: View {
     @Binding private var isContextPopoverOpen: Bool
     @Binding private var searchText: String
     @Binding private var selectedMode: BraisenlySidebarMode
-    @Binding private var theme: BraisenlyTheme
+    @Binding private var themeID: BraisenlyThemeDefinition.ID
 
     public init(
         documentTitle: String,
@@ -18,7 +19,7 @@ public struct BraisenlyCompactWorkspace: View {
         isContextPopoverOpen: Binding<Bool>,
         searchText: Binding<String>,
         selectedMode: Binding<BraisenlySidebarMode>,
-        theme: Binding<BraisenlyTheme>
+        theme: Binding<BraisenlyThemeDefinition.ID>
     ) {
         self.documentTitle = documentTitle
         self.documentText = documentText
@@ -27,17 +28,17 @@ public struct BraisenlyCompactWorkspace: View {
         _isContextPopoverOpen = isContextPopoverOpen
         _searchText = searchText
         _selectedMode = selectedMode
-        _theme = theme
+        _themeID = theme
     }
 
     public var body: some View {
         GeometryReader { proxy in
-            let sidebarWidth = proxy.size.width * BraisenlyDS.Metrics.sidebarWidthRatio
+            let sidebarWidth = proxy.size.width * theme.metrics.sidebarWidthRatio
             ZStack(alignment: .leading) {
                 BraisenlyDocumentCanvas(
                     title: documentTitle,
                     bodyText: documentText,
-                    theme: $theme,
+                    theme: $themeID,
                     platform: .iPhone,
                     onToggleSidebar: toggleSidebar,
                     onOpenActionSheet: { isActionSheetPresented = true }
@@ -45,7 +46,7 @@ public struct BraisenlyCompactWorkspace: View {
                 .offset(x: isSidebarOpen ? sidebarWidth : 0)
                 .overlay {
                     if isSidebarOpen {
-                        Color.black.opacity(0.38).ignoresSafeArea().onTapGesture(perform: closeSidebar)
+                        theme.colors.scrim.ignoresSafeArea().onTapGesture(perform: closeSidebar)
                     }
                 }
                 if isSidebarOpen {

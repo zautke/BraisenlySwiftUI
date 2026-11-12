@@ -7,7 +7,7 @@ public struct BraisenlyMobileWorkspaceView: View {
     @State private var isContextPopoverOpen = false
     @State private var searchText = "gris"
     @State private var selectedMode = BraisenlySidebarMode.search
-    @State private var theme: BraisenlyTheme
+    @State private var themeID: BraisenlyThemeDefinition.ID
 
     public let documentTitle: String
     public let documentText: String
@@ -16,17 +16,18 @@ public struct BraisenlyMobileWorkspaceView: View {
     public init(
         documentTitle: String = "Home",
         documentText: String = BraisenlyMobileWorkspaceView.sampleText,
-        initialTheme: BraisenlyTheme = .dark,
+        initialTheme: BraisenlyThemeDefinition.ID = BraisenlyThemes.liquidGlass.id,
         platform: BraisenlyPlatform = .automatic
     ) {
         self.documentTitle = documentTitle
         self.documentText = documentText
         self.platform = platform
-        _theme = State(initialValue: initialTheme)
+        _themeID = State(initialValue: initialTheme)
     }
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
+        let theme = BraisenlyThemes.theme(withID: themeID)
         Group {
             if resolvedPlatform == .iPhone {
                 BraisenlyCompactWorkspace(
@@ -37,7 +38,7 @@ public struct BraisenlyMobileWorkspaceView: View {
                     isContextPopoverOpen: $isContextPopoverOpen,
                     searchText: $searchText,
                     selectedMode: $selectedMode,
-                    theme: $theme
+                    theme: $themeID
                 )
             } else {
                 BraisenlyRegularWorkspace(
@@ -48,7 +49,7 @@ public struct BraisenlyMobileWorkspaceView: View {
                     isContextPopoverOpen: $isContextPopoverOpen,
                     searchText: $searchText,
                     selectedMode: $selectedMode,
-                    theme: $theme
+                    theme: $themeID
                 )
             }
         }
@@ -57,8 +58,8 @@ public struct BraisenlyMobileWorkspaceView: View {
             BraisenlyDocumentActionSheet(platform: resolvedPlatform)
                 .presentationDetents(resolvedPlatform == .mac ? [.large] : [.fraction(0.76), .large])
                 .presentationDragIndicator(.hidden)
-                .presentationCornerRadius(28)
-                .presentationBackground(BraisenlyDS.Colors.surfaceSheet)
+                .braisenlySheetBackground()
+                .braisenlyTheme(theme)
         }
     }
 

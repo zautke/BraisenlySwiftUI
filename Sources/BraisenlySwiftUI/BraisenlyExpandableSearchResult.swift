@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyExpandableSearchResult: View {
+    @Environment(\.braisenlyTheme) private var theme
     public let query: String
     public let platform: BraisenlyPlatform
     @Binding private var isExpanded: Bool
@@ -16,7 +17,7 @@ public struct BraisenlyExpandableSearchResult: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
             Button { withAnimation(.snappy) { isExpanded.toggle() } } label: {
                 HStack {
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
@@ -24,7 +25,7 @@ public struct BraisenlyExpandableSearchResult: View {
                     Spacer()
                     Text("1")
                 }
-                .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                .foregroundStyle(theme.colors.textPrimary)
             }
             .buttonStyle(.plain)
             if isExpanded {
@@ -33,7 +34,7 @@ public struct BraisenlyExpandableSearchResult: View {
                     query: query,
                     platform: platform
                 )
-                .padding(.leading, 12)
+                .padding(.leading, theme.metrics.spacing[.m])
             }
         }
     }

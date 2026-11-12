@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyDualActionPill: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     public let platform: BraisenlyPlatform
@@ -25,8 +26,8 @@ public struct BraisenlyDualActionPill: View {
             Button(action: onMore) { Image(systemName: "ellipsis").frame(width: size, height: size) }
                 .accessibilityLabel("More actions")
         }
-        .font(.system(size: 18, weight: .medium))
-        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+        .font(theme.typography.controlIcon)
+        .foregroundStyle(theme.colors.textPrimary)
         .buttonStyle(.plain)
         .braisenlyCapsule()
     }

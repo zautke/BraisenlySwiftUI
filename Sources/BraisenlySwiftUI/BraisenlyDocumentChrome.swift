@@ -1,7 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyDocumentChrome: View {
-    @Binding private var theme: BraisenlyTheme
+    @Environment(\.braisenlyTheme) private var theme
+    @Binding private var themeID: BraisenlyThemeDefinition.ID
 
     public let platform: BraisenlyPlatform
     public let onToggleSidebar: () -> Void
@@ -9,13 +10,13 @@ public struct BraisenlyDocumentChrome: View {
     public let onOpenActionSheet: () -> Void
 
     public init(
-        theme: Binding<BraisenlyTheme> = .constant(.dark),
+        theme: Binding<BraisenlyThemeDefinition.ID> = .constant(BraisenlyThemes.liquidGlass.id),
         platform: BraisenlyPlatform = .automatic,
         onToggleSidebar: @escaping () -> Void = {},
         onEdit: @escaping () -> Void = {},
         onOpenActionSheet: @escaping () -> Void = {}
     ) {
-        _theme = theme
+        _themeID = theme
         self.platform = platform
         self.onToggleSidebar = onToggleSidebar
         self.onEdit = onEdit
@@ -23,6 +24,7 @@ public struct BraisenlyDocumentChrome: View {
     }
 
     public var body: some View {
+        BraisenlyGlassGroup {
         VStack {
             HStack {
                 BraisenlyCircleIconButton(
@@ -31,19 +33,20 @@ public struct BraisenlyDocumentChrome: View {
                     platform: platform,
                     action: onToggleSidebar
                 )
-                BraisenlyThemeToggle(theme: $theme, platform: platform)
+                BraisenlyThemeSwitcher(selection: $themeID, style: .cycle, platform: platform)
                 Spacer()
                 BraisenlyDualActionPill(platform: platform, onEdit: onEdit, onMore: onOpenActionSheet)
             }
-            .padding(.horizontal, platform == .mac ? 20 : 16)
-            .padding(.top, platform == .mac ? 12 : 6)
+            .padding(.horizontal, platform == .mac ? theme.metrics.spacing[.xl] : theme.metrics.spacing[.l])
+            .padding(.top, platform == .mac ? theme.metrics.spacing[.m] : theme.metrics.spacing[.s])
             Spacer()
             BraisenlyBottomToolbar(
                 platform: platform,
                 onSearch: onToggleSidebar,
                 onMenu: onOpenActionSheet
             )
-            .padding(.bottom, platform == .mac ? 16 : 12)
+            .padding(.bottom, platform == .mac ? theme.metrics.spacing[.l] : theme.metrics.spacing[.m])
+        }
         }
     }
 }

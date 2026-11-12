@@ -2,6 +2,7 @@ import BraisenlySwiftUI
 import SwiftUI
 
 public struct AIComposer: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Binding private var text: String
 
     public let isResponding: Bool
@@ -22,7 +23,7 @@ public struct AIComposer: View {
 
     public var body: some View {
         let canSend = !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        HStack(alignment: .bottom, spacing: 10) {
+        HStack(alignment: .bottom, spacing: theme.metrics.spacing[.s]) {
             BraisenlyPromptField(
                 "Message Askenly…",
                 text: $text,

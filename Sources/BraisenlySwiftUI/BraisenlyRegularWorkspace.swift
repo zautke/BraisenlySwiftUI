@@ -8,7 +8,7 @@ public struct BraisenlyRegularWorkspace: View {
     @Binding private var isContextPopoverOpen: Bool
     @Binding private var searchText: String
     @Binding private var selectedMode: BraisenlySidebarMode
-    @Binding private var theme: BraisenlyTheme
+    @Binding private var themeID: BraisenlyThemeDefinition.ID
     @State private var columnVisibility = NavigationSplitViewVisibility.all
 
     public init(
@@ -19,7 +19,7 @@ public struct BraisenlyRegularWorkspace: View {
         isContextPopoverOpen: Binding<Bool>,
         searchText: Binding<String>,
         selectedMode: Binding<BraisenlySidebarMode>,
-        theme: Binding<BraisenlyTheme>
+        theme: Binding<BraisenlyThemeDefinition.ID>
     ) {
         self.documentTitle = documentTitle
         self.documentText = documentText
@@ -28,7 +28,7 @@ public struct BraisenlyRegularWorkspace: View {
         _isContextPopoverOpen = isContextPopoverOpen
         _searchText = searchText
         _selectedMode = selectedMode
-        _theme = theme
+        _themeID = theme
     }
 
     public var body: some View {
@@ -48,7 +48,7 @@ public struct BraisenlyRegularWorkspace: View {
             BraisenlyDocumentCanvas(
                 title: documentTitle,
                 bodyText: documentText,
-                theme: $theme,
+                theme: $themeID,
                 platform: platform,
                 onToggleSidebar: toggleSidebar,
                 onOpenActionSheet: { isActionSheetPresented = true }

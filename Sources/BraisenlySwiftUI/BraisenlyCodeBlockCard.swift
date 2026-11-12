@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyCodeBlockCard: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let language: String?
     public let code: String
     public let onCopy: (() -> Void)?
@@ -19,36 +21,37 @@ public struct BraisenlyCodeBlockCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text(language?.isEmpty == false ? language! : "code")
-                    .font(BraisenlyDS.Typography.metadata)
-                    .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+                    .font(theme.typography.metadata)
+                    .foregroundStyle(theme.colors.accentTeal)
                 Spacer()
                 if let onCopy {
                     Button(action: onCopy) {
                         Label("Copy", systemImage: "doc.on.doc")
-                            .font(BraisenlyDS.Typography.metadata)
-                            .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                            .font(theme.typography.metadata)
+                            .foregroundStyle(theme.colors.textSecondary)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(BraisenlyDS.Colors.surfaceElevated.opacity(0.75))
+            .padding(.horizontal, theme.metrics.spacing[.m])
+            .padding(.vertical, theme.metrics.spacing[.s])
+            .background(theme.colors.surfaceElevated.opacity(0.75))
 
-            Divider().overlay(BraisenlyDS.Colors.divider)
+            Divider().overlay(theme.colors.divider)
 
             ScrollView(.horizontal) {
                 Text(code)
-                    .font(.system(size: 13.5, design: .monospaced))
-                    .foregroundStyle(BraisenlyDS.Colors.textBright)
+                    .font(theme.typography.code)
+                    .foregroundStyle(theme.colors.textBright)
                     .textSelection(.enabled)
-                    .padding(12)
+                    .padding(theme.metrics.spacing[.m])
             }
             .scrollIndicators(.hidden)
         }
         .braisenlyCard(
-            cornerRadius: BraisenlyDS.Metrics.snippetRadius,
-            fill: BraisenlyDS.Colors.surfaceSnippet
+            cornerRadius: theme.metrics.radius[.s],
+            fill: theme.colors.surfaceSnippet,
+            role: .content
         )
     }
 }

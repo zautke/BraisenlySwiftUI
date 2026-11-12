@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyConversationRow: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     public let title: String
@@ -32,44 +33,44 @@ public struct BraisenlyConversationRow: View {
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
         Button(action: action) {
-            HStack(spacing: 12) {
+            HStack(spacing: theme.metrics.spacing[.m]) {
                 Image(systemName: isPinned ? "pin.fill" : "bubble.left.and.bubble.right")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(isSelected ? BraisenlyDS.Colors.accentTeal : BraisenlyDS.Colors.textSecondary)
+                    .font(theme.typography.rowIcon)
+                    .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
                     .frame(width: 20)
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                     Text(title)
-                        .font(BraisenlyDS.Typography.rowLabelMedium)
-                        .foregroundStyle(isSelected ? BraisenlyDS.Colors.textBright : BraisenlyDS.Colors.textPrimary)
+                        .font(theme.typography.rowLabelMedium)
+                        .foregroundStyle(isSelected ? theme.colors.textBright : theme.colors.textPrimary)
                         .lineLimit(1)
                     if let subtitle, !subtitle.isEmpty {
                         Text(subtitle)
-                            .font(BraisenlyDS.Typography.metadata)
-                            .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                            .font(theme.typography.metadata)
+                            .foregroundStyle(theme.colors.textSecondary)
                             .lineLimit(1)
                     }
                 }
-                Spacer(minLength: 8)
+                Spacer(minLength: theme.metrics.spacing[.s])
                 if let timestampText {
                     Text(timestampText)
-                        .font(BraisenlyDS.Typography.metadata)
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                        .font(theme.typography.metadata)
+                        .foregroundStyle(theme.colors.textSecondary)
                 }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
+            .padding(.horizontal, theme.metrics.spacing[.m])
+            .padding(.vertical, theme.metrics.spacing[.s])
             .frame(minHeight: resolvedPlatform.rowHeight)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
                 if isSelected {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(BraisenlyDS.Colors.surfaceHighlight.opacity(0.45))
+                    RoundedRectangle(cornerRadius: theme.metrics.radius[.m], style: .continuous)
+                        .fill(theme.colors.surfaceHighlight.opacity(0.45))
                 }
             }
             .overlay {
                 if isSelected {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(BraisenlyDS.Colors.accentTeal.opacity(0.6), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: theme.metrics.radius[.m], style: .continuous)
+                        .strokeBorder(theme.colors.accentTeal.opacity(0.6), lineWidth: theme.metrics.hairline * 2)
                 }
             }
             .contentShape(Rectangle())

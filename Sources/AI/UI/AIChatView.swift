@@ -3,8 +3,8 @@ import SwiftUI
 
 public struct AIChatView: View {
     @Bindable private var session: AIChatSession
-    @State private var internalTheme: BraisenlyTheme
-    private var externalTheme: Binding<BraisenlyTheme>?
+    @State private var internalTheme: BraisenlyThemeDefinition.ID
+    private var externalTheme: Binding<BraisenlyThemeDefinition.ID>?
 
     public let platform: BraisenlyPlatform
     public let modelName: String?
@@ -16,8 +16,8 @@ public struct AIChatView: View {
     public init(
         session: AIChatSession,
         platform: BraisenlyPlatform = .automatic,
-        initialTheme: BraisenlyTheme = .dark,
-        theme: Binding<BraisenlyTheme>? = nil,
+        initialTheme: BraisenlyThemeDefinition.ID = BraisenlyThemes.liquidGlass.id,
+        theme: Binding<BraisenlyThemeDefinition.ID>? = nil,
         modelName: String? = nil,
         onToggleSidebar: (() -> Void)? = nil,
         onNewChat: (() -> Void)? = nil,
@@ -35,11 +35,26 @@ public struct AIChatView: View {
         _internalTheme = State(initialValue: initialTheme)
     }
 
-    private var activeThemeBinding: Binding<BraisenlyTheme> {
+    private var activeThemeBinding: Binding<BraisenlyThemeDefinition.ID> {
         externalTheme ?? $internalTheme
     }
 
+    /// Resolved from the binding: this view applies the theme itself when unbound, so the
+    /// environment value read here would be the parent's.
+    private var theme: BraisenlyThemeDefinition {
+        BraisenlyThemes.theme(withID: activeThemeBinding.wrappedValue)
+    }
+
     public var body: some View {
+        let content = chat
+        if externalTheme == nil {
+            content.braisenlyTheme(theme)
+        } else {
+            content
+        }
+    }
+
+    private var chat: some View {
         VStack(spacing: 0) {
             AIChatHeader(
                 title: session.conversation.title,
@@ -58,8 +73,8 @@ public struct AIChatView: View {
             )
             if let failure = session.failure {
                 AIChatErrorBanner(failure: failure, onDismiss: session.clearFailure)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
+                    .padding(.horizontal, theme.metrics.spacing[.l])
+                    .padding(.bottom, theme.metrics.spacing[.s])
             }
             AIComposer(
                 text: $session.draft,
@@ -68,10 +83,9 @@ public struct AIChatView: View {
                 onCancel: session.cancel
             )
             .frame(maxWidth: 860)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, theme.metrics.spacing[.l])
+            .padding(.vertical, theme.metrics.spacing[.m])
         }
-        .background(BraisenlyDS.Colors.backgroundPrimary.ignoresSafeArea())
-        .braisenlyTheme(activeThemeBinding.wrappedValue)
+        .background(theme.colors.backgroundPrimary.ignoresSafeArea())
     }
 }

@@ -2,7 +2,8 @@ import BraisenlySwiftUI
 import SwiftUI
 
 public struct AIChatHeader: View {
-    @Binding private var theme: BraisenlyTheme
+    @Environment(\.braisenlyTheme) private var theme
+    @Binding private var themeID: BraisenlyThemeDefinition.ID
 
     public let title: String
     public let modelName: String?
@@ -15,7 +16,7 @@ public struct AIChatHeader: View {
     public init(
         title: String,
         modelName: String? = nil,
-        theme: Binding<BraisenlyTheme>,
+        theme: Binding<BraisenlyThemeDefinition.ID>,
         platform: BraisenlyPlatform = .automatic,
         onToggleSidebar: (() -> Void)? = nil,
         onNewChat: (() -> Void)? = nil,
@@ -24,7 +25,7 @@ public struct AIChatHeader: View {
     ) {
         self.title = title
         self.modelName = modelName
-        _theme = theme
+        _themeID = theme
         self.platform = platform
         self.onToggleSidebar = onToggleSidebar
         self.onNewChat = onNewChat
@@ -33,7 +34,7 @@ public struct AIChatHeader: View {
     }
 
     public var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: theme.metrics.spacing[.m]) {
             if let onToggleSidebar {
                 BraisenlyCircleIconButton(
                     systemName: "sidebar.left",
@@ -45,10 +46,10 @@ public struct AIChatHeader: View {
                 BraisenlyAvatarBadge(systemName: "sparkles")
             }
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                 Text(title)
-                    .font(BraisenlyDS.Typography.rowLabelMedium)
-                    .foregroundStyle(BraisenlyDS.Colors.textBright)
+                    .font(theme.typography.rowLabelMedium)
+                    .foregroundStyle(theme.colors.textBright)
                     .lineLimit(1)
                 if let modelName {
                     BraisenlyModelPill(
@@ -70,7 +71,7 @@ public struct AIChatHeader: View {
                 )
             }
 
-            BraisenlyThemeToggle(theme: $theme, platform: platform)
+            BraisenlyThemeSwitcher(selection: $themeID, style: .cycle, platform: platform)
 
             if let onMoreActions {
                 BraisenlyCircleIconButton(
@@ -81,9 +82,9 @@ public struct AIChatHeader: View {
                 )
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(BraisenlyDS.Colors.backgroundPrimary.opacity(0.96))
-        .overlay(alignment: .bottom) { Divider().overlay(BraisenlyDS.Colors.divider) }
+        .padding(.horizontal, theme.metrics.spacing[.l])
+        .padding(.vertical, theme.metrics.spacing[.s])
+        .background(theme.colors.backgroundPrimary.opacity(0.96))
+        .overlay(alignment: .bottom) { Divider().overlay(theme.colors.divider) }
     }
 }

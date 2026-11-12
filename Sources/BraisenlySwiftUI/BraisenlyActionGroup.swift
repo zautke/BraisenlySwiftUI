@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyActionGroup: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let items: [BraisenlyActionItem]
     public let platform: BraisenlyPlatform
     public let action: (BraisenlyActionItem) -> Void
@@ -21,7 +23,7 @@ public struct BraisenlyActionGroup: View {
                 Button { action(item) } label: { BraisenlyActionRow(item: item, platform: platform) }
                     .buttonStyle(.plain)
                 if item.id != items.last?.id {
-                    Divider().overlay(BraisenlyDS.Colors.divider).padding(.horizontal, 16)
+                    Divider().overlay(theme.colors.divider).padding(.horizontal, theme.metrics.spacing[.l])
                 }
             }
         }

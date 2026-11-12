@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyBottomToolbar: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     public let tabCount: Int
@@ -34,7 +35,8 @@ public struct BraisenlyBottomToolbar: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
-        HStack(spacing: resolvedPlatform == .iPad ? 36 : 28) {
+        BraisenlyGlassGroup {
+        HStack(spacing: theme.metrics.spacing[.xl]) {
             BraisenlyToolbarIconButton(systemName: "chevron.left", label: "Back", action: onBack)
             BraisenlyToolbarIconButton(systemName: "chevron.right", label: "Forward", isEnabled: false, action: onForward)
             BraisenlyToolbarIconButton(systemName: "magnifyingglass", label: "Search", action: onSearch)
@@ -44,8 +46,9 @@ public struct BraisenlyBottomToolbar: View {
             BraisenlyToolbarIconButton(systemName: "line.3.horizontal", label: "Menu", action: onMenu)
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, resolvedPlatform == .mac ? 18 : 26)
-        .frame(height: resolvedPlatform == .mac ? 44 : BraisenlyDS.Metrics.toolbarHeight)
-        .braisenlyCapsule()
+        .padding(.horizontal, resolvedPlatform == .mac ? theme.metrics.spacing[.l] : theme.metrics.spacing[.xl])
+        .frame(height: resolvedPlatform == .mac ? theme.metrics.circleButtonSize : theme.metrics.toolbarHeight)
+        .braisenlyCapsule(role: .chrome)
+        }
     }
 }

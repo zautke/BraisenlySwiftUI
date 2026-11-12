@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyToolbarIconButton: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let systemName: String
     public let label: LocalizedStringResource
     public let isEnabled: Bool
@@ -21,8 +23,8 @@ public struct BraisenlyToolbarIconButton: View {
     public var body: some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(isEnabled ? BraisenlyDS.Colors.textPrimary : BraisenlyDS.Colors.textDisabled)
+                .font(theme.typography.controlIcon)
+                .foregroundStyle(isEnabled ? theme.colors.textPrimary : theme.colors.textDisabled)
         }
         .disabled(!isEnabled)
         .accessibilityLabel(Text(label))

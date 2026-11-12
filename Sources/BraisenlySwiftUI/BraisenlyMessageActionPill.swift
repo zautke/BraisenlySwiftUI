@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyMessageActionPill: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let isCopied: Bool
     public let canRegenerate: Bool
     public let onCopy: () -> Void
@@ -19,27 +21,27 @@ public struct BraisenlyMessageActionPill: View {
     }
 
     public var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: theme.metrics.spacing[.m]) {
             Button(action: onCopy) {
                 Label(
                     isCopied ? "Copied" : "Copy",
                     systemImage: isCopied ? "checkmark" : "doc.on.doc"
                 )
-                .font(BraisenlyDS.Typography.metadata)
+                .font(theme.typography.metadata)
             }
             .buttonStyle(.plain)
 
             if canRegenerate, let onRegenerate {
                 Button(action: onRegenerate) {
                     Label("Regenerate", systemImage: "arrow.clockwise")
-                        .font(BraisenlyDS.Typography.metadata)
+                        .font(theme.typography.metadata)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceSnippet)
+        .foregroundStyle(theme.colors.textSecondary)
+        .padding(.horizontal, theme.metrics.spacing[.s])
+        .padding(.vertical, theme.metrics.spacing[.xs])
+        .braisenlyCapsule(fill: theme.colors.surfaceSnippet)
     }
 }

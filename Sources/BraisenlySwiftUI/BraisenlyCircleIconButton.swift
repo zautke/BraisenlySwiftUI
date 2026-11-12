@@ -1,7 +1,9 @@
 import SwiftUI
 
 public struct BraisenlyCircleIconButton: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @ScaledMetric(relativeTo: .body) private var iconScale: CGFloat = 1
 
     public let systemName: String
     public let accessibilityLabel: LocalizedStringResource
@@ -27,8 +29,8 @@ public struct BraisenlyCircleIconButton: View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: iconSize, weight: .medium))
-                .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                .font(.system(size: iconSize * iconScale, weight: .medium))
+                .foregroundStyle(theme.colors.textPrimary)
                 .frame(width: resolvedPlatform.controlSize, height: resolvedPlatform.controlSize)
                 .braisenlyCapsule()
         }

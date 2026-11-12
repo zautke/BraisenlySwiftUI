@@ -2,6 +2,7 @@ import BraisenlySwiftUI
 import SwiftUI
 
 public struct AIMessageList: View {
+    @Environment(\.braisenlyTheme) private var theme
     public let messages: [AIMessage]
     public let onSelectSuggestion: (String) -> Void
     public let onRegenerate: () -> Void
@@ -22,7 +23,7 @@ public struct AIMessageList: View {
         } else {
             ScrollViewReader { proxy in
                 ScrollView {
-                    LazyVStack(spacing: 18) {
+                    LazyVStack(spacing: theme.metrics.spacing[.l]) {
                         ForEach(messages) { message in
                             let isLastAssistant = message.id == messages.last?.id
                                 && message.role == .assistant
@@ -35,7 +36,7 @@ public struct AIMessageList: View {
                             .id(message.id)
                         }
                     }
-                    .padding(16)
+                    .padding(theme.metrics.spacing[.l])
                     .frame(maxWidth: 860)
                     .frame(maxWidth: .infinity)
                 }

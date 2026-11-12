@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlySuggestionCard: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let title: String
     public let systemImage: String?
     public let action: () -> Void
@@ -17,22 +19,22 @@ public struct BraisenlySuggestionCard: View {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: 12) {
+            HStack(spacing: theme.metrics.spacing[.m]) {
                 Text(title)
-                    .font(BraisenlyDS.Typography.rowLabel)
-                    .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                    .font(theme.typography.rowLabel)
+                    .foregroundStyle(theme.colors.textPrimary)
                     .multilineTextAlignment(.leading)
-                Spacer(minLength: 8)
+                Spacer(minLength: theme.metrics.spacing[.s])
                 if let systemImage {
                     Image(systemName: systemImage)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+                        .font(theme.typography.labelEmphasis)
+                        .foregroundStyle(theme.colors.accentTeal)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .frame(maxWidth: 420, minHeight: 44, alignment: .leading)
-            .braisenlyCard(cornerRadius: 14)
+            .padding(.horizontal, theme.metrics.spacing[.l])
+            .padding(.vertical, theme.metrics.spacing[.s])
+            .frame(maxWidth: 420, minHeight: theme.metrics.circleButtonSize, alignment: .leading)
+            .braisenlyCard(cornerRadius: theme.metrics.radius[.m], role: .content)
         }
         .buttonStyle(.plain)
     }

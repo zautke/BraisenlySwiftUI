@@ -8,18 +8,21 @@ public struct AIChatWorkspaceView: View {
     @State private var isModelSettingsPresented = false
     @State private var isConversationActionsPresented = false
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-    @State private var theme: BraisenlyTheme
+    @State private var themeID: BraisenlyThemeDefinition.ID
 
     public let platform: BraisenlyPlatform
 
+    /// This view owns the theme state and applies it, so it resolves the theme from its id.
+    private var theme: BraisenlyThemeDefinition { BraisenlyThemes.theme(withID: themeID) }
+
     public init(
         controller: AIChatWorkspaceController,
-        initialTheme: BraisenlyTheme = .dark,
+        initialTheme: BraisenlyThemeDefinition.ID = BraisenlyThemes.liquidGlass.id,
         platform: BraisenlyPlatform = .automatic
     ) {
         self.controller = controller
         self.platform = platform
-        _theme = State(initialValue: initialTheme)
+        _themeID = State(initialValue: initialTheme)
     }
 
     public var body: some View {
@@ -42,8 +45,8 @@ public struct AIChatWorkspaceView: View {
             )
             .presentationDetents(resolvedPlatform == .mac ? [.large] : [.fraction(0.82), .large])
             .presentationDragIndicator(.hidden)
-            .presentationCornerRadius(28)
-            .presentationBackground(BraisenlyDS.Colors.surfaceSheet)
+            .braisenlySheetBackground()
+            .braisenlyTheme(theme)
         }
         .sheet(isPresented: $isConversationActionsPresented) {
             AIConversationActionSheet(
@@ -60,19 +63,19 @@ public struct AIChatWorkspaceView: View {
             )
             .presentationDetents(resolvedPlatform == .mac ? [.large] : [.fraction(0.65), .large])
             .presentationDragIndicator(.hidden)
-            .presentationCornerRadius(28)
-            .presentationBackground(BraisenlyDS.Colors.surfaceSheet)
+            .braisenlySheetBackground()
+            .braisenlyTheme(theme)
         }
     }
 
     private var compactWorkspace: some View {
         GeometryReader { proxy in
-            let sidebarWidth = proxy.size.width * BraisenlyDS.Metrics.sidebarWidthRatio
+            let sidebarWidth = proxy.size.width * theme.metrics.sidebarWidthRatio
             ZStack(alignment: .leading) {
                 AIChatView(
                     session: controller.session,
                     platform: .iPhone,
-                    theme: $theme,
+                    theme: $themeID,
                     modelName: controller.configuration.activeProfile.name,
                     onToggleSidebar: toggleCompactSidebar,
                     onNewChat: controller.createNewConversation,
@@ -82,7 +85,7 @@ public struct AIChatWorkspaceView: View {
                 .offset(x: isSidebarOpen ? sidebarWidth : 0)
                 .overlay {
                     if isSidebarOpen {
-                        Color.black.opacity(0.38)
+                        theme.colors.scrim
                             .ignoresSafeArea()
                             .onTapGesture(perform: closeCompactSidebar)
                     }
@@ -138,7 +141,7 @@ public struct AIChatWorkspaceView: View {
             AIChatView(
                 session: controller.session,
                 platform: resolvedPlatform,
-                theme: $theme,
+                theme: $themeID,
                 modelName: controller.configuration.activeProfile.name,
                 onToggleSidebar: {
                     withAnimation {

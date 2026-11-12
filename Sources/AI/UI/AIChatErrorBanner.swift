@@ -14,7 +14,6 @@ public struct AIChatErrorBanner: View {
         BraisenlyBannerCard(
             message: failure.message,
             systemImage: "exclamationmark.triangle.fill",
-            iconColor: BraisenlyDS.Solarized.red,
             onDismiss: onDismiss
         )
     }
