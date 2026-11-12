@@ -38,9 +38,14 @@ public struct BraisenlySplitView<Sidebar: View, Detail: View>: View {
     }
 
     @ViewBuilder private var detailColumn: some View {
-        let column = theme.surface == .solid
-            ? AnyView(detail.scrollContentBackground(.hidden).background(theme.colors.backgroundPrimary))
-            : AnyView(detail)
-        if extendsDetailBackground { column.backgroundExtensionEffect() } else { column }
+        if theme.surface == .solid {
+            extend(detail.scrollContentBackground(.hidden).background(theme.colors.backgroundPrimary))
+        } else {
+            extend(detail)
+        }
+    }
+
+    @ViewBuilder private func extend<V: View>(_ v: V) -> some View {
+        if extendsDetailBackground { v.backgroundExtensionEffect() } else { v }
     }
 }
