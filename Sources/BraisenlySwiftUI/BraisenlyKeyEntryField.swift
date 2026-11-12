@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyKeyEntryField: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Binding private var text: String
     @State private var isRevealed = false
 
@@ -18,13 +19,13 @@ public struct BraisenlyKeyEntryField: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
             Text(title)
-                .font(BraisenlyDS.Typography.metadata)
-                .foregroundStyle(BraisenlyDS.Colors.textSecondary)
-            HStack(spacing: 10) {
+                .font(theme.typography.metadata)
+                .foregroundStyle(theme.colors.textSecondary)
+            HStack(spacing: theme.metrics.spacing[.s]) {
                 Image(systemName: "key.fill")
-                    .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+                    .foregroundStyle(theme.colors.accentTeal)
                     .frame(width: 20)
                 Group {
                     if isRevealed {
@@ -34,20 +35,20 @@ public struct BraisenlyKeyEntryField: View {
                     }
                 }
                 .textFieldStyle(.plain)
-                .font(BraisenlyDS.Typography.rowLabel)
-                .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                .font(theme.typography.rowLabel)
+                .foregroundStyle(theme.colors.textPrimary)
                 Button {
                     isRevealed.toggle()
                 } label: {
                     Image(systemName: isRevealed ? "eye.slash" : "eye")
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                        .foregroundStyle(theme.colors.textSecondary)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(isRevealed ? "Hide key" : "Show key")
             }
-            .padding(.horizontal, 14)
-            .frame(height: BraisenlyDS.Metrics.rowHeight)
-            .braisenlyCard(cornerRadius: 14, fill: BraisenlyDS.Colors.surfaceSnippet)
+            .padding(.horizontal, theme.metrics.spacing[.m])
+            .frame(height: theme.metrics.rowHeight)
+            .braisenlyCard(cornerRadius: theme.metrics.radius[.m], fill: theme.colors.surfaceSnippet)
         }
     }
 }

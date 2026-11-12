@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyTabCounterBadge: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let count: Int
 
     public init(count: Int) {
@@ -9,13 +11,13 @@ public struct BraisenlyTabCounterBadge: View {
 
     public var body: some View {
         Text(count, format: .number)
-            .font(BraisenlyDS.Typography.badgeNumber)
-            .foregroundStyle(BraisenlyDS.Colors.textPrimary)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
+            .font(theme.typography.badgeNumber)
+            .foregroundStyle(theme.colors.textPrimary)
+            .padding(.horizontal, theme.metrics.spacing[.xs])
+            .padding(.vertical, theme.metrics.spacing[.xs])
             .overlay(
-                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                    .strokeBorder(BraisenlyDS.Colors.textPrimary, lineWidth: 1.6)
+                RoundedRectangle(cornerRadius: theme.metrics.radius[.xs], style: .continuous)
+                    .strokeBorder(theme.colors.textPrimary, lineWidth: theme.metrics.hairline * 3.2)
             )
             .accessibilityLabel("\(count) tabs")
     }

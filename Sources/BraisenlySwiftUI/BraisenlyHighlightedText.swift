@@ -1,16 +1,20 @@
 import SwiftUI
 
 public struct BraisenlyHighlightedText: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let text: String
     public let highlight: String
-    public let font: Font
-    public let baseColor: Color
+    /// nil = `theme.typography.rowLabel`.
+    public let font: Font?
+    /// nil = `theme.colors.textPrimary`.
+    public let baseColor: Color?
 
     public init(
         _ text: String,
         highlight: String,
-        font: Font = BraisenlyDS.Typography.rowLabel,
-        baseColor: Color = BraisenlyDS.Colors.textPrimary
+        font: Font? = nil,
+        baseColor: Color? = nil
     ) {
         self.text = text
         self.highlight = highlight
@@ -22,14 +26,14 @@ public struct BraisenlyHighlightedText: View {
         HStack(spacing: 0) {
             ForEach(BraisenlyHighlightedTextSegment.make(text: text, highlight: highlight)) { segment in
                 Text(segment.text)
-                    .font(font)
-                    .foregroundStyle(segment.isMatch ? BraisenlyDS.Colors.matchForeground : baseColor)
-                    .padding(.horizontal, segment.isMatch ? 1.5 : 0)
-                    .padding(.vertical, segment.isMatch ? 0.5 : 0)
+                    .font(font ?? theme.typography.rowLabel)
+                    .foregroundStyle(segment.isMatch ? theme.colors.matchForeground : (baseColor ?? theme.colors.textPrimary))
+                    .padding(.horizontal, segment.isMatch ? theme.metrics.hairline * 3 : 0)
+                    .padding(.vertical, segment.isMatch ? theme.metrics.hairline : 0)
                     .background {
                         if segment.isMatch {
-                            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                                .fill(BraisenlyDS.Colors.matchBackground)
+                            RoundedRectangle(cornerRadius: theme.metrics.radius[.xs], style: .continuous)
+                                .fill(theme.colors.matchBackground)
                         }
                     }
             }

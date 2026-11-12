@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyPulseIndicator: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let label: String
 
     public init(label: String = "Thinking…") {
@@ -8,14 +10,14 @@ public struct BraisenlyPulseIndicator: View {
     }
 
     public var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: theme.metrics.spacing[.s]) {
             ProgressView()
                 .controlSize(.small)
-                .tint(BraisenlyDS.Colors.accentTeal)
+                .tint(theme.colors.accentTeal)
             Text(label)
-                .font(BraisenlyDS.Typography.metadata)
+                .font(theme.typography.metadata)
         }
-        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+        .foregroundStyle(theme.colors.textSecondary)
         .accessibilityElement(children: .combine)
     }
 }
