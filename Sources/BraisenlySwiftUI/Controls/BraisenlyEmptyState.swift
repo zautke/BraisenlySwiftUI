@@ -29,24 +29,27 @@ public struct BraisenlyEmptyState: View {
 
     public var body: some View {
         VStack(spacing: theme.metrics.spacing[.m]) {
-            Image(systemName: systemImage)
-                .font(theme.typography.documentTitle)
-                .foregroundStyle(theme.colors.textSecondary)
-            Text(title)
-                .font(theme.typography.vaultTitle)
-                .foregroundStyle(theme.colors.textBright)
-            if let message {
-                Text(message)
-                    .font(theme.typography.snippetBody)
+            VStack(spacing: theme.metrics.spacing[.m]) {
+                Image(systemName: systemImage)
+                    .font(theme.typography.documentTitle)
                     .foregroundStyle(theme.colors.textSecondary)
-                    .multilineTextAlignment(.center)
+                    .accessibilityHidden(true)
+                Text(title)
+                    .font(theme.typography.vaultTitle)
+                    .foregroundStyle(theme.colors.textBright)
+                if let message {
+                    Text(message)
+                        .font(theme.typography.snippetBody)
+                        .foregroundStyle(theme.colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
             }
+            .accessibilityElement(children: .combine)
             if let actionTitle, let action {
                 BraisenlyButton(actionTitle, prominence: .prominent, action: action)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(theme.metrics.spacing[.xl])
-        .accessibilityElement(children: .combine)
     }
 }

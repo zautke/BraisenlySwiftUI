@@ -39,7 +39,7 @@ public struct BraisenlySegmentedControl<Value: Hashable>: View {
                             .frame(minHeight: resolved.controlSize)
                             .frame(maxWidth: .infinity)
                             .braisenlyCapsule(
-                                fill: isSelected ? theme.colors.accentTeal.opacity(0.35) : nil,
+                                fill: isSelected ? theme.colors.surfaceHighlight : nil,
                                 role: .control
                             )
                     }

@@ -12,5 +12,6 @@ private let files = [
 ]
 
 @Test func ai1FilesHaveNoStaticTokensOrLiteralMetrics() throws {
-    #expect(try SourceScan.violations(in: files) == [])
+    let v = try SourceScan.violations(in: files)
+    #expect(v == [], "\(v)")
 }

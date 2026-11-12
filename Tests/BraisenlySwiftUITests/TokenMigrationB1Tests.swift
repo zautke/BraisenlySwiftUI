@@ -13,23 +13,21 @@ private let files = [
 ]
 
 @Test func b1FilesHaveNoStaticTokensOrLiteralMetrics() throws {
-    #expect(try SourceScan.violations(in: files) == [])
+    let v = try SourceScan.violations(in: files)
+    #expect(v == [], "\(v)")
 }
 
 @MainActor @Test(arguments: BraisenlyThemes.all)
 func b1ViewsRender(theme: BraisenlyThemeDefinition) {
-    let view = VStack {
-        BraisenlyCircleIconButton(systemName: "plus", accessibilityLabel: "Add") {}
-        BraisenlyToolbarIconButton(systemName: "gear", label: "Settings") {}
-        BraisenlyToolbarIconButton(systemName: "gear", label: "Settings", isEnabled: false) {}
-        BraisenlySendStopButton(isResponding: false, canSend: true, onSend: {}, onCancel: {})
-        BraisenlySendStopButton(isResponding: true, canSend: false, onSend: {}, onCancel: {})
-        BraisenlyDualActionPill(onEdit: {}, onMore: {})
-        BraisenlyMessageActionPill(isCopied: true, canRegenerate: true, onCopy: {}, onRegenerate: {})
-        BraisenlyModelPill(title: "Model")
-        BraisenlyModelPill(title: "Model", action: {})
-        BraisenlyCitationPill(title: "Title", source: "Source")
-        BraisenlyCitationPill(title: "Title", url: URL(string: "https://example.com"))
-    }
-    #expect(RenderSmoke.renders(view, theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyCircleIconButton(systemName: "plus", accessibilityLabel: "Add") {}, theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyToolbarIconButton(systemName: "gear", label: "Settings") {}, theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyToolbarIconButton(systemName: "gear", label: "Settings", isEnabled: false) {}, theme: theme))
+    #expect(RenderSmoke.renders(BraisenlySendStopButton(isResponding: false, canSend: true, onSend: {}, onCancel: {}), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlySendStopButton(isResponding: true, canSend: false, onSend: {}, onCancel: {}), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyDualActionPill(onEdit: {}, onMore: {}), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyMessageActionPill(isCopied: true, canRegenerate: true, onCopy: {}, onRegenerate: {}), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyModelPill(title: "Model"), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyModelPill(title: "Model", action: {}), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyCitationPill(title: "Title", source: "Source"), theme: theme))
+    #expect(RenderSmoke.renders(BraisenlyCitationPill(title: "Title", url: URL(string: "https://example.com")), theme: theme))
 }

@@ -22,7 +22,7 @@ public struct BraisenlyColorSwatch: View {
 
     public var body: some View {
         if let action {
-            Button(action: action) { content }.buttonStyle(.plain)
+            Button(action: action) { content.contentShape(Rectangle()) }.buttonStyle(.plain)
         } else {
             content
         }

@@ -59,10 +59,9 @@ public struct BraisenlyThemeSwitcher: View {
 
     private var cycleBody: some View {
         let size = platform.resolved(horizontalSizeClass: horizontalSizeClass).controlSize
-        let nextName = BraisenlyThemes.theme(
-            withID: BraisenlyThemes.nextID(after: current?.id ?? selection, in: themes), in: themes
-        ).name
-        return Button { choose(BraisenlyThemes.nextID(after: current?.id ?? selection, in: themes)) } label: {
+        let nextID = BraisenlyThemes.nextID(after: current?.id ?? selection, in: themes)
+        let nextName = BraisenlyThemes.theme(withID: nextID, in: themes).name
+        return Button { choose(nextID) } label: {
             Image(systemName: current?.symbolName ?? "circle")
                 .font(theme.typography.controlIcon)
                 .foregroundStyle(theme.colors.accentTeal)
@@ -73,7 +72,7 @@ public struct BraisenlyThemeSwitcher: View {
         .buttonStyle(.plain)
         .accessibilityLabel("Theme")
         .accessibilityValue(current?.name ?? "")
-        .accessibilityHint("Switches to \(nextName)")
+        .accessibilityHint(themes.isEmpty ? "" : "Switches to \(nextName)")
     }
 
     private func choose(_ id: BraisenlyThemeDefinition.ID) {

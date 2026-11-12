@@ -13,7 +13,8 @@ private let files = [
 ]
 
 @Test func b2FilesHaveNoStaticTokensOrLiteralMetrics() throws {
-    #expect(try SourceScan.violations(in: files) == [])
+    let v = try SourceScan.violations(in: files)
+    #expect(v == [], "\(v)")
 }
 
 @Test func b2OverridesDefaultToNil() {

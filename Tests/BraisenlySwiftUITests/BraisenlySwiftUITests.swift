@@ -37,9 +37,9 @@ import Testing
     #expect(avatar.systemName == "sparkles")
     #expect(avatar.size == 40)
 
-    let bubble = BraisenlyChatBubbleSurface(text: "Hello **world**", cornerRadius: 20)
+    let bubble = BraisenlyChatBubbleSurface(text: "Hello **world**", cornerRadius: 22)
     #expect(bubble.text == "Hello **world**")
-    #expect(bubble.cornerRadius == 20)
+    #expect(bubble.cornerRadius == 22)
 
     let pill = BraisenlyCitationPill(title: "Design Doc", source: "Vault")
     #expect(pill.title == "Design Doc")

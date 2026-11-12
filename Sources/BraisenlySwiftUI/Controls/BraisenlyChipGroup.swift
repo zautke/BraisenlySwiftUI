@@ -21,6 +21,7 @@ public struct BraisenlyChipGroup<Value: Hashable>: View {
                     chip(option)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

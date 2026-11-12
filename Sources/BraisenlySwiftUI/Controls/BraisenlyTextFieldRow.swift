@@ -27,7 +27,6 @@ public struct BraisenlyTextFieldRow: View {
                 .foregroundStyle(theme.colors.textPrimary)
                 .lineLimit(axis == .vertical ? 1...5 : 1...1)
                 .textFieldStyle(.plain)
-                .accessibilityLabel(title)
         }
         .padding(.horizontal, theme.metrics.spacing[.m])
         .padding(.vertical, theme.metrics.spacing[.s])
