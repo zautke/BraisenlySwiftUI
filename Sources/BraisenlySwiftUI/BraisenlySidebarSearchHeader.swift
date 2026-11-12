@@ -18,7 +18,7 @@ public struct BraisenlySidebarSearchHeader: View {
                 Image(systemName: "magnifyingglass")
                 TextField("Search…", text: $searchText)
                     .textFieldStyle(.plain)
-                Text("Aa")
+                    .lineLimit(1)
                 Button { searchText = "" } label: { Image(systemName: "xmark.circle.fill") }
                     .accessibilityLabel("Clear search")
             }
