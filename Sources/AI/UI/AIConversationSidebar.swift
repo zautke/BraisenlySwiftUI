@@ -3,6 +3,7 @@ import SwiftUI
 
 public struct AIConversationSidebar: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.braisenlyTheme) private var theme
     @Binding private var searchText: String
 
     public let conversations: [AIConversation]
@@ -39,31 +40,31 @@ public struct AIConversationSidebar: View {
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
         ZStack(alignment: .bottom) {
-            BraisenlyDS.Colors.backgroundPrimary.ignoresSafeArea()
+            theme.colors.backgroundPrimary.ignoresSafeArea()
             VStack(spacing: 0) {
                 BraisenlySidebarSearchHeader(searchText: $searchText, platform: resolvedPlatform)
-                Divider().overlay(BraisenlyDS.Colors.divider)
+                Divider().overlay(theme.colors.divider)
 
                 HStack {
                     Text("\(conversations.count) thread\(conversations.count == 1 ? "" : "s")")
-                        .font(BraisenlyDS.Typography.metadata)
-                        .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                        .font(theme.typography.metadata)
+                        .foregroundStyle(theme.colors.textSecondary)
                     Spacer()
                     Button(action: onNewConversation) {
                         Label("New Chat", systemImage: "plus")
-                            .font(BraisenlyDS.Typography.metadata)
-                            .foregroundStyle(BraisenlyDS.Colors.accentTeal)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceElevated)
+                            .font(theme.typography.metadata)
+                            .foregroundStyle(theme.colors.accentTeal)
+                            .padding(.horizontal, theme.metrics.spacing[.s])
+                            .padding(.vertical, theme.metrics.spacing[.xs])
+                            .braisenlyCapsule(fill: theme.colors.surfaceElevated)
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
+                .padding(.horizontal, theme.metrics.spacing[.l])
+                .padding(.vertical, theme.metrics.spacing[.s])
 
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 6) {
+                    LazyVStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
                         ForEach(conversations) { conversation in
                             BraisenlyConversationRow(
                                 title: conversation.title,
@@ -83,20 +84,20 @@ public struct AIConversationSidebar: View {
                             }
                         }
                     }
-                    .padding(.horizontal, resolvedPlatform == .mac ? 10 : 12)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, resolvedPlatform == .mac ? theme.metrics.spacing[.s] : theme.metrics.spacing[.m])
+                    .padding(.vertical, theme.metrics.spacing[.s])
                 }
 
-                Divider().overlay(BraisenlyDS.Colors.divider)
+                Divider().overlay(theme.colors.divider)
 
                 HStack {
-                    VStack(alignment: .leading, spacing: 3) {
+                    VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                         Text("Askenly")
-                            .font(BraisenlyDS.Typography.vaultTitle)
-                            .foregroundStyle(BraisenlyDS.Colors.textBright)
+                            .font(theme.typography.vaultTitle)
+                            .foregroundStyle(theme.colors.textBright)
                         Text(activeModelName)
-                            .font(BraisenlyDS.Typography.metadata)
-                            .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                            .font(theme.typography.metadata)
+                            .foregroundStyle(theme.colors.textSecondary)
                             .lineLimit(1)
                     }
                     Spacer()
@@ -107,14 +108,14 @@ public struct AIConversationSidebar: View {
                         action: onOpenSettings
                     )
                 }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
+                .padding(.horizontal, theme.metrics.spacing[.m])
+                .padding(.vertical, theme.metrics.spacing[.m])
             }
         }
         .overlay(alignment: .trailing) {
             Rectangle()
-                .fill(BraisenlyDS.Colors.borderSubtle.opacity(0.4))
-                .frame(width: 0.5)
+                .fill(theme.colors.borderSubtle.opacity(0.4))
+                .frame(width: theme.metrics.hairline)
                 .ignoresSafeArea()
         }
     }

@@ -10,6 +10,7 @@ import AppKit
 public struct AIConversationActionSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.braisenlyTheme) private var theme
     @State private var draftTitle: String
 
     public let isPinned: Bool
@@ -67,30 +68,30 @@ public struct AIConversationActionSheet: View {
         ]
 
         ZStack {
-            BraisenlyDS.Colors.surfaceSheet.ignoresSafeArea()
-            VStack(spacing: 14) {
+            theme.colors.surfaceSheet.ignoresSafeArea()
+            VStack(spacing: theme.metrics.spacing[.m]) {
                 if resolvedPlatform != .mac {
                     Capsule()
-                        .fill(BraisenlyDS.Colors.textSecondary.opacity(0.6))
-                        .frame(width: 46, height: 5)
+                        .fill(theme.colors.textSecondary.opacity(0.6))
+                        .frame(width: theme.metrics.grabberSize.width, height: theme.metrics.grabberSize.height)
                 }
 
                 ScrollView {
-                    VStack(spacing: resolvedPlatform == .mac ? 12 : 16) {
+                    VStack(spacing: resolvedPlatform == .mac ? theme.metrics.spacing[.m] : theme.metrics.spacing[.l]) {
                         Button { dismiss() } label: {
                             BraisenlyActionRow(
                                 item: .init(id: "close", icon: "xmark", title: "Close"),
                                 platform: resolvedPlatform
                             )
-                            .braisenlyCard(cornerRadius: 24)
+                            .braisenlyCard(cornerRadius: theme.metrics.radius[.xl])
                         }
                         .buttonStyle(.plain)
 
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
                             Text("Conversation Title")
-                                .font(BraisenlyDS.Typography.metadata)
-                                .foregroundStyle(BraisenlyDS.Colors.textSecondary)
-                            HStack(spacing: 10) {
+                                .font(theme.typography.metadata)
+                                .foregroundStyle(theme.colors.textSecondary)
+                            HStack(spacing: theme.metrics.spacing[.s]) {
                                 BraisenlyPromptField("Conversation title…", text: $draftTitle) {
                                     onRename(draftTitle)
                                 }
@@ -130,13 +131,13 @@ public struct AIConversationActionSheet: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                    .padding(.horizontal, theme.metrics.spacing[.l])
+                    .padding(.bottom, theme.metrics.spacing[.xl])
                     .frame(maxWidth: resolvedPlatform == .mac ? 480 : 620)
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.top, resolvedPlatform == .mac ? 16 : 10)
+            .padding(.top, resolvedPlatform == .mac ? theme.metrics.spacing[.l] : theme.metrics.spacing[.s])
         }
         .frame(minWidth: resolvedPlatform == .mac ? 440 : nil, minHeight: resolvedPlatform == .mac ? 520 : nil)
     }

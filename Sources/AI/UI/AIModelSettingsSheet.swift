@@ -4,6 +4,7 @@ import SwiftUI
 public struct AIModelSettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.braisenlyTheme) private var theme
     @Binding private var configuration: AIInferenceConfiguration
 
     public let profiles: [AIModelProfile]
@@ -25,24 +26,24 @@ public struct AIModelSettingsSheet: View {
         let systemAndCloudModels = profiles.filter { !$0.isLocalMLX }
 
         ZStack {
-            BraisenlyDS.Colors.surfaceSheet.ignoresSafeArea()
-            VStack(spacing: 14) {
+            theme.colors.surfaceSheet.ignoresSafeArea()
+            VStack(spacing: theme.metrics.spacing[.m]) {
                 if resolvedPlatform != .mac {
                     Capsule()
-                        .fill(BraisenlyDS.Colors.textSecondary.opacity(0.6))
-                        .frame(width: 46, height: 5)
+                        .fill(theme.colors.textSecondary.opacity(0.6))
+                        .frame(width: theme.metrics.grabberSize.width, height: theme.metrics.grabberSize.height)
                 }
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: theme.metrics.spacing[.l]) {
                         HStack {
-                            VStack(alignment: .leading, spacing: 2) {
+                            VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                                 Text("Inference & Model Settings")
-                                    .font(BraisenlyDS.Typography.vaultTitle)
-                                    .foregroundStyle(BraisenlyDS.Colors.textBright)
+                                    .font(theme.typography.vaultTitle)
+                                    .foregroundStyle(theme.colors.textBright)
                                 Text("Pluggable on-device open-weight MLX models, Apple Foundation Models, and cloud endpoints.")
-                                    .font(BraisenlyDS.Typography.metadata)
-                                    .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                                    .font(theme.typography.metadata)
+                                    .foregroundStyle(theme.colors.textSecondary)
                             }
                             Spacer()
                             BraisenlyCircleIconButton(
@@ -65,13 +66,13 @@ public struct AIModelSettingsSheet: View {
                                     ? "On-device Apple Intelligence is available for private zero-latency inference."
                                     : "Using built-in local synthesis engine with automatic fallback when offline."),
                             systemImage: configuration.activeProfile.provider.iconName,
-                            iconColor: BraisenlyDS.Colors.accentTeal
+                            iconColor: theme.colors.accentTeal
                         )
 
                         if !openWeightModels.isEmpty {
                             Text("Pluggable On-Device Open-Weight Models (MLX)")
-                                .font(BraisenlyDS.Typography.rowLabelMedium)
-                                .foregroundStyle(BraisenlyDS.Colors.textBright)
+                                .font(theme.typography.rowLabelMedium)
+                                .foregroundStyle(theme.colors.textBright)
 
                             BraisenlyActionGroup(
                                 items: openWeightModels.map { profile in
@@ -93,8 +94,8 @@ public struct AIModelSettingsSheet: View {
 
                         if !systemAndCloudModels.isEmpty {
                             Text("Apple Intelligence & Cloud Endpoints")
-                                .font(BraisenlyDS.Typography.rowLabelMedium)
-                                .foregroundStyle(BraisenlyDS.Colors.textBright)
+                                .font(theme.typography.rowLabelMedium)
+                                .foregroundStyle(theme.colors.textBright)
 
                             BraisenlyActionGroup(
                                 items: systemAndCloudModels.map { profile in
@@ -120,20 +121,20 @@ public struct AIModelSettingsSheet: View {
                             step: 0.1
                         )
 
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
                             Text("System Instructions")
-                                .font(BraisenlyDS.Typography.metadata)
-                                .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                                .font(theme.typography.metadata)
+                                .foregroundStyle(theme.colors.textSecondary)
                             BraisenlyPromptField(
                                 "System instructions…",
                                 text: $configuration.systemPrompt
                             )
                         }
 
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: theme.metrics.spacing[.m]) {
                             Text("Cloud Provider Credentials")
-                                .font(BraisenlyDS.Typography.rowLabelMedium)
-                                .foregroundStyle(BraisenlyDS.Colors.textBright)
+                                .font(theme.typography.rowLabelMedium)
+                                .foregroundStyle(theme.colors.textBright)
 
                             BraisenlyKeyEntryField(
                                 title: "OpenAI / Compatible API Key",
@@ -148,13 +149,13 @@ public struct AIModelSettingsSheet: View {
                             )
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                    .padding(.horizontal, theme.metrics.spacing[.l])
+                    .padding(.bottom, theme.metrics.spacing[.xl])
                     .frame(maxWidth: resolvedPlatform == .mac ? 500 : 620)
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.top, resolvedPlatform == .mac ? 16 : 10)
+            .padding(.top, resolvedPlatform == .mac ? theme.metrics.spacing[.l] : theme.metrics.spacing[.s])
         }
         .frame(minWidth: resolvedPlatform == .mac ? 480 : nil, minHeight: resolvedPlatform == .mac ? 640 : nil)
     }
