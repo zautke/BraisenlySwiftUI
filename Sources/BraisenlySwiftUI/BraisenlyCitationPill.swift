@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyCitationPill: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let title: String
     public let source: String?
     public let url: URL?
@@ -28,17 +30,17 @@ public struct BraisenlyCitationPill: View {
     }
 
     private var pillContent: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: theme.metrics.spacing[.s]) {
             Image(systemName: systemImage)
-                .font(.system(size: 11, weight: .semibold))
+                .font(theme.typography.chipLabel)
             Text(displayTitle)
-                .font(BraisenlyDS.Typography.metadata)
+                .font(theme.typography.metadata)
                 .lineLimit(1)
         }
-        .foregroundStyle(BraisenlyDS.Colors.accentTeal)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceSnippet)
+        .foregroundStyle(theme.colors.accentTeal)
+        .padding(.horizontal, theme.metrics.spacing[.s])
+        .padding(.vertical, theme.metrics.spacing[.s])
+        .braisenlyCapsule(fill: theme.colors.surfaceSnippet)
     }
 
     private var displayTitle: String {

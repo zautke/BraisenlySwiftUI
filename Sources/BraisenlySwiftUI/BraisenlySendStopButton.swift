@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlySendStopButton: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let isResponding: Bool
     public let canSend: Bool
     public let size: CGFloat
@@ -25,13 +27,13 @@ public struct BraisenlySendStopButton: View {
         let isEnabled = isResponding || canSend
         Button(action: isResponding ? onCancel : onSend) {
             Image(systemName: isResponding ? "stop.fill" : "arrow.up")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(BraisenlyDS.Colors.backgroundPrimary)
+                .font(theme.typography.controlIconEmphasis)
+                .foregroundStyle(theme.colors.backgroundPrimary)
                 .contentTransition(.symbolEffect(.replace))
                 .frame(width: size, height: size)
                 .background(
                     Circle().fill(
-                        isResponding ? BraisenlyDS.Solarized.orange : BraisenlyDS.Colors.accentTeal
+                        isResponding ? theme.colors.warning : theme.colors.accentTeal
                     )
                 )
         }

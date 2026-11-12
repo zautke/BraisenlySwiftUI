@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct BraisenlyModelPill: View {
+    @Environment(\.braisenlyTheme) private var theme
+
     public let title: String
     public let systemImage: String
     public let isInteractive: Bool
@@ -27,22 +29,22 @@ public struct BraisenlyModelPill: View {
     }
 
     private var label: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: theme.metrics.spacing[.s]) {
             Image(systemName: systemImage)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+                .font(theme.typography.chipLabel)
+                .foregroundStyle(theme.colors.accentTeal)
             Text(title)
-                .font(BraisenlyDS.Typography.metadata)
-                .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                .font(theme.typography.metadata)
+                .foregroundStyle(theme.colors.textPrimary)
                 .lineLimit(1)
             if isInteractive {
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                    .font(theme.typography.chipLabel)
+                    .foregroundStyle(theme.colors.textSecondary)
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceSnippet)
+        .padding(.horizontal, theme.metrics.spacing[.s])
+        .padding(.vertical, theme.metrics.spacing[.xs])
+        .braisenlyCapsule(fill: theme.colors.surfaceSnippet, role: isInteractive ? .control : .chrome)
     }
 }
