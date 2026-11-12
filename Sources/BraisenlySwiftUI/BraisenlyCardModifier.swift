@@ -2,6 +2,9 @@ import SwiftUI
 
 /// Rounded-rect surface. Solid fill + hairline stroke, or glass for non-content roles
 /// when the environment theme is a glass theme (spec §5).
+///
+/// The view structure is identical for glass and solid themes; only values change,
+/// so switching themes never tears down the wrapped content (state, focus, scroll).
 public struct BraisenlyCardModifier: ViewModifier {
     @Environment(\.braisenlyTheme) private var theme
 
@@ -17,21 +20,19 @@ public struct BraisenlyCardModifier: ViewModifier {
         self.role = role
     }
 
-    @ViewBuilder
     public func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius ?? theme.metrics.radius[.l], style: .continuous)
-        if let glass = theme.surface.glass(for: role) {
-            content.glassEffect(glass, in: shape)
-        } else {
-            content
-                .background(shape.fill(fill ?? theme.colors.surfaceElevated))
-                .overlay(
-                    shape.strokeBorder(
-                        theme.colors.borderSubtle.opacity(0.6),
-                        lineWidth: theme.metrics.hairline * 1.6
-                    )
+        let glass = theme.surface.glass(for: role)
+        let solid = glass == nil
+        return content
+            .background(shape.fill(solid ? (fill ?? theme.colors.surfaceElevated) : Color.clear))
+            .overlay(
+                shape.strokeBorder(
+                    theme.colors.borderSubtle.opacity(solid ? 0.6 : 0),
+                    lineWidth: theme.metrics.hairline * 1.6
                 )
-        }
+            )
+            .glassEffect(glass ?? .identity, in: shape)
     }
 }
 

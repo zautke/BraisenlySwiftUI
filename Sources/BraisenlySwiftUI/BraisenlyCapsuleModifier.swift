@@ -2,6 +2,9 @@ import SwiftUI
 
 /// Capsule surface. Solid fill + stroke + shadow, or glass for non-content roles
 /// when the environment theme is a glass theme (spec §5).
+///
+/// The view structure is identical for glass and solid themes; only values change,
+/// so switching themes never tears down the wrapped content (state, focus, transitions).
 public struct BraisenlyCapsuleModifier: ViewModifier {
     @Environment(\.braisenlyTheme) private var theme
 
@@ -14,16 +17,15 @@ public struct BraisenlyCapsuleModifier: ViewModifier {
         self.role = role
     }
 
-    @ViewBuilder
     public func body(content: Content) -> some View {
-        if let glass = theme.surface.glass(for: role) {
-            content.glassEffect(glass, in: Capsule(style: .continuous))
-        } else {
-            content
-                .background(Capsule(style: .continuous).fill((fill ?? theme.colors.surfaceElevated).opacity(0.94)))
-                .overlay(Capsule(style: .continuous).strokeBorder(theme.colors.borderSubtle))
-                .shadow(color: theme.colors.shadow, radius: 12, x: 0, y: 6)
-        }
+        let shape = Capsule(style: .continuous)
+        let glass = theme.surface.glass(for: role)
+        let solid = glass == nil
+        return content
+            .background(shape.fill(solid ? (fill ?? theme.colors.surfaceElevated).opacity(0.94) : Color.clear))
+            .overlay(shape.strokeBorder(theme.colors.borderSubtle.opacity(solid ? 1 : 0)))
+            .shadow(color: solid ? theme.colors.shadow : Color.clear, radius: 12, x: 0, y: 6)
+            .glassEffect(glass ?? .identity, in: shape)
     }
 }
 

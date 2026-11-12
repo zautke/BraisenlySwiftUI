@@ -5,8 +5,10 @@ extension EnvironmentValues {
     @Entry var braisenlyIsInGlassGroup: Bool = false
 }
 
-/// The single owner of `GlassEffectContainer` (spec §5.2). Solid themes and nested groups
-/// render `content` without a container, so containers never nest.
+/// The single owner of `GlassEffectContainer` (spec §5.2). Nested groups render `content`
+/// without a container, so containers never nest. The container is always present for a
+/// top-level group (it is inert without glass children), so theme switches keep the
+/// view structure and the content's state.
 struct BraisenlyGlassGroup<Content: View>: View {
     @Environment(\.braisenlyTheme) private var theme
     @Environment(\.braisenlyIsInGlassGroup) private var isInGlassGroup
@@ -20,7 +22,7 @@ struct BraisenlyGlassGroup<Content: View>: View {
     }
 
     var body: some View {
-        if theme.surface == .solid || isInGlassGroup {
+        if isInGlassGroup {
             content
         } else {
             GlassEffectContainer(spacing: theme.metrics.spacing[spacing]) { content }

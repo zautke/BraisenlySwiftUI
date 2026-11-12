@@ -11,6 +11,7 @@ Environment-driven theming, Liquid Glass default theme, and catalog primitives.
 - Removed `BraisenlyTheme` and `BraisenlyThemeToggle`. Use `BraisenlyThemeDefinition`, `BraisenlyThemes`, `View.braisenlyTheme(_:)` and `BraisenlyThemeSwitcher`.
 - Workspace, document and AI chat views take `Binding<BraisenlyThemeDefinition.ID>` (or an initial theme id) instead of `BraisenlyTheme`.
 - Init parameters that defaulted to static tokens are now optional overrides (`Color? = nil`, `CGFloat? = nil`, `Font? = nil`) resolved against the environment theme.
+- `BraisenlyMobileWorkspaceView`, `AIChatView` and `AIChatWorkspaceView` start in Liquid Glass (previously Solarized Dark via `initialTheme: .dark`).
 - Typography uses Dynamic Type text styles; text sizes differ from the old fixed sizes, notably on macOS.
 
 ### Added

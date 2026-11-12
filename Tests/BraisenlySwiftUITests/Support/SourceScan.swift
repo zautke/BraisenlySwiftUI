@@ -7,11 +7,11 @@ enum SourceScan {
     static let bannedPatterns: [(id: String, regex: String)] = [
         ("staticToken", #"BraisenlyDS\.|BraisenlyDesignSystem\."#),
         ("fixedFont", #"\.font\(\.system\(size:\s*[0-9]"#),
-        ("literalPadding", #"\.padding\((\.[A-Za-z]+,\s*)?([1-9]|0\.)"#),
+        ("literalPadding", #"\.padding\(((\.[A-Za-z]+|\[[^\]]*\]),\s*)?([1-9]|0\.)"#),
         ("ternaryPadding", #"\.padding\([^)]*\?\s*[0-9.]+\s*:\s*[0-9.]+"#),
-        ("literalSpacing", #"spacing:\s*[1-9]"#),
+        ("literalSpacing", #"spacing:\s*([1-9]|0\.)"#),
         ("literalRadius", #"cornerRadius:\s*[0-9]"#),
-        ("colorLiteral", #"Color\.(black|white|gray)|\.black\.opacity"#),
+        ("colorLiteral", #"Color\.(black|white|gray)|Color\((red|white|hue):|\.(black|white|gray)\.opacity|(foregroundStyle|fill|tint|background)\(\.(black|white|gray)\)"#),
     ]
 
     /// Entries ending in "/" are directory prefixes; all others match one file exactly.
@@ -56,7 +56,7 @@ enum SourceScan {
     // MARK: Platform-conditional public declarations (§11.2, U-16)
 
     static func platformConditionalPublicViolations(inSource source: String, named name: String) -> [String] {
-        let declaration = #"^\s*(@[A-Za-z_]+(\([^)]*\))?\s+)*(nonisolated\s+)?public\s"#
+        let declaration = #"^\s*(@[A-Za-z_]+(\([^)]*\))?\s+)*(nonisolated\s+)?(public|open)\s|^\s*extension\s+[A-Za-z_][A-Za-z0-9_.]*\s*:"#
         var frames: [Bool] = [] // true = platform frame
         var result: [String] = []
         for (number, line) in scanLines(source) {

@@ -2,7 +2,9 @@ import SwiftUI
 
 public enum BraisenlyButtonProminence: Sendable { case standard, prominent }
 
-/// Themed button: system glass button styles under a glass theme, solid capsule otherwise.
+/// Themed button: interactive glass capsule under a glass theme, solid capsule otherwise.
+/// One `Button` with one style whose values follow the theme, so switching themes keeps
+/// the button's identity (no structural branch).
 public struct BraisenlyButton: View {
     @Environment(\.braisenlyTheme) private var theme
 
@@ -24,39 +26,33 @@ public struct BraisenlyButton: View {
     }
 
     public var body: some View {
-        if theme.surface == .solid {
-            solidButton
-        } else {
-            glassButton
+        Button(action: action) {
+            HStack(spacing: theme.metrics.spacing[.xs]) {
+                if let systemImage { Image(systemName: systemImage) }
+                Text(title)
+            }
+            .font(theme.typography.rowLabelMedium)
+            .frame(minHeight: theme.metrics.circleButtonSize)
+            .padding(.horizontal, theme.metrics.spacing[.l])
         }
+        .buttonStyle(BraisenlyButtonStyle(theme: theme, prominent: prominence == .prominent))
     }
+}
 
-    private var label: some View {
-        HStack(spacing: theme.metrics.spacing[.xs]) {
-            if let systemImage { Image(systemName: systemImage) }
-            Text(title)
-        }
-        .font(theme.typography.rowLabelMedium)
-        .frame(minHeight: theme.metrics.circleButtonSize)
-        .padding(.horizontal, theme.metrics.spacing[.l])
-    }
+private struct BraisenlyButtonStyle: ButtonStyle {
+    let theme: BraisenlyThemeDefinition
+    let prominent: Bool
 
-    @ViewBuilder
-    private var glassButton: some View {
-        if prominence == .prominent {
-            Button(action: action) { label }.buttonStyle(.glassProminent)
-        } else {
-            Button(action: action) { label }.buttonStyle(.glass)
-        }
-    }
-
-    private var solidButton: some View {
-        let prominent = prominence == .prominent
-        return Button(action: action) {
-            label
-                .foregroundStyle(prominent ? theme.colors.matchForeground : theme.colors.textBright)
-                .braisenlyCapsule(fill: prominent ? theme.colors.accentTeal : theme.colors.surfaceElevated)
-        }
-        .buttonStyle(.plain)
+    func makeBody(configuration: Configuration) -> some View {
+        let shape = Capsule(style: .continuous)
+        let glass = theme.surface.glass(for: .control)
+        let solid = glass == nil
+        let fill = prominent ? theme.colors.accentTeal : theme.colors.surfaceElevated
+        return configuration.label
+            .foregroundStyle(prominent ? theme.colors.matchForeground : theme.colors.textBright)
+            .background(shape.fill(solid ? fill : Color.clear))
+            .overlay(shape.strokeBorder(theme.colors.borderSubtle.opacity(solid && !prominent ? 1 : 0)))
+            .glassEffect(glass.map { prominent ? $0.tint(theme.colors.accentTeal) : $0 } ?? .identity, in: shape)
+            .opacity(configuration.isPressed ? 0.75 : 1)
     }
 }

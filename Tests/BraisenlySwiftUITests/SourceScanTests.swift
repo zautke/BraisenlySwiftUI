@@ -10,6 +10,11 @@ import Testing
     ("VStack(spacing: 12) {", "literalSpacing"),
     ("RoundedRectangle(cornerRadius: 14)", "literalRadius"),
     ("Color.black.opacity(0.38)", "colorLiteral"),
+    (".padding([.horizontal, .top], 12)", "literalPadding"),
+    ("HStack(spacing: 0.5) {", "literalSpacing"),
+    (".foregroundStyle(.white)", "colorLiteral"),
+    (".fill(.black)", "colorLiteral"),
+    ("Color(red: 0.1, green: 0.2, blue: 0.3)", "colorLiteral"),
 ])
 func detectsEachBannedPattern(line: String, patternID: String) {
     #expect(SourceScan.violations(inSource: line, named: "X.swift") == ["X.swift:1: \(patternID)"])
@@ -32,6 +37,8 @@ func detectsEachBannedPattern(line: String, patternID: String) {
     ("#if canImport(UIKit)\n#elseif canImport(AppKit)\n    public init() {}\n#endif", 3),
     ("#if canImport(UIKit)\n#else\n@MainActor public func f() {}\n#endif", 3),
     ("#if DEBUG\n#if os(iOS)\npublic extension View {}\n#endif\n#endif", 3),
+    ("#if os(macOS)\nopen class Y {}\n#endif", 2),
+    ("#if canImport(AppKit)\nextension Foo: SomePublicProtocol {}\n#endif", 2),
 ])
 func detectsPublicDeclarationInPlatformRegion(source: String, line: Int) {
     #expect(SourceScan.platformConditionalPublicViolations(inSource: source, named: "N.swift")

@@ -1,9 +1,12 @@
 import SwiftUI
 
 /// `NavigationSplitView` that follows the theme: glass themes keep system defaults,
-/// solid themes paint sidebar and detail from color tokens.
+/// solid themes paint sidebar and detail from color tokens. The column modifiers are
+/// always applied (values change with the theme), so switching themes keeps column state.
 public struct BraisenlySplitView<Sidebar: View, Detail: View>: View {
     @Environment(\.braisenlyTheme) private var theme
+    @State private var localVisibility: NavigationSplitViewVisibility = .automatic
+    @State private var localCompactColumn: NavigationSplitViewColumn = .sidebar
     private let columnVisibility: Binding<NavigationSplitViewVisibility>?
     private let preferredCompactColumn: Binding<NavigationSplitViewColumn>?
     public let extendsDetailBackground: Bool
@@ -23,25 +26,18 @@ public struct BraisenlySplitView<Sidebar: View, Detail: View>: View {
     }
 
     public var body: some View {
+        let solid = theme.surface == .solid
         NavigationSplitView(
-            columnVisibility: columnVisibility ?? .constant(.automatic),
-            preferredCompactColumn: preferredCompactColumn ?? .constant(.sidebar)
+            columnVisibility: columnVisibility ?? $localVisibility,
+            preferredCompactColumn: preferredCompactColumn ?? $localCompactColumn
         ) {
-            if theme.surface == .solid {
-                sidebar.scrollContentBackground(.hidden).background(theme.colors.backgroundDimmed)
-            } else {
-                sidebar
-            }
+            sidebar
+                .scrollContentBackground(solid ? .hidden : .automatic)
+                .background(solid ? theme.colors.backgroundDimmed : Color.clear)
         } detail: {
-            detailColumn
-        }
-    }
-
-    @ViewBuilder private var detailColumn: some View {
-        if theme.surface == .solid {
-            extend(detail.scrollContentBackground(.hidden).background(theme.colors.backgroundPrimary))
-        } else {
-            extend(detail)
+            extend(detail
+                .scrollContentBackground(solid ? .hidden : .automatic)
+                .background(solid ? theme.colors.backgroundPrimary : Color.clear))
         }
     }
 

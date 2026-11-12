@@ -25,7 +25,7 @@ func glassGroupMarksDescendants(theme: BraisenlyThemeDefinition) {
     var seen: Bool?
     let probe = BraisenlyGlassGroup { EnvironmentReader { seen = $0.braisenlyIsInGlassGroup } }
     _ = RenderSmoke.renders(probe, theme: theme)
-    #expect(seen == (theme.surface != .solid))
+    #expect(seen == true) // container always present (inert without glass children) so theme switches keep structure
 }
 
 @MainActor @Test func nestedGlassGroupStillMarksDescendants() {

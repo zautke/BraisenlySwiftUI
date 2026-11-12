@@ -23,7 +23,7 @@ public struct BraisenlyPropertyTable: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
+            ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
                 if index > 0 {
                     Rectangle().fill(theme.colors.divider).frame(height: theme.metrics.hairline)
                 }

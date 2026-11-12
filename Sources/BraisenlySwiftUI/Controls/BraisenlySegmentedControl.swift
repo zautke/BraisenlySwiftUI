@@ -34,7 +34,7 @@ public struct BraisenlySegmentedControl<Value: Hashable>: View {
                     } label: {
                         Text(title(option))
                             .font(theme.typography.rowLabelMedium)
-                            .foregroundStyle(isSelected ? theme.colors.textBright : theme.colors.textSecondary)
+                            .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
                             .padding(.horizontal, theme.metrics.spacing[.m])
                             .frame(minHeight: resolved.controlSize)
                             .frame(maxWidth: .infinity)

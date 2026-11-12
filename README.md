@@ -4,7 +4,7 @@ BraisenlySwiftUI is a reusable SwiftUI design system for building dark, focused 
 
 The package also ships `BraisenlyAI`, an additive, separately importable AI chat component library and provider-agnostic streaming model layer built on the same design system.
 
-The package is written in Swift 6.4 and supports iOS 17, iPadOS 17, and macOS 14 or later.
+The package is written in Swift 6.4 and supports iOS 26, iPadOS 26, and macOS 26 or later. Liquid Glass is the default theme; Solarized Light and Dark are built-in alternatives.
 
 ## Installation
 
@@ -62,8 +62,7 @@ struct ToolbarExample: View {
             onAdd: { /* Create a note */ },
             onMenu: { /* Show actions */ }
         )
-        .padding()
-        .background(BraisenlyDS.Colors.backgroundPrimary)
+        .braisenlyPadding(.all, .l)
     }
 }
 ```
@@ -92,45 +91,52 @@ The complete workspace adapts in the same way:
 BraisenlyMobileWorkspaceView(platform: .mac)
 ```
 
-## Solarized themes
+## Themes
 
-Braisenly includes the canonical Solarized palette and semantic Solarized Light and Dark themes. `BraisenlyDS.Solarized` exposes all 16 original colors, while `BraisenlyDS.Colors` automatically resolves each semantic role for the active appearance.
+Every component reads its colors, typography and metrics from the environment theme, a `BraisenlyThemeDefinition`. Three themes ship in `BraisenlyThemes`:
 
-- Solarized Dark uses `base03` and `base02` backgrounds with `base0` and `base1` text.
-- Solarized Light uses `base3` and `base2` backgrounds with `base00` and `base01` text.
-- Accent colors remain consistent between appearances.
+- `liquidGlass` (default): system colors, Dynamic Type, Liquid Glass on control and navigation surfaces.
+- `solarizedLight` and `solarizedDark`: the canonical Solarized palette on solid surfaces. `BraisenlyDS.Solarized` still exposes the 16 source colors.
 
-The complete workspace starts in Solarized Dark and includes an animated theme control. Set a different initial appearance when needed:
+The complete workspace starts in Liquid Glass and includes a theme switcher. Set a different initial theme when needed:
 
 ```swift
-BraisenlyMobileWorkspaceView(initialTheme: .light)
+BraisenlyMobileWorkspaceView(initialTheme: BraisenlyThemes.solarizedDark.id)
 ```
 
-Use the morphing toggle independently with any Braisenly surface:
+Apply a theme to any subtree and switch it with `BraisenlyThemeSwitcher`:
 
 ```swift
 struct ThemeControl: View {
-    @State private var theme = BraisenlyTheme.dark
+    @State private var themeID = BraisenlyThemes.liquidGlass.id
 
     var body: some View {
-        BraisenlyThemeToggle(theme: $theme)
-            .braisenlyTheme(theme)
+        BraisenlyThemeSwitcher(selection: $themeID, style: .cycle)
+            .braisenlyTheme(BraisenlyThemes.theme(withID: themeID))
     }
 }
 ```
 
-The toggle uses the SF Symbols Replace content transition to morph between sun and moon symbols and automatically disables motion when Reduce Motion is enabled.
+The `.cycle` style uses the SF Symbols Replace content transition and disables motion when Reduce Motion is enabled; the `.row` style lists every theme.
 
 ## Components
 
 ### Foundations
 
-- `BraisenlyDesignSystem` and `BraisenlyDS` expose semantic colors, typography, and layout metrics.
+- `BraisenlyThemeDefinition`, `BraisenlyThemes` and `.braisenlyTheme(_:)` deliver colors, typography, and metrics through the environment.
 - `BraisenlyPlatform` selects automatic, iPhone, iPad, or Mac presentation.
-- `BraisenlyTheme` selects Solarized Light or Dark presentation.
-- `BraisenlyCapsuleModifier` creates elevated floating controls.
-- `BraisenlyCardModifier` creates bordered grouped surfaces.
-- `.braisenlyCapsule()` and `.braisenlyCard()` apply those surfaces to any view.
+- `BraisenlyCapsuleModifier` and `BraisenlyCardModifier` draw glass or solid surfaces by `BraisenlySurfaceRole`; `.braisenlyCapsule()`, `.braisenlyCard()` and `.braisenlySheetBackground()` apply them.
+
+### Layout wrappers
+
+- `BraisenlyVStack`, `BraisenlyHStack`, `BraisenlyZStack`, `BraisenlyScroll`, `BraisenlyGrid`, `BraisenlySplitView`
+- `BraisenlySpacer`, `BraisenlyDivider`, `.braisenlyPadding(_:_:)`
+- `BraisenlyText`, `BraisenlyIcon`
+
+### Controls
+
+- `BraisenlyThemeSwitcher`, `BraisenlyButton`, `BraisenlySegmentedControl`, `BraisenlyToggleRow`, `BraisenlyStepperRow`, `BraisenlyTextFieldRow`
+- `BraisenlySectionHeader`, `BraisenlyNavRow`, `BraisenlyChipGroup`, `BraisenlyColorSwatch`, `BraisenlyPropertyTable`, `BraisenlyEmptyState`
 
 ### Primitives
 
@@ -138,7 +144,6 @@ The toggle uses the SF Symbols Replace content transition to morph between sun a
 - `BraisenlyDualActionPill`
 - `BraisenlyTabCounterBadge`
 - `BraisenlyHighlightedText`
-- `BraisenlyThemeToggle`
 
 ### Navigation and search
 
@@ -170,11 +175,8 @@ The toggle uses the SF Symbols Replace content transition to morph between sun a
 Use the design-system modifiers to style your own content consistently:
 
 ```swift
-Text("Connected notes")
-    .font(BraisenlyDS.Typography.rowLabelMedium)
-    .foregroundStyle(BraisenlyDS.Colors.textBright)
-    .padding(.horizontal, 18)
-    .frame(height: BraisenlyDS.Metrics.rowHeight)
+BraisenlyText("Connected notes", style: .rowLabelMedium, tone: .bright)
+    .braisenlyPadding(.horizontal, .l)
     .braisenlyCapsule()
 ```
 
