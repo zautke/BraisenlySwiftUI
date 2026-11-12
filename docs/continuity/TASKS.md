@@ -7,11 +7,11 @@ Updated 2026-11-11. Package plan: `docs/superpowers/plans/2026-11-08-themable-to
 - [x] Task 1 theme model, tokens, themes, env, floor bump — dbcd785 (opus, 2026-11-08)
 - [x] Task 3 source-scan guard — 6fd8b7d (session 6280253b inline, 2026-11-09)
 - [x] Task 2 surface modifiers, glass group, sheet background, RenderSmoke — a7ee0a1 (same, 2026-11-09)
-- [ ] Independent review of Tasks 1-3 (combined diff dbea45d..a7ee0a1) — dispatched 2026-11-11
-- [ ] Tasks 4-7 token migration batches B1-B4 (parallel OK, disjoint files)
-- [ ] Task 9 AI leaves migration
-- [ ] Tasks 11-13 layout wrappers (one batched dispatch)
-- [ ] Tasks 14-19 controls (batched), 20-22 (batched), 24 then 23 (batched)
+- [x] Independent review of Tasks 1-3 — approved; fix wave b30591a (2026-11-11)
+- [x] Tasks 4-7 token migration batches B1-B4 — 4034dd1, 3db3a88, bbd3632, 62133b9; each reviewed APPROVED_WITH_MINORS (2026-11-11)
+- [ ] Task 9 AI leaves migration — in flight (-t5)
+- [ ] Tasks 11-13 layout wrappers — in flight (-t6)
+- [ ] Tasks 14-19 controls — in flight (-t7); 20-22 (batched), 24 then 23 (batched)
 - [ ] Task 25 ThemeSwitcher
 - [ ] Task 8 B5 document/workspaces, Task 10 AI compounds (after 25)
 - [ ] Task 26 remove legacy theme API

@@ -4,6 +4,7 @@
 - Found Tasks 2 (a7ee0a1) and 3 (6fd8b7d) committed 2026-11-09 by session 6280253b inline, without independent review; Task 1 reviewer from 11-08 never reported. Ruling: one combined review of dbea45d..a7ee0a1.
 - Disk recovered to 19 GiB free; parallel worktrees allowed again (cap 3).
 - Created `docs/continuity/` six-file set (this set).
+- Review 1-3 approved; fix wave b30591a. Round 1 of Tasks 4-7 died on the usage-limit reset (no work lost); round 2 delivered B1-B4, all reviewed and merged → tip 62133b9, 35 tests. Wave 3 (9, 11-13, 14-19) dispatched 18:06.
 
 ## 2026-11-09 — session 6280253b
 - Implemented plan Tasks 3 and 2 inline (test-first), pushed to PR #7.

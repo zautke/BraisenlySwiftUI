@@ -6,3 +6,5 @@
 - 2026-11-08 — Subagents may not have the codemunch MCP; brief them with a Read/Grep fallback so they do not stall.
 - 2026-11-09/11 — Subagents and their reviews die with the session. Record every dispatch AND every verdict in the ledger immediately; otherwise the next session cannot tell reviewed from unreviewed commits.
 - 2026-11-08 — kb org release log is a table; appending a bare row lands outside it. Read the note body before `bm_edit append`.
+- 2026-11-11 — Subagents die when the account usage limit trips; the failure arrives as an idle_notification with failureReason. Stop them, re-dispatch the same briefs after the reset; nothing is lost if the ledger recorded the dispatch.
+- 2026-11-11 — `task-brief` script writes the brief file itself; never redirect its stdout to the same path (clobbers the first bytes).
