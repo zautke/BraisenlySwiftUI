@@ -2,6 +2,7 @@ import BraisenlySwiftUI
 import SwiftUI
 
 public struct AIEmptyState: View {
+    @Environment(\.braisenlyTheme) private var theme
     public let suggestions: [String]
     public let onSelectSuggestion: (String) -> Void
 
@@ -18,23 +19,22 @@ public struct AIEmptyState: View {
     }
 
     public var body: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: theme.metrics.spacing[.l]) {
             BraisenlyAvatarBadge(
                 systemName: "sparkles",
-                foregroundColor: BraisenlyDS.Colors.accentTeal,
                 size: 56,
                 iconSize: 26
             )
-            VStack(spacing: 6) {
+            VStack(spacing: theme.metrics.spacing[.s]) {
                 Text("How can Askenly help?")
-                    .font(BraisenlyDS.Typography.documentTitle)
-                    .foregroundStyle(BraisenlyDS.Colors.textBright)
+                    .font(theme.typography.documentTitle)
+                    .foregroundStyle(theme.colors.textBright)
                 Text("Ask a question, develop an idea, or work with your notes.")
-                    .font(BraisenlyDS.Typography.rowLabel)
-                    .foregroundStyle(BraisenlyDS.Colors.textSecondary)
+                    .font(theme.typography.rowLabel)
+                    .foregroundStyle(theme.colors.textSecondary)
                     .multilineTextAlignment(.center)
             }
-            VStack(spacing: 10) {
+            VStack(spacing: theme.metrics.spacing[.s]) {
                 ForEach(suggestions, id: \.self) { suggestion in
                     BraisenlySuggestionCard(title: suggestion) {
                         onSelectSuggestion(suggestion)
@@ -42,7 +42,7 @@ public struct AIEmptyState: View {
                 }
             }
         }
-        .padding(24)
+        .padding(theme.metrics.spacing[.xl])
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

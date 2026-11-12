@@ -8,6 +8,7 @@ import AppKit
 #endif
 
 public struct AIMessageBubble: View {
+    @Environment(\.braisenlyTheme) private var theme
     @State private var isCopied = false
 
     public let message: AIMessage
@@ -25,21 +26,21 @@ public struct AIMessageBubble: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: theme.metrics.spacing[.s]) {
             if message.role != .user { avatar }
-            VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 10) {
+            VStack(alignment: message.role == .user ? .trailing : .leading, spacing: theme.metrics.spacing[.s]) {
                 if !message.text.isEmpty {
                     BraisenlyChatBubbleSurface(
                         text: message.text,
                         fill: message.role == .user
-                            ? BraisenlyDS.Colors.surfaceHighlight
-                            : BraisenlyDS.Colors.surfaceElevated
+                            ? theme.colors.surfaceHighlight
+                            : theme.colors.surfaceElevated
                     )
                 }
                 ForEach(message.toolCalls) { AIToolCallCard(toolCall: $0) }
                 if !message.citations.isEmpty {
                     ScrollView(.horizontal) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: theme.metrics.spacing[.s]) {
                             ForEach(message.citations) { AICitationChip(citation: $0) }
                         }
                     }
@@ -67,8 +68,8 @@ public struct AIMessageBubble: View {
         BraisenlyAvatarBadge(
             systemName: message.role == .user ? "person.fill" : "sparkles",
             foregroundColor: message.role == .user
-                ? BraisenlyDS.Colors.textBright
-                : BraisenlyDS.Colors.accentTeal
+                ? theme.colors.textBright
+                : nil
         )
     }
 

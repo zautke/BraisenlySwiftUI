@@ -2,6 +2,7 @@ import BraisenlySwiftUI
 import SwiftUI
 
 public struct AIToolCallCard: View {
+    @Environment(\.braisenlyTheme) private var theme
     public let toolCall: AIToolCall
 
     public init(toolCall: AIToolCall) {
@@ -28,9 +29,9 @@ public struct AIToolCallCard: View {
 
     private var iconColor: Color {
         switch toolCall.state {
-        case .pending, .running: BraisenlyDS.Colors.accentTeal
-        case .complete: BraisenlyDS.Solarized.green
-        case .failed: BraisenlyDS.Solarized.red
+        case .pending, .running: theme.colors.accentTeal
+        case .complete: theme.colors.success
+        case .failed: theme.colors.danger
         }
     }
 }
