@@ -489,7 +489,7 @@ Behavior (each row is the acceptance contract for its task):
 | ColorSwatch | circle (`radius` n/a) filled `color`, stroke `borderSubtle`, size `metrics.circleButtonSize`; name (`metadata`) + detail (`code`); selected ring `accentTeal`; if `action` non-nil it is a button | label = name, value = detail |
 | PropertyTable | card `.content`; one row per entry: key (`metadata`, `textSecondary`) leading, value (`code`, `textPrimary`) trailing, `BraisenlyDivider`-style separators between rows | each row combined (`.accessibilityElement(children: .combine)`) |
 | EmptyState | centered icon (`.system(.largeTitle)` via typography? use `documentTitle` font for icon), title (`vaultTitle`), message (`snippetBody`, `textSecondary`), optional `BraisenlyButton` | combined |
-| Button | glass theme: `.buttonStyle(.glass)` / `.glassProminent` (system glass button); solid: capsule (`.control` path → solid fill `surfaceElevated` / `accentTeal` for prominent, text `textBright` / `matchForeground`); label `rowLabelMedium`; min height `metrics.circleButtonSize` | native button |
+| Button | one `Button` with a private `ButtonStyle` whose values follow the theme (deviation 11, §15): glass theme: interactive glass capsule, accent-tinted when prominent; solid: capsule (`.control` path → solid fill `surfaceElevated` / `accentTeal` for prominent, text `textBright` / `matchForeground`); label `rowLabelMedium`; min height `metrics.circleButtonSize` | native button |
 
 `BraisenlyFlowLayout` (internal, `Controls/BraisenlyFlowLayout.swift`) exposes a pure, testable row-packing function:
 ```swift
@@ -628,6 +628,7 @@ The scratch path name `.build-symgraph` is the Architect's call. It is currently
 8. **D-1 color token names** stay identical to `BraisenlyDS.Colors` (incl. `accentTeal`) to make migration mechanical; five semantic tokens added (`danger`, `warning`, `success`, `scrim`, `shadow`). `BraisenlyThemeDefinition` also conforms to `Equatable` (testability).
 9. **Plan sequencing**: the `Package.swift` floor bump moves into Task 1 (Task 2's `glassEffect` will not compile on the iOS 17 floor without `#available`).
 10. **Scope**: the 14 `BraisenlyAI` views are migrated too (forced by the `BraisenlyTheme` removal for 3 of them; the other 11 would otherwise ignore the active theme).
+11. **Theme switches never change view structure** (final review 2026-11-12): card/capsule modifiers, glass group, split view and `BraisenlyButton` vary only values across glass and solid themes (`Glass.identity`, clear fills, inert `GlassEffectContainer`). `BraisenlyButton` therefore uses a private `ButtonStyle` instead of the system `.glass`/`.glassProminent` styles so the button's identity survives a switch. `braisenlySheetBackground()` keeps its branch: `presentationBackground` has no system-default value, and no package sheet contains a switcher.
 
 ## 16. Builder-check results
 

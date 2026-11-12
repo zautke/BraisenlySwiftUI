@@ -17,7 +17,7 @@ Updated 2026-11-11. Package plan: `docs/superpowers/plans/2026-11-08-themable-to
 - [x] Task 26 remove legacy theme API — 049cff5 (inline, 2026-11-12)
 - [x] Task 27 guards + CHANGELOG 0.2.0 + .gitignore — f2a4d81; U-16 negative probe PASS (`BraisenlyPlatform.swift:45: platformConditionalPublic`) (2026-11-12)
 - [x] Task 28 final verification — swift build/test 79+9 green; xcodebuild macOS + presto BUILD SUCCEEDED (2026-11-12)
-- [ ] Final whole-branch review (opus) — in flight 2026-11-12; fix wave, re-review
+- [x] Final whole-branch review (opus) — CHANGES_REQUIRED → fix wave 136a67b → re-review APPROVED_WITH_MINORS → minors applied (2026-11-12)
 - [ ] Merge PR #7 → development as 0.2.0 + tag + four release-record surfaces (kb project log, kb org log, project memory, global memory)
 
 ## Phase 3+ — demo (plan in BraisenlySwiftDemo-scaffold/docs/superpowers/plans/2026-11-08-demo-catalog.md)

@@ -40,6 +40,7 @@ public struct BraisenlyButton: View {
 }
 
 private struct BraisenlyButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
     let theme: BraisenlyThemeDefinition
     let prominent: Bool
 
@@ -53,6 +54,6 @@ private struct BraisenlyButtonStyle: ButtonStyle {
             .background(shape.fill(solid ? fill : Color.clear))
             .overlay(shape.strokeBorder(theme.colors.borderSubtle.opacity(solid && !prominent ? 1 : 0)))
             .glassEffect(glass.map { prominent ? $0.tint(theme.colors.accentTeal) : $0 } ?? .identity, in: shape)
-            .opacity(configuration.isPressed ? 0.75 : 1)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.4)
     }
 }
