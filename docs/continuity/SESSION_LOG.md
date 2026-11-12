@@ -3,7 +3,7 @@
 ## 2026-11-12 — session 09b81d56 resumed (boot disk recovered 119 MiB → 2.6 GiB)
 - Tasks 8/10/minors-sweep had finished in worktrees -t5/-t6/-t7 before the disk block; cherry-picked onto tip, build + 86 tests green, pushed.
 - Tasks 26 and 27 done inline test-first (legacy theme removed; guard tests; U-16 negative probe fired on the declared line); Task 28 verification: swift build/test, xcodebuild macOS, xcodebuild presto (USB, connected) all green.
-- Final whole-branch review dispatched (opus, read-only).
+- Final whole-branch review (opus): CHANGES_REQUIRED (theme switch rebuilt view structure, split view constant bindings, stale README + 6 minors) → fix wave 136a67b → APPROVED_WITH_MINORS → minors b496564. Codex: no findings. PR #7 merged 8fac707, tag 0.2.0, four release records, run ledger RUN 2026-11-12 #1. Task worktrees pruned.
 
 ## 2026-11-11 — session 09b81d56 resumed ("swift storybook")
 - Found Tasks 2 (a7ee0a1) and 3 (6fd8b7d) committed 2026-11-09 by session 6280253b inline, without independent review; Task 1 reviewer from 11-08 never reported. Ruling: one combined review of dbea45d..a7ee0a1.
