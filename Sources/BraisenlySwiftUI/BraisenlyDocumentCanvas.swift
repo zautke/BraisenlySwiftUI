@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyDocumentCanvas: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     public let title: String
@@ -9,12 +10,12 @@ public struct BraisenlyDocumentCanvas: View {
     public let onToggleSidebar: () -> Void
     public let onEdit: () -> Void
     public let onOpenActionSheet: () -> Void
-    @Binding private var theme: BraisenlyTheme
+    @Binding private var themeID: BraisenlyThemeDefinition.ID
 
     public init(
         title: String = "Home",
         bodyText: String,
-        theme: Binding<BraisenlyTheme> = .constant(.dark),
+        theme: Binding<BraisenlyThemeDefinition.ID> = .constant(BraisenlyThemes.liquidGlass.id),
         platform: BraisenlyPlatform = .automatic,
         onToggleSidebar: @escaping () -> Void = {},
         onEdit: @escaping () -> Void = {},
@@ -22,7 +23,7 @@ public struct BraisenlyDocumentCanvas: View {
     ) {
         self.title = title
         self.bodyText = bodyText
-        _theme = theme
+        _themeID = theme
         self.platform = platform
         self.onToggleSidebar = onToggleSidebar
         self.onEdit = onEdit
@@ -32,25 +33,25 @@ public struct BraisenlyDocumentCanvas: View {
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
         ZStack {
-            BraisenlyDS.Colors.backgroundPrimary.ignoresSafeArea()
+            theme.colors.backgroundPrimary.ignoresSafeArea()
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: theme.metrics.spacing[.l]) {
                     Text(title)
-                        .font(BraisenlyDS.Typography.documentTitle)
-                        .foregroundStyle(BraisenlyDS.Colors.accentTeal)
+                        .font(theme.typography.documentTitle)
+                        .foregroundStyle(theme.colors.accentTeal)
                     Text(bodyText)
-                        .font(BraisenlyDS.Typography.bodyReading)
-                        .foregroundStyle(BraisenlyDS.Colors.textPrimary)
+                        .font(theme.typography.bodyReading)
+                        .foregroundStyle(theme.colors.textPrimary)
                         .lineSpacing(4.5)
                 }
                 .frame(maxWidth: resolvedPlatform.contentMaxWidth, alignment: .leading)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.horizontal, resolvedPlatform == .iPhone ? 20 : 32)
-                .padding(.top, resolvedPlatform == .mac ? 82 : 74)
-                .padding(.bottom, 110)
+                .padding(.horizontal, resolvedPlatform == .iPhone ? theme.metrics.spacing[.l] + theme.metrics.spacing[.xs] : theme.metrics.spacing[.xl] + theme.metrics.spacing[.s])
+                .padding(.top, theme.metrics.spacing[.xl] * 3 + (resolvedPlatform == .mac ? theme.metrics.spacing[.s] : 0))
+                .padding(.bottom, theme.metrics.toolbarHeight + theme.metrics.spacing[.xl] * 2)
             }
             BraisenlyDocumentChrome(
-                theme: $theme,
+                theme: $themeID,
                 platform: resolvedPlatform,
                 onToggleSidebar: onToggleSidebar,
                 onEdit: onEdit,

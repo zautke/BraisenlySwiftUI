@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlyDocumentActionSheet: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var toggles = [
@@ -26,19 +27,20 @@ public struct BraisenlyDocumentActionSheet: View {
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
         ZStack {
-            BraisenlyDS.Colors.surfaceSheet.ignoresSafeArea()
-            VStack(spacing: 14) {
+            if theme.surface == .solid { theme.colors.surfaceSheet.ignoresSafeArea() }
+            VStack(spacing: theme.metrics.spacing[.m]) {
                 if resolvedPlatform != .mac {
-                    Capsule().fill(BraisenlyDS.Colors.textSecondary.opacity(0.6)).frame(width: 46, height: 5)
+                    Capsule().fill(theme.colors.textSecondary.opacity(0.6))
+                        .frame(width: theme.metrics.grabberSize.width, height: theme.metrics.grabberSize.height)
                 }
                 ScrollView {
-                    VStack(spacing: resolvedPlatform == .mac ? 12 : 16) {
+                    VStack(spacing: resolvedPlatform == .mac ? theme.metrics.spacing[.m] : theme.metrics.spacing[.l]) {
                         Button { dismiss() } label: {
                             BraisenlyActionRow(
                                 item: .init(id: "close", icon: "xmark", title: "Close"),
                                 platform: resolvedPlatform
                             )
-                            .braisenlyCard(cornerRadius: 24)
+                            .braisenlyCard(cornerRadius: theme.metrics.radius[.xl])
                         }
                         .buttonStyle(.plain)
                         BraisenlyActionGroup(items: toggles, platform: resolvedPlatform, action: toggle)
@@ -48,13 +50,13 @@ public struct BraisenlyDocumentActionSheet: View {
                             platform: resolvedPlatform
                         ) { _ in }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                    .padding(.horizontal, theme.metrics.spacing[.l])
+                    .padding(.bottom, theme.metrics.spacing[.xl])
                     .frame(maxWidth: resolvedPlatform == .mac ? 480 : 620)
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.top, resolvedPlatform == .mac ? 16 : 10)
+            .padding(.top, resolvedPlatform == .mac ? theme.metrics.spacing[.l] : theme.metrics.spacing[.s])
         }
         .frame(minWidth: resolvedPlatform == .mac ? 440 : nil, minHeight: resolvedPlatform == .mac ? 620 : nil)
     }
