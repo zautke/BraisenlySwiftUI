@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlySidebarContextPopover: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding private var selectedMode: BraisenlySidebarMode
     @Binding private var isPresented: Bool
@@ -19,31 +20,31 @@ public struct BraisenlySidebarContextPopover: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
             ForEach(BraisenlySidebarMode.allCases) { mode in
                 Button {
                     selectedMode = mode
                     withAnimation(.spring(response: 0.25, dampingFraction: 0.85)) { isPresented = false }
                 } label: {
-                    HStack(spacing: 12) {
+                    HStack(spacing: theme.metrics.spacing[.m]) {
                         Image(systemName: mode.icon).frame(width: 24)
-                        Text(mode.rawValue).font(BraisenlyDS.Typography.rowLabelMedium)
+                        Text(mode.rawValue).font(theme.typography.rowLabelMedium)
                         Spacer()
                     }
-                    .foregroundStyle(BraisenlyDS.Colors.textBright)
-                    .padding(.horizontal, 14)
+                    .foregroundStyle(theme.colors.textBright)
+                    .padding(.horizontal, theme.metrics.spacing[.m])
                     .frame(height: resolvedPlatform.rowHeight)
                     .background {
                         if mode == selectedMode {
-                            Capsule(style: .continuous).fill(BraisenlyDS.Colors.surfaceHighlight)
+                            Capsule(style: .continuous).fill(theme.colors.surfaceHighlight)
                         }
                     }
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(resolvedPlatform == .mac ? 8 : 10)
-        .braisenlyCard(cornerRadius: BraisenlyDS.Metrics.popoverRadius)
-        .shadow(color: .black.opacity(0.45), radius: 20, x: 0, y: 8)
+        .padding(theme.metrics.spacing[.s])
+        .braisenlyCard(cornerRadius: theme.metrics.radius[.xl], role: .chrome)
+        .shadow(color: theme.surface == .solid ? theme.colors.shadow : .clear, radius: 20, x: 0, y: 8)
     }
 }

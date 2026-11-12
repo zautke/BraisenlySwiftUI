@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlySidebarSearchHeader: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding private var searchText: String
     public let platform: BraisenlyPlatform
@@ -12,8 +13,8 @@ public struct BraisenlySidebarSearchHeader: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
-        HStack(spacing: 12) {
-            HStack(spacing: 10) {
+        HStack(spacing: theme.metrics.spacing[.m]) {
+            HStack(spacing: theme.metrics.spacing[.s]) {
                 Image(systemName: "magnifyingglass")
                 TextField("Search…", text: $searchText)
                     .textFieldStyle(.plain)
@@ -21,15 +22,15 @@ public struct BraisenlySidebarSearchHeader: View {
                 Button { searchText = "" } label: { Image(systemName: "xmark.circle.fill") }
                     .accessibilityLabel("Clear search")
             }
-            .foregroundStyle(BraisenlyDS.Colors.textSecondary)
-            .padding(.horizontal, 14)
+            .foregroundStyle(theme.colors.textSecondary)
+            .padding(.horizontal, theme.metrics.spacing[.m])
             .frame(height: resolvedPlatform == .mac ? 34 : 42)
-            .braisenlyCapsule(fill: BraisenlyDS.Colors.surfaceSheet)
+            .braisenlyCapsule(fill: theme.colors.surfaceSheet, role: .chrome)
             Button {} label: { Image(systemName: "slider.horizontal.3").frame(width: 36, height: 42) }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Search filters")
         }
-        .padding(.horizontal, resolvedPlatform == .mac ? 12 : 16)
-        .padding(.vertical, resolvedPlatform == .mac ? 10 : 14)
+        .padding(.horizontal, resolvedPlatform == .mac ? theme.metrics.spacing[.m] : theme.metrics.spacing[.l])
+        .padding(.vertical, resolvedPlatform == .mac ? theme.metrics.spacing[.s] : theme.metrics.spacing[.m])
     }
 }

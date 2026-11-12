@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct BraisenlySidebarDrawer: View {
+    @Environment(\.braisenlyTheme) private var theme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding private var searchText: String
     @Binding private var selectedMode: BraisenlySidebarMode
@@ -23,14 +24,15 @@ public struct BraisenlySidebarDrawer: View {
 
     public var body: some View {
         let resolvedPlatform = platform.resolved(horizontalSizeClass: horizontalSizeClass)
+        BraisenlyGlassGroup {
         ZStack(alignment: .bottom) {
-            BraisenlyDS.Colors.backgroundPrimary.ignoresSafeArea()
+            theme.colors.backgroundPrimary.ignoresSafeArea()
             VStack(spacing: 0) {
                 BraisenlySidebarSearchHeader(searchText: $searchText, platform: resolvedPlatform)
-                Divider().overlay(BraisenlyDS.Colors.divider)
+                Divider().overlay(theme.colors.divider)
                 BraisenlySearchMetadataRow()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: theme.metrics.spacing[.l]) {
                         BraisenlyHighlightedText("applegriswald", highlight: searchText)
                         BraisenlyHighlightedText("griswalds", highlight: searchText)
                         BraisenlyExpandableSearchResult(
@@ -39,7 +41,7 @@ public struct BraisenlySidebarDrawer: View {
                             isExpanded: $isMatchExpanded
                         )
                     }
-                    .padding(resolvedPlatform == .mac ? 12 : 16)
+                    .padding(resolvedPlatform == .mac ? theme.metrics.spacing[.m] : theme.metrics.spacing[.l])
                 }
                 BraisenlySidebarFooter(
                     selectedMode: selectedMode,
@@ -53,14 +55,20 @@ public struct BraisenlySidebarDrawer: View {
                     isPresented: $isShowingContextPopover,
                     platform: resolvedPlatform
                 )
-                .padding(.horizontal, 14)
-                .padding(.bottom, resolvedPlatform == .mac ? 104 : 126)
+                .padding(.horizontal, theme.metrics.spacing[.m])
+                .padding(.bottom, footerClearance(resolvedPlatform))
                 .transition(.scale(scale: 0.92, anchor: .bottom).combined(with: .opacity))
             }
         }
         .overlay(alignment: .trailing) {
-            Rectangle().fill(BraisenlyDS.Colors.borderSubtle.opacity(0.4)).frame(width: 0.5).ignoresSafeArea()
+            Rectangle().fill(theme.colors.borderSubtle.opacity(0.4)).frame(width: theme.metrics.hairline).ignoresSafeArea()
         }
+        }
+    }
+
+    /// Footer height: mode capsule + settings button + inner spacing and bottom inset (mac 104, iPhone 120; was 104/126).
+    private func footerClearance(_ platform: BraisenlyPlatform) -> CGFloat {
+        platform.rowHeight + platform.controlSize + theme.metrics.spacing[.m] + theme.metrics.spacing[.l]
     }
 
     private func toggleContextPopover() {
