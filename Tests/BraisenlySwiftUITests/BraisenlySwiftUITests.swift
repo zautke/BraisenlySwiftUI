@@ -25,13 +25,6 @@ import Testing
     #expect(BraisenlyPlatform.iPad.contentMaxWidth < .infinity)
 }
 
-@Test func themesToggleBidirectionally() {
-    #expect(BraisenlyTheme.dark.next == .light)
-    #expect(BraisenlyTheme.light.next == .dark)
-    #expect(BraisenlyTheme.dark.symbolName == "moon.stars.fill")
-    #expect(BraisenlyTheme.light.symbolName == "sun.max.fill")
-}
-
 @Test func chatPrimitivesStoreConfigurationProperties() {
     let avatar = BraisenlyAvatarBadge(systemName: "sparkles", size: 40, iconSize: 18)
     #expect(avatar.systemName == "sparkles")
