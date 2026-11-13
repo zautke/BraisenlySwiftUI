@@ -23,6 +23,18 @@ public struct BraisenlyParameterSliderRow: View {
         self.formatString = formatString
     }
 
+    /// An unstepped slider (the system draws tick dots for `step`) whose setter snaps to `step`.
+    private var snapped: Binding<Double> {
+        Binding(
+            get: { value },
+            set: { raw in
+                guard step > 0 else { value = raw; return }
+                let n = ((raw - range.lowerBound) / step).rounded()
+                value = min(max(range.lowerBound + n * step, range.lowerBound), range.upperBound)
+            }
+        )
+    }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: theme.metrics.spacing[.s]) {
             HStack {
@@ -34,7 +46,7 @@ public struct BraisenlyParameterSliderRow: View {
                     .font(theme.typography.metadata)
                     .foregroundStyle(theme.colors.accentTeal)
             }
-            Slider(value: $value, in: range, step: step)
+            Slider(value: snapped, in: range)
                 .tint(theme.colors.accentTeal)
         }
         .padding(.horizontal, theme.metrics.spacing[.l])
