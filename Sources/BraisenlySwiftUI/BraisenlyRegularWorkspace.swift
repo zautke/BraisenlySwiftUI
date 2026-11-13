@@ -44,8 +44,12 @@ public struct BraisenlyRegularWorkspace: View {
                 ideal: platform == .mac ? 320 : 360,
                 max: platform == .mac ? 420 : 460
             )
-            // The document chrome owns the sidebar toggle (`toggleSidebar()`); drop the system one.
+            // The document chrome owns the sidebar toggle (`toggleSidebar()`); drop the system one on iOS,
+            // where it floats in the column's own bar. On macOS the removal reaches the window toolbar
+            // and would also strip the host window's toggle.
+            #if os(iOS)
             .toolbar(removing: .sidebarToggle)
+            #endif
         } detail: {
             BraisenlyDocumentCanvas(
                 title: documentTitle,
