@@ -1,5 +1,7 @@
 import SwiftUI
 
+/// One wrapped paragraph whose case-insensitive matches of `highlight` carry an inline,
+/// baseline-aligned rounded highlight (drawn by a `TextRenderer`, so the run never leaves the text flow).
 public struct BraisenlyHighlightedText: View {
     @Environment(\.braisenlyTheme) private var theme
 
@@ -23,22 +25,46 @@ public struct BraisenlyHighlightedText: View {
     }
 
     public var body: some View {
-        HStack(spacing: 0) {
-            ForEach(BraisenlyHighlightedTextSegment.make(text: text, highlight: highlight)) { segment in
-                Text(segment.text)
-                    .font(font ?? theme.typography.rowLabel)
-                    .foregroundStyle(segment.isMatch ? theme.colors.matchForeground : (baseColor ?? theme.colors.textPrimary))
-                    .padding(.horizontal, segment.isMatch ? theme.metrics.hairline * 3 : 0)
-                    .padding(.vertical, segment.isMatch ? theme.metrics.hairline : 0)
-                    .background {
-                        if segment.isMatch {
-                            RoundedRectangle(cornerRadius: theme.metrics.radius[.xs], style: .continuous)
-                                .fill(theme.colors.matchBackground)
-                        }
-                    }
+        let base = baseColor ?? theme.colors.textPrimary
+        BraisenlyHighlightedTextSegment.make(text: text, highlight: highlight)
+            .reduce(Text(verbatim: "")) { paragraph, segment in
+                let run = Text(verbatim: segment.text)
+                    .foregroundStyle(segment.isMatch ? theme.colors.matchForeground : base)
+                let styled = segment.isMatch ? run.customAttribute(BraisenlyHighlightMatchAttribute()) : run
+                return Text("\(paragraph)\(styled)")
+            }
+            .font(font ?? theme.typography.rowLabel)
+            .textRenderer(BraisenlyHighlightRenderer(
+                fill: theme.colors.matchBackground,
+                cornerRadius: theme.metrics.radius[.xs],
+                outset: theme.metrics.hairline
+            ))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(text)
+    }
+}
+
+/// Marks a matched run inside the paragraph.
+struct BraisenlyHighlightMatchAttribute: TextAttribute {}
+
+/// Paints a rounded fill behind every matched run, then draws the text on top.
+struct BraisenlyHighlightRenderer: TextRenderer {
+    let fill: Color
+    let cornerRadius: CGFloat
+    let outset: CGFloat
+
+    func draw(layout: Text.Layout, in context: inout GraphicsContext) {
+        for line in layout {
+            for run in line where run[BraisenlyHighlightMatchAttribute.self] != nil {
+                let rect = run.typographicBounds.rect.insetBy(dx: -outset, dy: 0)
+                context.fill(
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous).path(in: rect),
+                    with: .color(fill)
+                )
             }
         }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(text)
+        for line in layout {
+            context.draw(line)
+        }
     }
 }
