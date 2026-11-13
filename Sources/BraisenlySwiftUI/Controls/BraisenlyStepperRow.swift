@@ -21,21 +21,29 @@ public struct BraisenlyStepperRow: View {
     }
 
     public var body: some View {
-        let clampedValue = Binding(
-            get: { Self.clamped(value, to: range) },
-            set: { value = Self.clamped($0, to: range) }
-        )
-        Stepper(value: clampedValue, in: range, step: step) {
-            HStack(spacing: theme.metrics.spacing[.s]) {
-                Text(title)
-                    .font(theme.typography.rowLabel)
-                    .foregroundStyle(theme.colors.textPrimary)
-                Spacer(minLength: theme.metrics.spacing[.s])
-                Text("\(clampedValue.wrappedValue)")
-                    .font(theme.typography.rowLabelMedium.monospacedDigit())
-                    .foregroundStyle(theme.colors.textBright)
+        let current = Self.clamped(value, to: range)
+        HStack(spacing: theme.metrics.spacing[.s]) {
+            Text(title)
+                .font(theme.typography.rowLabel)
+                .foregroundStyle(theme.colors.textPrimary)
+            Spacer(minLength: theme.metrics.spacing[.s])
+            Text("\(current)")
+                .font(theme.typography.rowLabelMedium.monospacedDigit())
+                .foregroundStyle(theme.colors.textBright)
+            BraisenlyCircleIconButton(systemName: "minus", accessibilityLabel: "Decrement") {
+                value = Self.clamped(current - step, to: range)
             }
+            .disabled(current <= range.lowerBound)
+            .opacity(current <= range.lowerBound ? 0.4 : 1)
+            BraisenlyCircleIconButton(systemName: "plus", accessibilityLabel: "Increment") {
+                value = Self.clamped(current + step, to: range)
+            }
+            .disabled(current >= range.upperBound)
+            .opacity(current >= range.upperBound ? 0.4 : 1)
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(title)
+        .accessibilityValue("\(current)")
         .padding(.horizontal, theme.metrics.spacing[.m])
         .padding(.vertical, theme.metrics.spacing[.s])
         .braisenlyCard(role: .content)
