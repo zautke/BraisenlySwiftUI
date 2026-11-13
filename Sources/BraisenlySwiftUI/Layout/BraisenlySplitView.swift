@@ -32,6 +32,7 @@ public struct BraisenlySplitView<Sidebar: View, Detail: View>: View {
             preferredCompactColumn: preferredCompactColumn ?? $localCompactColumn
         ) {
             sidebar
+                .navigationSplitViewColumnWidth(min: 260, ideal: 300, max: 420)
                 .scrollContentBackground(solid ? .hidden : .automatic)
                 .background(solid ? theme.colors.backgroundDimmed : Color.clear)
         } detail: {

@@ -2,6 +2,15 @@
 
 All notable changes to BraisenlySwiftUI. Versions follow MAJOR.MINOR.PATCH; merges into `development` bump MINOR, promotions to `main` bump MAJOR.
 
+## 0.3.0 — 2026-11-12
+
+Narrow-sidebar layout fixes found live in the BraisenlySwiftDemo catalog.
+
+### Fixed
+- `BraisenlyThemeSwitcher` (`.row`) no longer wraps theme names one character per line in a narrow sidebar; it falls back to icon-only pills (accessibility labels kept) when the labelled row does not fit.
+- `BraisenlySidebarSearchHeader` no longer draws a stray "Aa" over the search field; the field is single-line.
+- `BraisenlySplitView` gives the sidebar a 260–420 pt column width (ideal 300).
+
 ## 0.2.0 — 2026-11-12
 
 Environment-driven theming, Liquid Glass default theme, and catalog primitives.

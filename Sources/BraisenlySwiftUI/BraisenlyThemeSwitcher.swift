@@ -37,22 +37,34 @@ public struct BraisenlyThemeSwitcher: View {
         }
     }
 
+    /// Full labels when the row fits; icon-only pills (same accessibility labels) when it does not.
     private var rowBody: some View {
         BraisenlyGlassGroup {
-            HStack(spacing: theme.metrics.spacing[.xs]) {
-                ForEach(themes, id: \.id) { item in
-                    let isSelected = item.id == current?.id
-                    Button { choose(item.id) } label: {
-                        Label(item.name, systemImage: item.symbolName)
-                            .font(theme.typography.chipLabel)
-                            .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
-                            .padding(.horizontal, theme.metrics.spacing[.m])
-                            .padding(.vertical, theme.metrics.spacing[.s])
-                            .braisenlyCapsule()
+            ViewThatFits(in: .horizontal) {
+                pills(iconOnly: false)
+                pills(iconOnly: true)
+            }
+        }
+    }
+
+    private func pills(iconOnly: Bool) -> some View {
+        HStack(spacing: theme.metrics.spacing[.xs]) {
+            ForEach(themes, id: \.id) { item in
+                let isSelected = item.id == current?.id
+                Button { choose(item.id) } label: {
+                    HStack(spacing: theme.metrics.spacing[.xs]) {
+                        Image(systemName: item.symbolName)
+                        if !iconOnly { Text(item.name).lineLimit(1).fixedSize() }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(isSelected ? .isSelected : [])
+                        .font(theme.typography.chipLabel)
+                        .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
+                        .padding(.horizontal, theme.metrics.spacing[.m])
+                        .padding(.vertical, theme.metrics.spacing[.s])
+                        .braisenlyCapsule()
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(item.name)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
             }
         }
     }
