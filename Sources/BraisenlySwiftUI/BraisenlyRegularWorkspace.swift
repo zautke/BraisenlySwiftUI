@@ -44,6 +44,8 @@ public struct BraisenlyRegularWorkspace: View {
                 ideal: platform == .mac ? 320 : 360,
                 max: platform == .mac ? 420 : 460
             )
+            // The document chrome owns the sidebar toggle (`toggleSidebar()`); drop the system one.
+            .toolbar(removing: .sidebarToggle)
         } detail: {
             BraisenlyDocumentCanvas(
                 title: documentTitle,
