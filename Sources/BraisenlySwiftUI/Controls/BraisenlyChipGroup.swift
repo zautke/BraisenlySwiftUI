@@ -30,10 +30,10 @@ public struct BraisenlyChipGroup<Value: Hashable>: View {
         return Button { selection.wrappedValue = option } label: {
             Text(title(option))
                 .font(theme.typography.chipLabel)
-                .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textPrimary)
+                .foregroundStyle(isSelected ? theme.selectedPair.label : theme.colors.textPrimary)
                 .padding(.horizontal, theme.metrics.spacing[.m])
                 .padding(.vertical, theme.metrics.spacing[.s])
-                .braisenlyCapsule(role: .control)
+                .braisenlyCapsule(fill: isSelected ? theme.selectedPair.fill : nil, role: .control)
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? .isSelected : [])

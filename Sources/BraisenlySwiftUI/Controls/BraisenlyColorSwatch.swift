@@ -12,6 +12,9 @@ public struct BraisenlyColorSwatch: View {
 
     public var isInteractive: Bool { action != nil }
 
+    /// Smallest shrink applied to the name/detail before middle truncation.
+    static let minimumNameScale: CGFloat = 0.8
+
     public init(color: Color, name: String, detail: String? = nil, isSelected: Bool = false, action: (() -> Void)? = nil) {
         self.color = color
         self.name = name
@@ -29,7 +32,9 @@ public struct BraisenlyColorSwatch: View {
     }
 
     private var content: some View {
-        HStack(spacing: theme.metrics.spacing[.m]) {
+        // Name sits under the circle so it gets the full column width; one line, middle-truncated,
+        // never hyphenated mid-word.
+        VStack(spacing: theme.metrics.spacing[.xs]) {
             Circle()
                 .fill(color)
                 .overlay(Circle().strokeBorder(theme.colors.borderSubtle, lineWidth: theme.metrics.hairline))
@@ -38,17 +43,24 @@ public struct BraisenlyColorSwatch: View {
                 .overlay(
                     Circle().strokeBorder(theme.colors.accentTeal, lineWidth: isSelected ? theme.metrics.hairline * 2 : 0)
                 )
-            VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
+            if !name.isEmpty {
                 Text(name)
                     .font(theme.typography.metadata)
                     .foregroundStyle(theme.colors.textPrimary)
-                if let detail {
-                    Text(detail)
-                        .font(theme.typography.code)
-                        .foregroundStyle(theme.colors.textSecondary)
-                }
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .minimumScaleFactor(Self.minimumNameScale)
+            }
+            if let detail, !detail.isEmpty {
+                Text(detail)
+                    .font(theme.typography.code)
+                    .foregroundStyle(theme.colors.textSecondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .minimumScaleFactor(Self.minimumNameScale)
             }
         }
+        .multilineTextAlignment(.center)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(name)
         .accessibilityValue(detail ?? "")

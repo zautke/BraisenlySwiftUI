@@ -32,17 +32,36 @@ public struct BraisenlySplitView<Sidebar: View, Detail: View>: View {
             preferredCompactColumn: preferredCompactColumn ?? $localCompactColumn
         ) {
             sidebar
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .navigationSplitViewColumnWidth(min: 260, ideal: 300, max: 420)
                 .scrollContentBackground(solid ? .hidden : .automatic)
+                .modifier(SolidMacChrome(solid: solid))
                 .background(solid ? theme.colors.backgroundDimmed : Color.clear)
         } detail: {
             extend(detail
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .scrollContentBackground(solid ? .hidden : .automatic)
+                .modifier(SolidMacChrome(solid: solid))
                 .background(solid ? theme.colors.backgroundPrimary : Color.clear))
         }
     }
 
     @ViewBuilder private func extend<V: View>(_ v: V) -> some View {
         if extendsDetailBackground { v.backgroundExtensionEffect() } else { v }
+    }
+}
+
+/// macOS solid themes: no toolbar material and no scroll-edge blur, so the window toolbar band
+/// shows the column's theme colour. iOS keeps system bars (status bar and nav buttons need the edge effect).
+private struct SolidMacChrome: ViewModifier {
+    let solid: Bool
+    func body(content: Content) -> some View {
+        #if os(macOS)
+        content
+            .scrollEdgeEffectHidden(solid)
+            .toolbarBackgroundVisibility(solid ? .hidden : .automatic, for: .windowToolbar)
+        #else
+        content
+        #endif
     }
 }

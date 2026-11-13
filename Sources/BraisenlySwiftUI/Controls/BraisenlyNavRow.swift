@@ -35,13 +35,14 @@ public struct BraisenlyNavRow: View {
                 if let systemImage {
                     Image(systemName: systemImage)
                         .font(theme.typography.rowIcon)
-                        .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
+                        .foregroundStyle(isSelected ? theme.selectedPair.label : theme.colors.textSecondary)
                         .frame(width: 20)
                         .accessibilityHidden(true)
                 }
                 Text(title)
                     .font(theme.typography.rowLabel)
-                    .foregroundStyle(isSelected ? theme.colors.textBright : theme.colors.textPrimary)
+                    // Glass keeps the bright title it had; only solid themes need the inverted label.
+                    .foregroundStyle(isSelected ? (theme.surface == .solid ? theme.selectedPair.label : theme.colors.textBright) : theme.colors.textPrimary)
                 Spacer(minLength: theme.metrics.spacing[.s])
                 if let badge {
                     Text(badge)
@@ -59,7 +60,7 @@ public struct BraisenlyNavRow: View {
             .background {
                 if isSelected {
                     RoundedRectangle(cornerRadius: theme.metrics.radius[.s], style: .continuous)
-                        .fill(theme.colors.surfaceHighlight)
+                        .fill(theme.selectedPair.fill)
                 }
             }
             .contentShape(Rectangle())
