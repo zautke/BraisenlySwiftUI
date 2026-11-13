@@ -21,6 +21,11 @@ public struct BraisenlyPropertyTable: View {
         self.rows = rows
     }
 
+    /// `metadata` and `code` are footnote (10 pt on macOS); key and value use the next larger
+    /// style (value in its monospaced variant) so neither renders below 11 pt.
+    static func keyFont(_ theme: BraisenlyThemeDefinition) -> Font { theme.typography.snippetBody }
+    static func valueFont(_ theme: BraisenlyThemeDefinition) -> Font { theme.typography.snippetBody.monospaced() }
+
     public var body: some View {
         VStack(spacing: 0) {
             ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
@@ -29,11 +34,11 @@ public struct BraisenlyPropertyTable: View {
                 }
                 HStack(alignment: .firstTextBaseline, spacing: theme.metrics.spacing[.m]) {
                     Text(row.key)
-                        .font(theme.typography.metadata)
+                        .font(Self.keyFont(theme))
                         .foregroundStyle(theme.colors.textSecondary)
                     Spacer(minLength: theme.metrics.spacing[.m])
                     Text(row.value)
-                        .font(theme.typography.code)
+                        .font(Self.valueFont(theme))
                         .foregroundStyle(theme.colors.textPrimary)
                         .multilineTextAlignment(.trailing)
                 }

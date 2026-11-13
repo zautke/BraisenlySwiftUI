@@ -11,6 +11,14 @@ import Testing
     }
 
     @MainActor @Test(arguments: BraisenlyThemes.all)
+    func captionNeverBelowMetadataOrElevenPoints(theme: BraisenlyThemeDefinition) {
+        let context = EnvironmentValues().fontResolutionContext
+        let size = BraisenlyTextFieldRow.captionFont(theme).resolve(in: context).pointSize
+        #expect(size >= theme.typography.metadata.resolve(in: context).pointSize)
+        #expect(size >= 11)
+    }
+
+    @MainActor @Test(arguments: BraisenlyThemes.all)
     func rendersInEveryTheme(theme: BraisenlyThemeDefinition) {
         #expect(RenderSmoke.renders(BraisenlyTextFieldRow("Name", text: .constant("Ada"), prompt: "Your name"), theme: theme))
         let five = "one\ntwo\nthree\nfour\nfive"
