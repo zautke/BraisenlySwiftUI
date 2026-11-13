@@ -41,7 +41,8 @@ public struct BraisenlyNavRow: View {
                 }
                 Text(title)
                     .font(theme.typography.rowLabel)
-                    .foregroundStyle(isSelected ? theme.selectedPair.label : theme.colors.textPrimary)
+                    // Glass keeps the bright title it had; only solid themes need the inverted label.
+                    .foregroundStyle(isSelected ? (theme.surface == .solid ? theme.selectedPair.label : theme.colors.textBright) : theme.colors.textPrimary)
                 Spacer(minLength: theme.metrics.spacing[.s])
                 if let badge {
                     Text(badge)
