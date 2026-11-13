@@ -46,7 +46,9 @@ public struct BraisenlyCodeBlockCard: View {
                     .textSelection(.enabled)
                     .padding(theme.metrics.spacing[.m])
             }
-            .scrollIndicators(.hidden)
+            // `.never`, not `.hidden`: macOS keeps legacy scrollers visible for `.hidden` when
+            // "Show scroll bars" is Always or a mouse is attached. Lines still scroll horizontally.
+            .scrollIndicators(.never, axes: .horizontal)
         }
         .braisenlyCard(
             cornerRadius: theme.metrics.radius[.s],
