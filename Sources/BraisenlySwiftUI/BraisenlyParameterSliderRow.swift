@@ -23,14 +23,23 @@ public struct BraisenlyParameterSliderRow: View {
         self.formatString = formatString
     }
 
-    /// An unstepped slider (the system draws tick dots for `step`) whose setter snaps to `step`.
-    private var snapped: Binding<Double> {
+    /// Continuous thumb position. The slider is unstepped (the system draws tick dots for `step`)
+    /// and `value` receives the snapped position, so small keyboard increments accumulate here
+    /// instead of being rounded away.
+    @State private var position: Double?
+
+    private func snap(_ raw: Double) -> Double {
+        guard step > 0 else { return raw }
+        let n = ((raw - range.lowerBound) / step).rounded()
+        return min(max(range.lowerBound + n * step, range.lowerBound), range.upperBound)
+    }
+
+    private var thumb: Binding<Double> {
         Binding(
-            get: { value },
+            get: { position ?? value },
             set: { raw in
-                guard step > 0 else { value = raw; return }
-                let n = ((raw - range.lowerBound) / step).rounded()
-                value = min(max(range.lowerBound + n * step, range.lowerBound), range.upperBound)
+                position = raw
+                value = snap(raw)
             }
         )
     }
@@ -46,8 +55,12 @@ public struct BraisenlyParameterSliderRow: View {
                     .font(theme.typography.metadata)
                     .foregroundStyle(theme.colors.accentTeal)
             }
-            Slider(value: snapped, in: range)
+            Slider(value: thumb, in: range)
                 .tint(theme.colors.accentTeal)
+                .onChange(of: value) { _, new in
+                    // Follow changes made outside the slider.
+                    if let position, snap(position) != new { self.position = nil }
+                }
         }
         .padding(.horizontal, theme.metrics.spacing[.l])
         .padding(.vertical, theme.metrics.spacing[.m])
