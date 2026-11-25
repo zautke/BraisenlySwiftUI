@@ -2,6 +2,27 @@
 
 All notable changes to BraisenlySwiftUI. Versions follow MAJOR.MINOR.PATCH; merges into `development` bump MINOR, promotions to `main` bump MAJOR.
 
+## 0.4.0 — 2026-11-25
+
+Catalog visual-audit fixes from the BraisenlySwiftDemo live walk (`docs/audits/2026-11-13-catalog-visual-audit.md`).
+
+### Fixed
+- `BraisenlySplitView`: sidebar and detail columns fill their full height; solid themes paint the window toolbar band in the column background (F1, F2, F3).
+- `BraisenlyStepperRow`: themed minus/plus buttons on both platforms, replacing the unthemed system stepper (F20).
+- `BraisenlyToggleRow`: full-width row with trailing switch on macOS, matching iPad (F19).
+- `BraisenlySegmentedControl`, `BraisenlyChipGroup`, `BraisenlyNavRow`: selected-state label contrast raised to ≥ 4.5:1 in Light and Dark (F17).
+- `BraisenlyCapsuleModifier` (solid themes): hairline stroke and faint shadow (opacity ≤ 0.08, radius ≤ 4) instead of heavy grey drop shadows (F18).
+- `BraisenlyParameterSliderRow`: no tick dots on fine steps; the thumb keeps a continuous position so keyboard increments are not rounded away (F24).
+- `BraisenlyTextFieldRow` caption and `BraisenlyPropertyTable` key/value text: never below the theme `metadata` size or 11 pt (F23).
+- `BraisenlyCodeBlockCard`: horizontal scroller hidden; long lines still scroll (F20).
+- `BraisenlyMobileWorkspaceView`: follows the environment theme unless `initialTheme` is passed (F4).
+- `BraisenlyRegularWorkspace`: system sidebar toggle removed from the embedded split view (F8).
+- `BraisenlyColorSwatch`: name stacks under the circle on one middle-truncated line (F10).
+- `BraisenlyHighlightedText`: single wrapped `Text` with inline rounded match highlights; no detached fragments (F11).
+
+### Added
+- `docs/audits/2026-11-13-catalog-visual-audit.md`: audit brief and findings F1–F24.
+
 ## 0.3.0 — 2026-11-12
 
 Narrow-sidebar layout fixes found live in the BraisenlySwiftDemo catalog.
