@@ -16,10 +16,14 @@ public struct BraisenlyTextFieldRow: View {
         self.axis = axis
     }
 
+    /// `metadata` is footnote (10 pt on macOS); the caption uses the next larger style so it
+    /// never renders below 11 pt.
+    static func captionFont(_ theme: BraisenlyThemeDefinition) -> Font { theme.typography.snippetBody }
+
     public var body: some View {
         VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
             Text(title)
-                .font(theme.typography.metadata)
+                .font(Self.captionFont(theme))
                 .foregroundStyle(theme.colors.textSecondary)
                 .accessibilityHidden(true)
             TextField(title, text: $text, prompt: Text(prompt), axis: axis)

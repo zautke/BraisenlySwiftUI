@@ -229,3 +229,15 @@ public struct BraisenlyMetricTokens: Sendable, Equatable {
         grabberSize: CGSize(width: 46, height: 5)
     )
 }
+
+extension BraisenlyThemeDefinition {
+    /// Fill and label of a selected segment, chip or row. One source for the views and the
+    /// contrast test. Solid themes invert (bright text colour as fill, background as label) so the
+    /// pair clears WCAG 4.5:1 in Light and Dark; glass keeps the tinted label on the glass surface.
+    var selectedPair: (fill: Color, label: Color) {
+        if surface.glass(for: .control) != nil {
+            return (colors.surfaceHighlight, colors.accentTeal)
+        }
+        return (colors.textBright, colors.backgroundPrimary)
+    }
+}

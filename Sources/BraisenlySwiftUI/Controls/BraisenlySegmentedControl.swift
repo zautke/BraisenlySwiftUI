@@ -34,12 +34,12 @@ public struct BraisenlySegmentedControl<Value: Hashable>: View {
                     } label: {
                         Text(title(option))
                             .font(theme.typography.rowLabelMedium)
-                            .foregroundStyle(isSelected ? theme.colors.accentTeal : theme.colors.textSecondary)
+                            .foregroundStyle(isSelected ? theme.selectedPair.label : theme.colors.textSecondary)
                             .padding(.horizontal, theme.metrics.spacing[.m])
                             .frame(minHeight: resolved.controlSize)
                             .frame(maxWidth: .infinity)
                             .braisenlyCapsule(
-                                fill: isSelected ? theme.colors.surfaceHighlight : nil,
+                                fill: isSelected ? theme.selectedPair.fill : nil,
                                 role: .control
                             )
                     }

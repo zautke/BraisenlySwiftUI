@@ -15,7 +15,8 @@ public struct BraisenlyToggleRow: View {
     }
 
     public var body: some View {
-        Toggle(isOn: $isOn) {
+        // Same layout on every platform: title (and subtitle) leading, switch trailing, full width.
+        HStack(spacing: theme.metrics.spacing[.m]) {
             VStack(alignment: .leading, spacing: theme.metrics.spacing[.xs]) {
                 Text(title)
                     .font(theme.typography.rowLabel)
@@ -26,8 +27,13 @@ public struct BraisenlyToggleRow: View {
                         .foregroundStyle(theme.colors.textSecondary)
                 }
             }
+            Spacer(minLength: theme.metrics.spacing[.s])
+            Toggle(title, isOn: $isOn)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .tint(theme.colors.accentTeal)
         }
-        .tint(theme.colors.accentTeal)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, theme.metrics.spacing[.m])
         .padding(.vertical, theme.metrics.spacing[.s])
         .braisenlyCard(role: .content)

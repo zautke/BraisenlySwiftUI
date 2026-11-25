@@ -24,7 +24,8 @@ public struct BraisenlyCapsuleModifier: ViewModifier {
         return content
             .background(shape.fill(solid ? (fill ?? theme.colors.surfaceElevated).opacity(0.94) : Color.clear))
             .overlay(shape.strokeBorder(theme.colors.borderSubtle.opacity(solid ? 1 : 0)))
-            .shadow(color: solid ? theme.colors.shadow : Color.clear, radius: 12, x: 0, y: 6)
+            // Solid themes: fill + hairline, with only a faint lift (0.35 * 0.2 = 0.07 opacity, radius 4).
+            .shadow(color: solid ? theme.colors.shadow.opacity(0.2) : Color.clear, radius: 4, x: 0, y: 1)
             .glassEffect(glass ?? .identity, in: shape)
     }
 }
